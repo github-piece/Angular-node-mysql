@@ -10,12 +10,14 @@ import { HeaderComponent } from './includes/front/header/header.component';
 import { TopNavbarComponent } from './includes/dashboard/top-navbar/top-navbar.component';
 import {_MatMenuDirectivesModule, MatIconModule, MatMenuModule} from '@angular/material';
 import {FormsModule} from '@angular/forms';
+import { FooterComponent } from './includes/front/footer/footer.component';
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     HeaderComponent,
-    TopNavbarComponent
+    TopNavbarComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
