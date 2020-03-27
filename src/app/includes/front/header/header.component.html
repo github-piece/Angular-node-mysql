@@ -1,0 +1,79 @@
+<header class="header-area">
+  <div class="header-top">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-12">
+          <div class="header-top-item d-flex justify-content-between">
+            <div class="header-left-side d-flex mt-0">
+              <mat-icon>search</mat-icon>
+              <p class="mb-0">
+                 &nbsp;Are you looking for it services & solution provider?
+              </p>
+            </div>
+            <div class="header-right-social d-flex justify-content-end align-items-center">
+              <ul class="d-none d-lg-block mb-0">
+                <li>
+                  <div class="d-flex">
+                    <mat-icon>emoji_flags</mat-icon>
+                    <p class="mb-0">&nbsp;English</p>
+                  </div>
+                </li>
+                <li>
+                  <div class="d-flex">
+                    <mat-icon>star_border</mat-icon>
+                    <p class="mb-0">&nbsp;Join With Us</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="header-nav">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="navigation">
+            <nav class="navbar navbar-expand-lg navbar-light">
+              <button class="navbar-toggler" [matMenuTriggerFor]="menu">
+                <span class="toggler-icon"></span>
+                <span class="toggler-icon"></span>
+                <span class="toggler-icon"></span>
+              </button>
+              <a class="navbar-brand float-left d-flex" routerLink="/">
+                <img src="assets/images/auth_logo.png" style="width: 64px; margin-top: -8px">
+                <div class="logo-text ml-2">M&nbsp;S&nbsp;E</div>
+              </a>
+              <mat-menu #menu="matMenu" xPosition="before">
+                <button mat-menu-item routerLink="/" routerLinkActive="active">Home</button>
+                <button mat-menu-item routerLink="/about" routerLinkActive="active">About Us</button>
+                <button mat-menu-item routerLink="/contact" routerLinkActive="active">Contact Us</button>
+                <button mat-menu-item routerLink="/login" routerLinkActive="active">Login</button>
+                <button mat-menu-item routerLink="/register" routerLinkActive="active">Sign Up</button>
+              </mat-menu>
+                <div class="collapse navbar-collapse">
+                  <ul class="navbar-nav float-right ml-auto mr-2">
+                    <li class="nav-item">
+                      <a class="nav-link" routerLink="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" routerLink="/about">About Us </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" routerLink="/contact">Contact Us</a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="hidden-xs">
+                  <a class="main-btn main-btn-2 mr-2" routerLink="/login">Login</a>
+                  <a class="main-btn main-btn-2" routerLink="/register">Sign Up</a>
+                </div>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
