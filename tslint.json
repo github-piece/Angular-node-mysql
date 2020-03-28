@@ -1,4 +1,5 @@
 {
+  "eofline": true,
   "extends": "tslint:recommended",
   "rules": {
     "array-type": false,

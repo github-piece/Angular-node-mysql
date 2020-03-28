@@ -8,11 +8,14 @@ import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { HomeComponent } from './pages/front/home/home.component';
 import { HeaderComponent } from './includes/front/header/header.component';
 import { TopNavbarComponent } from './includes/dashboard/top-navbar/top-navbar.component';
-import {_MatMenuDirectivesModule, MatIconModule, MatMenuModule} from '@angular/material';
-import {FormsModule} from '@angular/forms';
+import {_MatMenuDirectivesModule, MatIconModule, MatMenuModule, MatSnackBarModule} from '@angular/material';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { FooterComponent } from './includes/front/footer/footer.component';
 import { AboutComponent } from './pages/front/about/about.component';
 import { ContactComponent } from './pages/front/contact/contact.component';
+import { LoginComponent } from './pages/auth/login/login.component';
+import { SignupComponent } from './pages/auth/signup/signup.component';
+import {HttpClientModule} from '@angular/common/http';
 @NgModule({
   declarations: [
     AppComponent,
@@ -22,6 +25,8 @@ import { ContactComponent } from './pages/front/contact/contact.component';
     FooterComponent,
     AboutComponent,
     ContactComponent,
+    LoginComponent,
+    SignupComponent,
   ],
   imports: [
     BrowserModule,
@@ -31,7 +36,10 @@ import { ContactComponent } from './pages/front/contact/contact.component';
     MatMenuModule,
     MatIconModule,
     FormsModule,
-    MDBBootstrapModule.forRoot()
+    MDBBootstrapModule.forRoot(),
+    ReactiveFormsModule,
+    HttpClientModule,
+    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]
