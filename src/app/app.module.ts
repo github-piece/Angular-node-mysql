@@ -7,7 +7,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { HomeComponent } from './pages/front/home/home.component';
 import { HeaderComponent } from './includes/front/header/header.component';
-import { TopNavbarComponent } from './includes/dashboard/top-navbar/top-navbar.component';
 import {_MatMenuDirectivesModule, MatIconModule, MatMenuModule, MatSnackBarModule} from '@angular/material';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { FooterComponent } from './includes/front/footer/footer.component';
@@ -21,7 +20,6 @@ import {HttpClientModule} from '@angular/common/http';
     AppComponent,
     HomeComponent,
     HeaderComponent,
-    TopNavbarComponent,
     FooterComponent,
     AboutComponent,
     ContactComponent,
@@ -36,12 +34,14 @@ import {HttpClientModule} from '@angular/common/http';
     MatMenuModule,
     MatIconModule,
     FormsModule,
-    MDBBootstrapModule.forRoot(),
     ReactiveFormsModule,
     HttpClientModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MDBBootstrapModule.forRoot()
   ],
   providers: [],
+  exports: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
