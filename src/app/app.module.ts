@@ -11,13 +11,17 @@ import { TopNavbarComponent } from './includes/dashboard/top-navbar/top-navbar.c
 import {_MatMenuDirectivesModule, MatIconModule, MatMenuModule} from '@angular/material';
 import {FormsModule} from '@angular/forms';
 import { FooterComponent } from './includes/front/footer/footer.component';
+import { AboutComponent } from './pages/front/about/about.component';
+import { ContactComponent } from './pages/front/contact/contact.component';
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     HeaderComponent,
     TopNavbarComponent,
-    FooterComponent
+    FooterComponent,
+    AboutComponent,
+    ContactComponent,
   ],
   imports: [
     BrowserModule,
