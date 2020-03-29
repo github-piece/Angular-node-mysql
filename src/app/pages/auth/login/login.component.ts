@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AuthenticationService} from '../../../_services/authentication/authentication.service';
-import {first} from 'rxjs/operators';
+import {MatSnackBar} from '@angular/material';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +16,8 @@ export class LoginComponent implements OnInit {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private authenticationService: AuthenticationService,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) { }
   get f() {
     return this.loginForm.controls;
@@ -35,9 +36,12 @@ export class LoginComponent implements OnInit {
     this.authenticationService.login(this.f.u_email.value, this.f.u_password.value)
       .subscribe(data => {
         if (data.status === 1) {
-          this.router.navigate(['/pages/maindashboard']);
+          this.router.navigate(['/dashboard/maindashboard']);
         } else {
-          this.router.navigate(['']);
+          this.snackBar.open('Sorry, still you didn\'t register', '', {
+            duration: 2000
+          });
+          console.clear();
         }
       });
   }

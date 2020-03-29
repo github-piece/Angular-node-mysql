@@ -24,7 +24,7 @@ import {HttpClientModule} from '@angular/common/http';
     AboutComponent,
     ContactComponent,
     LoginComponent,
-    SignupComponent,
+    SignupComponent
   ],
   imports: [
     BrowserModule,
@@ -40,8 +40,6 @@ import {HttpClientModule} from '@angular/common/http';
     MDBBootstrapModule.forRoot()
   ],
   providers: [],
-  exports: [
-  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

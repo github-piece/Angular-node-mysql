@@ -1,0 +1,27 @@
+.simple-menu-item {
+  height: 48px;
+  padding: 0px 20px;
+  background: transparent;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  color: #263238;
+  display: flex;
+  align-items: center;
+}
+.simple-menu-item:hover, :focus {
+  outline: 0;
+  background: #eceff1;
+}
+.simple-menu-item:focus {
+  border-left: 4px solid #243238;
+  margin-left: 1px;
+}
+.simple-menu-item mat-icon
+{
+  font-size: 24px;
+  margin-right: 14px;
+}

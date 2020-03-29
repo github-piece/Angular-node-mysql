@@ -50,7 +50,7 @@ h1 {
 }
 
 .w3layouts-main{
-  background-image: url('bg.jpg');
+  background-image: url('bg.svg');
   background-repeat: repeat-x;
   animation: slideleft 20000s infinite linear;
   -webkit-animation: slideleft 20000s infinite linear;

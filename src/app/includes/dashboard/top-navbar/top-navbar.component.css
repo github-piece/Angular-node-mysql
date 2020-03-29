@@ -1,0 +1,81 @@
+mat-toolbar {
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.32);
+  position: fixed;
+  z-index: 2;
+}
+.logo {
+  letter-spacing: 8px;
+}
+.logo img {
+  width: 42px;
+  background: white;
+  border-radius: 50%;
+  padding: 3px;
+  letter-spacing: 8px;
+}
+.search-bar-wrapper {
+  background-color: rgba(255,255,255, 0.1);
+  border: none;
+  border-radius: 6px;
+  height: 42px;
+  letter-spacing: 2px;
+  width: 100%;
+  max-width: 360px;
+  margin-left: 48px;
+}
+.search-bar-wrapper input {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  width: 320px;
+}
+.search-bar-wrapper input:focus {
+  outline: none;
+}
+.search-bar-wrapper input::placeholder {
+  color: white;
+}
+.button {
+  font-size: 28px;
+  height: 28px;
+}
+.pl-14 {
+  padding-left: 18px!important;
+}
+.mat-badge-medium.mat-badge-overlap.mat-badge-after .mat-badge-content {
+  right: -16px!important;
+}
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+.is-mobile {
+  position: fixed;
+  z-index: 2;
+}
+mat-sidenav {
+  width: 220px;
+}
+mat-nav-list {
+  overflow: hidden;
+  padding-top: 20px
+}
+mat-sidenav-container {
+  top: 64px
+}
+mat-sidenav-content {
+  width: 100%;
+  height: calc(100vh - 64px);
+}
+@media (max-width: 600px) {
+  mat-sidenav-container {
+    top: 56px
+  }
+  mat-sidenav-content {
+    height: calc(100vh - 56px);
+  }
+}
+

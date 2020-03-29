@@ -1,3 +1,51 @@
-<mat-toolbar color="primary">
-  Header
+<mat-toolbar color="accent">
+  <button mat-icon-button (click)="sideNav.toggle()">
+    <mat-icon>apps</mat-icon>
+  </button>
+  <div class="logo mr-2 hidden-xs">
+    <img src="assets/images/auth_logo.png" alt="logo">
+  </div>
+  <div class="logo">MSE</div>
+  <div class="search-bar-wrapper hidden-xs">
+    <button mat-icon-button>
+      <mat-icon>search</mat-icon>
+    </button>
+    <label>
+      <input type="text" matInput [formControl]="searchBar" [matAutocomplete]="auto" placeholder="Search here">
+    </label>
+  </div>
+  <div class="ml-auto">
+    <img src="{{userData.useravatar}}" class="avatar" [matMenuTriggerFor]="menu">
+    <button mat-button [matMenuTriggerFor]="menu" class="hidden-md">{{userData.username}}</button>
+    <button mat-button class="text-left pl-14 hidden-md">
+      <mat-icon matBadge="10" matBadgeColor="warn" class="button">mail</mat-icon>
+    </button>
+    <button mat-button class="text-left pl-14 hidden-md">
+      <mat-icon class="button">create_new_folder</mat-icon>
+    </button>
+  </div>
 </mat-toolbar>
+
+<mat-autocomplete #auto="matAutocomplete">
+  <mat-option *ngFor="let option of filterOptions | async" [value]="option">
+    {{ option }}
+  </mat-option>
+</mat-autocomplete>
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item class="shown-xs">Create</button>
+  <button mat-menu-item class="shown-xs">Messages</button>
+  <button mat-menu-item (click)="logout()">Log out</button>
+</mat-menu>
+
+<mat-sidenav-container>
+  <mat-sidenav #sideNav [mode]="mobileQuery.matches ? 'over' : 'side'" opened>
+    <mat-nav-list>
+      <app-menu></app-menu>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

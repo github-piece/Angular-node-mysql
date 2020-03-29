@@ -79,26 +79,26 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 .hidden-xs, .hidden-md {
-  display: block;
+  display: initial!important;
 }
 .shown-xs, .shown-md {
-  display: none;
+  display: none!important;
 }
 
 @media (max-width: 991px) {
   .hidden-xs {
-    display: none;
+    display: none!important;
   }
   .shown-xs {
-    display: block;
+    display: initial!important;
   }
 }
 @media (max-width: 767px) {
   .hidden-md {
-    display: none;
+    display: none!important;
   }
   .shown-md {
-    display: block;
+    display: initial!important;
   }
 }
 .section-title .title {
@@ -7844,3 +7844,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 .arrow-none .carousel-control-next, .carousel-control-prev{display: none!important;}
 .testimonial-area .carousel-indicators {bottom: -50px!important;}.testimonial-area .carousel-indicators li{}
+button:active, button:focus {outline:0;border:none;-moz-outline-style:none;}
+.loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
