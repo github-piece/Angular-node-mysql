@@ -5,6 +5,7 @@ import {map} from 'rxjs/operators';
 import {AuthenticationService} from '../../../_services/authentication/authentication.service';
 import {Router} from '@angular/router';
 import {MediaMatcher} from '@angular/cdk/layout';
+import {Server} from '../../../../config/url.service';
 
 @Component({
   selector: 'app-top-navbar',
@@ -24,6 +25,7 @@ export class TopNavbarComponent implements OnInit, OnDestroy {
   ];
   filterOptions: Observable<Array<string>>;
   userData: any = [];
+  open = 'opened';
   private mobileQueryListener: () => void;
 
   constructor(
@@ -42,6 +44,7 @@ export class TopNavbarComponent implements OnInit, OnDestroy {
     if (this.userData == null || this.userData === {}) {
       this.router.navigate(['/login']);
     }
+    this.userData.useravatar = Server + '/avatar/' + this.userData.useravatar;
     this.filterOptions = this.searchBar.valueChanges.pipe(map(value => value ? this.filter(value) : this.options.slice()));
   }
   filter(val: string): Array<string> {

@@ -12,8 +12,7 @@ import {
   MatBadgeModule,
   MatButtonModule,
   MatCardModule,
-  MatInputModule, MatListModule, MatMenuModule, MatSidenavModule,
-  MatToolbarModule
+  MatInputModule, MatListModule, MatMenuModule, MatPaginatorModule, MatSelectModule, MatSidenavModule, MatToolbarModule
 } from '@angular/material';
 import {MatIconModule} from '@angular/material';
 import {ReactiveFormsModule} from '@angular/forms';
@@ -26,6 +25,9 @@ import { FaqsComponent } from './faqs/faqs.component';
 import { AboutusComponent } from './aboutus/aboutus.component';
 import { TermPolicyComponent } from './term-policy/term-policy.component';
 import { ContactusComponent } from './contactus/contactus.component';
+import {AgmCoreModule} from '@agm/core';
+import {GoogleChartsModule} from 'angular-google-charts';
+import {MatTableModule} from '@angular/material/table';
 
 @NgModule({
   declarations: [
@@ -57,7 +59,12 @@ import { ContactusComponent } from './contactus/contactus.component';
     _MatMenuDirectivesModule,
     MatMenuModule,
     MatSidenavModule,
-    MatListModule
+    MatListModule,
+    MatSelectModule,
+    AgmCoreModule,
+    GoogleChartsModule,
+    MatTableModule,
+    MatPaginatorModule,
   ],
   exports: [
     TopNavbarComponent,

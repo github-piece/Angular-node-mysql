@@ -39,7 +39,7 @@
 </mat-menu>
 
 <mat-sidenav-container>
-  <mat-sidenav #sideNav [mode]="mobileQuery.matches ? 'over' : 'side'" opened>
+  <mat-sidenav #sideNav [mode]="mobileQuery.matches ? 'over' : 'side'" [opened]="mobileQuery.matches ? 'false' : 'true'">
     <mat-nav-list>
       <app-menu></app-menu>
     </mat-nav-list>
