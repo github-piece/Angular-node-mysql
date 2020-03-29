@@ -28,6 +28,7 @@ import { ContactusComponent } from './contactus/contactus.component';
 import {AgmCoreModule} from '@agm/core';
 import {GoogleChartsModule} from 'angular-google-charts';
 import {MatTableModule} from '@angular/material/table';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import {MatTableModule} from '@angular/material/table';
     GoogleChartsModule,
     MatTableModule,
     MatPaginatorModule,
+    NgxPaginationModule,
   ],
   exports: [
     TopNavbarComponent,
