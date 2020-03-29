@@ -17,13 +17,31 @@ import {
 } from '@angular/material';
 import {MatIconModule} from '@angular/material';
 import {ReactiveFormsModule} from '@angular/forms';
+import { NewsfeedComponent } from './newsfeed/newsfeed.component';
+import { InvestComponent } from './invest/invest.component';
+import { PortfolioComponent } from './portfolio/portfolio.component';
+import { CatalogueComponent } from './catalogue/catalogue.component';
+import { UserpageComponent } from './userpage/userpage.component';
+import { FaqsComponent } from './faqs/faqs.component';
+import { AboutusComponent } from './aboutus/aboutus.component';
+import { TermPolicyComponent } from './term-policy/term-policy.component';
+import { ContactusComponent } from './contactus/contactus.component';
 
 @NgModule({
   declarations: [
     DashboardComponent,
     MaindashboardComponent,
     TopNavbarComponent,
-    MenuComponent
+    MenuComponent,
+    NewsfeedComponent,
+    InvestComponent,
+    PortfolioComponent,
+    CatalogueComponent,
+    UserpageComponent,
+    FaqsComponent,
+    AboutusComponent,
+    TermPolicyComponent,
+    ContactusComponent
   ],
   imports: [
     CommonModule,
