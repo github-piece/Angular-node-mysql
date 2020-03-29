@@ -11,13 +11,13 @@ import {
   MatAutocompleteModule,
   MatBadgeModule,
   MatButtonModule,
-  MatCardModule,
+  MatCardModule, MatDialogModule,
   MatInputModule, MatListModule, MatMenuModule, MatPaginatorModule, MatSelectModule, MatSidenavModule, MatToolbarModule
 } from '@angular/material';
 import {MatIconModule} from '@angular/material';
 import {ReactiveFormsModule} from '@angular/forms';
 import { NewsfeedComponent } from './newsfeed/newsfeed.component';
-import { InvestComponent } from './invest/invest.component';
+import {InvestComponent, InvestDetailComponent} from './invest/invest.component';
 import { PortfolioComponent } from './portfolio/portfolio.component';
 import { CatalogueComponent } from './catalogue/catalogue.component';
 import { UserpageComponent } from './userpage/userpage.component';
@@ -44,7 +44,8 @@ import {NgxPaginationModule} from 'ngx-pagination';
     FaqsComponent,
     AboutusComponent,
     TermPolicyComponent,
-    ContactusComponent
+    ContactusComponent,
+    InvestDetailComponent
   ],
   imports: [
     CommonModule,
@@ -67,10 +68,14 @@ import {NgxPaginationModule} from 'ngx-pagination';
     MatTableModule,
     MatPaginatorModule,
     NgxPaginationModule,
+    MatDialogModule
   ],
   exports: [
     TopNavbarComponent,
     MenuComponent
+  ],
+  entryComponents: [
+    InvestDetailComponent
   ]
 })
 export class DashboardModule { }

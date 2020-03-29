@@ -1,0 +1,17 @@
+.matHeight {
+  height: 450px;
+}
+@media(max-width: 767px) {
+  .matHeight {
+    height: auto;
+  }
+}
+.matHeight img {
+  cursor: pointer;
+}
+.matHeight img:hover {
+  opacity: .8;
+}
+.detail img {
+  width: 100%;
+}
