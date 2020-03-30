@@ -30,11 +30,10 @@ export class NewsfeedComponent implements OnInit {
       });
   }
   articlePic() {
-    // tslint:disable-next-line:prefer-for-of
-    for ( let i = 0; i < this.articles.length; i++) {
-      this.articles[i].imgurl1 = Server + '/article/' + this.articles[i].imgurl1;
-      this.articles[i].imgurl2 = Server + '/article/' + this.articles[i].imgurl2;
-      this.articles[i].u_avatar = Server + '/avatar/' + this.articles[i].u_avatar;
+    for (const article of this.articles) {
+      article.imgurl1 = Server + '/article/' + article.imgurl1;
+      article.imgurl2 = Server + '/article/' + article.imgurl2;
+      article.u_avatar = Server + '/avatar/' + article.u_avatar;
     }
     this.thisArticle = this.articles[0];
   }

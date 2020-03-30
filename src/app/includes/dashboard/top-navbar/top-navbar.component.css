@@ -30,6 +30,7 @@ mat-toolbar {
   font-size: 16px;
   font-weight: 500;
   width: 320px;
+  height: 42px;
 }
 .search-bar-wrapper input:focus {
   outline: none;
