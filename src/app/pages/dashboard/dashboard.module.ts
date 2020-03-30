@@ -11,7 +11,7 @@ import {
   MatAutocompleteModule,
   MatBadgeModule,
   MatButtonModule,
-  MatCardModule, MatDialogModule,
+  MatCardModule, MatDialogModule, MatTabsModule,
   MatInputModule, MatListModule, MatMenuModule, MatPaginatorModule, MatSelectModule, MatSidenavModule, MatToolbarModule
 } from '@angular/material';
 import {MatIconModule} from '@angular/material';
@@ -68,7 +68,8 @@ import {NgxPaginationModule} from 'ngx-pagination';
     MatTableModule,
     MatPaginatorModule,
     NgxPaginationModule,
-    MatDialogModule
+    MatDialogModule,
+    MatTabsModule
   ],
   exports: [
     TopNavbarComponent,

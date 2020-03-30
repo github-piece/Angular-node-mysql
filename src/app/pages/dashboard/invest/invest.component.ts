@@ -10,7 +10,7 @@ export interface DialogData {
 })
 export class InvestComponent implements OnInit {
   investList = [];
-  constructor(public matDialog: MatDialog) { }
+  constructor(private matDialog: MatDialog) { }
 
   ngOnInit() {
     this.investList = investList;
@@ -38,7 +38,7 @@ export class InvestComponent implements OnInit {
 export class InvestDetailComponent implements OnInit {
   detailData: any;
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: DialogData
+    @Inject(MAT_DIALOG_DATA) private data: DialogData
   ) {}
   ngOnInit() {
     this.detailData = investList;

@@ -7901,6 +7901,7 @@ button:active, button:focus {outline:0;border:none;-moz-outline-style:none;}
   display: table-row;
   outline: 0;
   vertical-align: middle;
+  width: 100%;
 }
 .mat-table th {
   font-weight: 500;

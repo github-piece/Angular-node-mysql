@@ -1,9 +1,8 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {AuthenticationService} from '../../../_services/authentication/authentication.service';
-import {Router} from '@angular/router';
 import {BusinessService} from '../../../_services/business/business.service';
 import {Server} from '../../../../config/url.service';
-import {MatSort, MatTableDataSource} from '@angular/material';
+import {MatTableDataSource} from '@angular/material';
 import {MatPaginator} from '@angular/material/paginator';
 export interface PeriodicElement {
   name: string;
@@ -41,7 +40,6 @@ export class MaindashboardComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   constructor(
     private authenticationService: AuthenticationService,
-    private router: Router,
     private businessService: BusinessService
   ) { }
   ngOnInit() {
@@ -71,40 +69,44 @@ export class MaindashboardComponent implements OnInit, AfterViewInit {
   }
   onAddress(businessId) {
     this.mapData = [];
-    this.businessData.forEach(business => {
-      if (business.id === businessId) {
-        this.mapData[0] = business;
-        this.lng = business.lng;
-        this.lat = business.lat;
+    // tslint:disable-next-line:prefer-for-of
+    for (let i = 0; i < this.businessData.length; i++) {
+      if (this.businessData[i].id === businessId) {
+        this.mapData[0] = this.businessData[i];
+        this.lng = this.businessData[i].lng;
+        this.lat = this.businessData[i].lat;
       }
-    });
+    }
   }
   onAddressAll() {
     this.lat = 0; this.lng = 0;
     this.mapData = this.businessData;
-    this.businessData.forEach(data => {
-      if (data.pic.substr(0, 4) !== 'http') {
-        data.pic = Server + '/business/' + data.pic;
+    // tslint:disable-next-line:prefer-for-of
+    for (let i = 0; i < this.businessData.length; i++) {
+      if (this.businessData[i].pic.substr(0, 4) !== 'http') {
+        this.businessData[i].pic = Server + '/business/' + this.businessData[i].pic;
       }
-      this.lat += data.lat;
-      this.lng += data.lng;
-    });
+      this.lat += this.businessData[i].lat;
+      this.lng += this.businessData[i].lng;
+    }
     this.lat /= this.businessData.length; this.lng /= this.businessData.length;
   }
   setBusinessList() {
     let businessArray = [];
-    this.businessData.forEach(data => {
-      const businessValue = data.business.split(',');
+    // tslint:disable-next-line:prefer-for-of
+    for (let i = 0; i < this.businessData.length; i++) {
+      const businessValue = this.businessData[i].business.split(',');
       businessArray = businessArray.concat(businessValue);
-    });
+    }
     const businessArrayName = businessArray.filter((v, i, a) => a.indexOf(v) === i);
     for (let j = 0; j < businessArrayName.length; j++) {
       this.businessList[j + 1] = [businessArrayName[j], 'treeMap', 0, businessArrayName.length - j - 1];
-      businessArray.forEach(arrayData => {
-        if (businessArrayName[j] === arrayData) {
+      // tslint:disable-next-line:prefer-for-of
+      for (let i = 0; i < businessArray.length; i++) {
+        if (businessArrayName[j] === businessArray[i]) {
           this.businessList[j + 1][2] = Number(this.businessList[j + 1][2]) + 1;
         }
-      });
+      }
     }
   }
   chartSet() {
@@ -137,11 +139,12 @@ export class MaindashboardComponent implements OnInit, AfterViewInit {
     const tenureArrayName = tenureArray.filter((v, i, a) => a.indexOf(v) === i);
     for (let j = 0; j < tenureArrayName.length; j++) {
       this.tenureList[j] = [tenureArrayName[j], 0];
-      this.businessData.forEach(data => {
-        if (tenureArrayName[j] === data.tenure) {
-          this.tenureList[j][1] += parseFloat(data.tenure);
+      // tslint:disable-next-line:prefer-for-of
+      for (let i = 0; i < this.businessData.length; i++) {
+        if (tenureArrayName[j] === this.businessData[i].tenure) {
+          this.tenureList[j][1] += parseFloat(this.businessData[i].tenure);
         }
-      });
+      }
     }
 
     this.charts.push({
@@ -155,11 +158,12 @@ export class MaindashboardComponent implements OnInit, AfterViewInit {
     const goalArrayName = goalArray.filter((v, i, a) => a.indexOf(v) === i);
     for (let j = 0; j < goalArrayName.length; j++) {
       this.goalList[j] = [goalArrayName[j], 0, this.getRandomColor(), goalArrayName[j]];
-      goalArray.forEach(goal => {
-        if (goalArrayName[j] === goal) {
+      // tslint:disable-next-line:prefer-for-of
+      for (let i = 0; i < goalArray.length; i++) {
+        if (goalArrayName[j] === goalArray[i]) {
           this.goalList[j][1] = Number(this.goalList[j][1]) + 1;
         }
-      });
+      }
     }
     this.charts.push({
       title: 'Business Goals',
@@ -190,9 +194,4 @@ export class MaindashboardComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = this.paginator;
   }
 }
-export interface PeriodicElement {
-  name: string;
-  no: number;
-  location: string;
-  address: string;
-}
+
