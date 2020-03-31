@@ -5,7 +5,6 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './dashboard.component';
 import {MaindashboardComponent} from './maindashboard/maindashboard.component';
 import {TopNavbarComponent} from '../../includes/dashboard/top-navbar/top-navbar.component';
-import {MenuComponent} from '../../includes/dashboard/menu/menu.component';
 import {
   _MatMenuDirectivesModule,
   MatAutocompleteModule,
@@ -50,7 +49,6 @@ import {NgxSpinnerModule} from 'ngx-spinner';
     DashboardComponent,
     MaindashboardComponent,
     TopNavbarComponent,
-    MenuComponent,
     NewsfeedComponent,
     InvestComponent,
     PortfolioComponent,
@@ -95,8 +93,7 @@ import {NgxSpinnerModule} from 'ngx-spinner';
     NgxSpinnerModule
   ],
   exports: [
-    TopNavbarComponent,
-    MenuComponent
+    TopNavbarComponent
   ],
   entryComponents: [
     InvestDetailComponent,

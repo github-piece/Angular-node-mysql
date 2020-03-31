@@ -1,3 +1,4 @@
+<ngx-spinner class="text-white">Now Loading...</ngx-spinner>
 <mat-toolbar color="accent">
   <button mat-icon-button (click)="sideNav.toggle()">
     <mat-icon>apps</mat-icon>
@@ -7,7 +8,7 @@
   </div>
   <div class="logo">MSE</div>
   <div class="search-bar-wrapper hidden-xs">
-    <button mat-icon-button class="search-btn">
+    <button mat-icon-button>
       <mat-icon>search</mat-icon>
     </button>
     <label>
@@ -15,17 +16,12 @@
     </label>
   </div>
   <div class="ml-auto">
-    <span *ngIf="mobileQuery.matches">
-      <img src="{{userData.useravatar}}" class="avatar" [matMenuTriggerFor]="menu">
-    </span>
-    <span *ngIf="!mobileQuery.matches">
-      <img src="{{userData.useravatar}}" class="avatar">
-    </span>
+    <img src="{{userData.useravatar}}" class="avatar" [matMenuTriggerFor]="menu">
     <button mat-button [matMenuTriggerFor]="menu" class="hidden-md">{{userData.username}}</button>
     <button mat-button class="text-left pl-14 hidden-md">
       <mat-icon matBadge="10" matBadgeColor="warn" class="button">mail</mat-icon>
     </button>
-    <button mat-button class="text-left pl-14 hidden-md">
+    <button mat-button class="text-left pl-14 hidden-md" (click)="notification.toggle()">
       <mat-icon class="button">create_new_folder</mat-icon>
     </button>
   </div>
@@ -38,15 +34,57 @@
 </mat-autocomplete>
 
 <mat-menu #menu="matMenu">
-  <button mat-menu-item class="shown-xs">Create</button>
+  <button mat-menu-item class="shown-xs">Notification</button>
   <button mat-menu-item class="shown-xs">Messages</button>
   <button mat-menu-item (click)="logout()">Log out</button>
 </mat-menu>
 
-<mat-sidenav-container>
+<mat-sidenav-container class="side-menu">
   <mat-sidenav #sideNav [mode]="mobileQuery.matches ? 'over' : 'side'" [opened]="mobileQuery.matches ? 'false' : 'true'">
     <mat-nav-list>
-      <app-menu></app-menu>
+      <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/maindashboard']">
+        <mat-icon>dashboard_outlined</mat-icon>
+        <span class="menu-item-title">Home</span>
+      </a>
+      <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/newsfeed']">
+        <mat-icon>menu_book</mat-icon>
+        <span class="menu-item-title">News Feed</span>
+      </a>
+
+      <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/howtopage']">
+        <mat-icon>storage</mat-icon>
+        <span class="menu-item-title">How To Invest</span>
+      </a>
+
+      <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/portfolio']">
+        <mat-icon>group</mat-icon>
+        <span class="menu-item-title">Portfolio</span>
+      </a>
+
+      <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/catalogue']">
+        <mat-icon>monochrome_photos</mat-icon>
+        <span class="menu-item-title">Catalogue</span>
+      </a>
+      <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/userpage']">
+        <mat-icon>group_add</mat-icon>
+        <span class="menu-item-title">Userpage</span>
+      </a>
+      <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/faqs']">
+        <mat-icon>camera</mat-icon>
+        <span class="menu-item-title">FAQs</span>
+      </a>
+      <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/about']">
+        <mat-icon>folder_shared</mat-icon>
+        <span class="menu-item-title">About Us</span>
+      </a>
+      <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/terms']">
+        <mat-icon>chrome_reader_mode</mat-icon>
+        <span class="menu-item-title">T's and C's</span>
+      </a>
+      <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/contact']">
+        <mat-icon>contact_phone</mat-icon>
+        <span class="menu-item-title">Contact Us</span>
+      </a>
     </mat-nav-list>
   </mat-sidenav>
 
@@ -54,4 +92,3 @@
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>
-<ngx-spinner class="text-white">Now Loading...</ngx-spinner>

@@ -15,17 +15,9 @@ import {Server} from '../../../../config/url.service';
 export class TopNavbarComponent implements OnInit, OnDestroy {
   mobileQuery: MediaQueryList;
   searchBar = new FormControl();
-  options = [
-    'Charts',
-    'Dashboard',
-    'Forms',
-    'Layouts',
-    'Tables',
-    'Utils'
-  ];
+  options = ['Charts', 'Dashboard', 'Forms', 'Layouts', 'Tables', 'Utils'];
   filterOptions: Observable<Array<string>>;
   userData: any = [];
-  open = 'opened';
   private mobileQueryListener: () => void;
 
   constructor(
