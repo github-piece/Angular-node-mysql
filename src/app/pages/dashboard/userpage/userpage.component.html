@@ -1,1 +1,149 @@
-<p>userpage works!</p>
+<div class="container">
+  <div class="p-header">Users Information</div>
+  <div class="p-title">User in your organization</div>
+  <mat-tab-group>
+    <mat-tab label="My Profile">
+      <div style="overflow: hidden">
+        <div class="row mb-4">
+          <div class="col-lg-3">
+            <mat-card>
+              <div class="profile-picture">
+                <img [src]="myData.useravatar" alt="photo">
+                <div class="profile-name">
+                  {{myData.username}}
+                </div>
+                <div class="profile-detail">
+                  {{myData.useremail}}
+                </div>
+                <input id="file" class="file-upload-btn" type="file" accept='image/*' (change)="preview($event.target)"/>
+                <label for="file" class="mt-5">Upload Image</label>
+              </div>
+            </mat-card>
+          </div>
+          <div class="col-lg-9 mt-2">
+            <mat-card>
+              <div class="mat-card-header">My Profile</div>
+              <mat-divider></mat-divider>
+              <div class="table-responsive mb-4">
+                <table class="mat-table odd">
+                  <tbody>
+                  <tr><td>Name</td><td>{{myData.username}}</td></tr>
+                  <tr><td>Email</td><td>{{myData.useremail}}</td></tr>
+                  <tr><td>Phone Number</td><td>{{myData.userphonenum}}</td></tr>
+                  <tr><td>Created Date</td><td>{{myData.usercreateddate}}</td></tr>
+                  <tr><td>Role</td><td>{{myData.useraccounttype}}</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <mat-slide-toggle color="primary" (click)="onChange()" checked *ngIf="onShow && !myData.provider">
+                <div class="m-0">Change Password</div>
+              </mat-slide-toggle>
+              <mat-slide-toggle color="primary" (click)="onChange()" *ngIf="!onShow && !myData.provider">
+                <div class="m-0">Change Password</div>
+              </mat-slide-toggle>
+              <mat-slide-toggle color="primary" (click)="onChange()" *ngIf="myData.provider" disabled>
+                <div class="m-0">Change Password</div>
+              </mat-slide-toggle>
+              <form [formGroup]="registerForm" *ngIf="onShow" (ngSubmit)="onSubmit()">
+                <mat-form-field>
+                  <mat-label>Old Password</mat-label>
+                  <input matInput type="password" placeholder="Insert old password" formControlName="oldPassword">
+                  <mat-hint>Please Insert your old password</mat-hint>
+                  <mat-error *ngIf="submitted && f.oldPassword.errors">
+                    <div *ngIf="f.oldPassword.errors.required">
+                      Password is required
+                    </div>
+                    <div *ngIf="f.oldPassword.errors.notMatch">
+                      Passwords doesn't match
+                    </div>
+                  </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                  <mat-label>New Password</mat-label>
+                  <input matInput type="password" placeholder="Insert new password" formControlName="newPassword">
+                  <mat-hint>Password has to be more than 6 letters</mat-hint>
+                  <mat-error *ngIf="submitted && f.newPassword.errors">
+                    <div *ngIf="f.newPassword.errors.required">
+                      Old Password is required
+                    </div>
+                    <div *ngIf="f.newPassword.errors.minlength">
+                      New Password must be at least 6 characters
+                    </div>
+                  </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                  <mat-label>Confirm Password</mat-label>
+                  <input matInput type="password" placeholder="Insert password again" formControlName="confirmPassword">
+                  <mat-hint>Please type your password again!</mat-hint>
+                  <mat-error *ngIf="submitted && f.confirmPassword.errors">
+                    <div *ngIf="f.confirmPassword.errors.required">
+                      Confirm Password is required
+                    </div>
+                    <div *ngIf="f.confirmPassword.errors.mustMatch">
+                      Passwords must match
+                    </div>
+                  </mat-error>
+                </mat-form-field>
+                <mat-divider></mat-divider>
+                <mat-card-actions>
+                  <button type="submit" mat-raised-button color="primary" class="float-right mr-2">Save</button>
+                  <button type="button" mat-button class="float-right mr-4" (click)="onChange()">Cancel</button>
+                </mat-card-actions>
+              </form>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab label="User List">
+      <mat-card>
+        <div class="float-right">
+          <button mat-stroked-button style="top: -8px" (click)="addUser()">Add User</button>
+        </div>
+        <mat-card-header>User List</mat-card-header>
+        <mat-divider></mat-divider>
+        <div class="table-responsive">
+          <table class="mat-table">
+            <thead>
+            <tr>
+              <th>Number</th>
+              <th>User Name</th>
+              <th>Email</th>
+              <th>Created</th>
+              <th>Status</th>
+              <th>Role</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let task of dataSource; index as index">
+              <td>{{index+1}}</td>
+              <td>{{task['u_name']}}</td>
+              <td>{{task['u_email']}}</td>
+              <td>{{task['u_createddate']}}</td>
+              <td>
+                <mat-slide-toggle color="primary" *ngIf="task.u_active == 'InActive'" (click)="freezeUser(task.u_id, 'active')">InActive</mat-slide-toggle>
+                <mat-slide-toggle color="primary" *ngIf="task.u_active == 'Active'" (click)="freezeUser(task.u_id, 'inactive')" checked>Activated</mat-slide-toggle>
+              </td>
+              <td>
+                <mat-form-field>
+                  <mat-label>Select Role</mat-label>
+                  <mat-select [(value)]="task['selected']" (selectionChange)="changeRole($event, task.u_id)">
+                    <mat-option value="Senior Admin">Senior Admin</mat-option>
+                    <mat-option value="Junior Admin">Junior Admin</mat-option>
+                    <mat-option value="Moderator">Moderator</mat-option>
+                    <mat-option value="User">User</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true" [length]="totalSize"
+                       [pageIndex]="currentPage" (page)="handlePage($event)">
+        </mat-paginator>
+      </mat-card>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+

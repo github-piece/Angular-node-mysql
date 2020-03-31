@@ -35,13 +35,19 @@ export class LoginComponent implements OnInit {
     }
     this.authenticationService.login(this.f.u_email.value, this.f.u_password.value)
       .subscribe(data => {
-        if (data.status === 1) {
-          this.router.navigate(['/dashboard/maindashboard']);
-        } else {
-          this.snackBar.open('Sorry, still you didn\'t register', '', {
+        if (data === null) {
+          this.snackBar.open('Information is not correct', '', {
             duration: 2000
           });
-          console.clear();
+        } else {
+          if (data.status === 1) {
+            this.router.navigate(['/dashboard/maindashboard']);
+          } else {
+            this.snackBar.open('Sorry, still you didn\'t register', '', {
+              duration: 2000
+            });
+            console.clear();
+          }
         }
       });
   }

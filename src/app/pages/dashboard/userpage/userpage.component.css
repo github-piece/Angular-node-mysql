@@ -1,0 +1,17 @@
+mat-form-field {
+  width: 100%;
+  margin: 8px 0;
+}
+.item-vertical-center {
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+}
+@media (max-width: 768px) {
+  .item-vertical-center {
+    position: relative;
+  }
+  .item-vertical-center img {
+    margin-top: 16px
+  }
+}

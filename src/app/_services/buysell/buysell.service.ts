@@ -6,7 +6,14 @@ import {Server} from '../../../config/url.service';
   providedIn: 'root'
 })
 export class BuysellService {
-
+  public rowData: any = [];
+  public businessId: any;
+  public businessRemain: any;
+  public businessName: any;
+  public modalContent: any;
+  public action: any;
+  public commission: any;
+  public fundTypes = [];
   constructor(private http: HttpClient) { }
   getBuyHistory(userId) {
     return this.http.post(`${Server}/getBuyHistory`, {userId});

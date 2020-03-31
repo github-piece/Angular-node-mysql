@@ -17,14 +17,14 @@
       </mat-form-field>
     </div>
     <agm-map [latitude]="lat" [zoom]="zoom" [longitude]="lng">
-      <agm-marker *ngFor="let data of mapData" [latitude]="data.lat" [longitude]="data.lng">
+      <agm-marker *ngFor="let map of mapData" [latitude]="map.lat" [longitude]="map.lng">
       <agm-info-window>
         <div class="feed">
-          <img [src]="data.pic">
+          <img [src]="map.pic">
           <div class="content">
-            {{data.name}}<br/>
-            {{data.address}}<br/>
-            <span>by</span> {{data.userName}}
+            {{map.name}}<br/>
+            {{map.address}}<br/>
+            <span>by</span> {{map.userName}}
           </div>
         </div>
       </agm-info-window>

@@ -15,7 +15,12 @@
     </label>
   </div>
   <div class="ml-auto">
-    <img src="{{userData.useravatar}}" class="avatar" [matMenuTriggerFor]="menu">
+    <span *ngIf="mobileQuery.matches">
+      <img src="{{userData.useravatar}}" class="avatar" [matMenuTriggerFor]="menu">
+    </span>
+    <span *ngIf="!mobileQuery.matches">
+      <img src="{{userData.useravatar}}" class="avatar">
+    </span>
     <button mat-button [matMenuTriggerFor]="menu" class="hidden-md">{{userData.username}}</button>
     <button mat-button class="text-left pl-14 hidden-md">
       <mat-icon matBadge="10" matBadgeColor="warn" class="button">mail</mat-icon>

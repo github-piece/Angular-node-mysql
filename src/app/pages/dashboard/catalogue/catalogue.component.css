@@ -1,0 +1,19 @@
+.search-box {
+  max-width: 800px;
+}
+ul {
+  list-style: none;
+  padding: 0;
+}
+.bg {
+  width: 100%;
+  min-height: 115px;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+.btn_stake_group button {
+  margin-top: 20px;
+}
+form mat-form-field {
+  width: 100%;
+}

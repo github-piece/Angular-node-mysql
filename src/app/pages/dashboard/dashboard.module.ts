@@ -11,8 +11,18 @@ import {
   MatAutocompleteModule,
   MatBadgeModule,
   MatButtonModule,
-  MatCardModule, MatDialogModule, MatTabsModule,
-  MatInputModule, MatListModule, MatMenuModule, MatPaginatorModule, MatSelectModule, MatSidenavModule, MatToolbarModule
+  MatCardModule,
+  MatDialogModule,
+  MatTabsModule,
+  MatInputModule,
+  MatListModule,
+  MatMenuModule,
+  MatPaginatorModule,
+  MatSelectModule,
+  MatSidenavModule,
+  MatToolbarModule,
+  MatExpansionModule,
+  MatCheckboxModule, MatSlideToggleModule
 } from '@angular/material';
 import {MatIconModule} from '@angular/material';
 import {ReactiveFormsModule} from '@angular/forms';
@@ -29,6 +39,9 @@ import {AgmCoreModule} from '@agm/core';
 import {GoogleChartsModule} from 'angular-google-charts';
 import {MatTableModule} from '@angular/material/table';
 import {NgxPaginationModule} from 'ngx-pagination';
+import {ChartsModule} from 'ng2-charts';
+import {BuymodalComponent} from './catalogue/catalogue.component';
+import {UserCreateModalComponent} from './userpage/usercreate.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +58,9 @@ import {NgxPaginationModule} from 'ngx-pagination';
     AboutusComponent,
     TermPolicyComponent,
     ContactusComponent,
-    InvestDetailComponent
+    InvestDetailComponent,
+    BuymodalComponent,
+    UserCreateModalComponent
   ],
   imports: [
     CommonModule,
@@ -69,14 +84,20 @@ import {NgxPaginationModule} from 'ngx-pagination';
     MatPaginatorModule,
     NgxPaginationModule,
     MatDialogModule,
-    MatTabsModule
+    MatTabsModule,
+    MatExpansionModule,
+    ChartsModule,
+    MatCheckboxModule,
+    MatSlideToggleModule
   ],
   exports: [
     TopNavbarComponent,
     MenuComponent
   ],
   entryComponents: [
-    InvestDetailComponent
+    InvestDetailComponent,
+    BuymodalComponent,
+    UserCreateModalComponent
   ]
 })
 export class DashboardModule { }

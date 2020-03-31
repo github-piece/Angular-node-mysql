@@ -226,6 +226,7 @@ export class PortfolioComponent implements OnInit {
   }
   handlePage(event?: PageEvent) {
     this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
     this.iterator();
   }
   getRandomColor() {

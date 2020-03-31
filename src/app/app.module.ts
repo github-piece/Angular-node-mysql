@@ -7,7 +7,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { HomeComponent } from './pages/front/home/home.component';
 import { HeaderComponent } from './includes/front/header/header.component';
-import {_MatMenuDirectivesModule, MatIconModule, MatMenuModule, MatPaginatorModule, MatSnackBarModule} from '@angular/material';
+import {
+  _MatMenuDirectivesModule,
+  MatIconModule,
+  MatMenuModule,
+  MatPaginatorModule,
+  MatSnackBarModule
+} from '@angular/material';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { FooterComponent } from './includes/front/footer/footer.component';
 import { AboutComponent } from './pages/front/about/about.component';
@@ -18,6 +24,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {GoogleChartsModule} from 'angular-google-charts';
 import {AgmCoreModule} from '@agm/core';
 import {MatTableModule} from '@angular/material/table';
+import {ChartsModule} from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -28,7 +35,7 @@ import {MatTableModule} from '@angular/material/table';
     AboutComponent,
     ContactComponent,
     LoginComponent,
-    SignupComponent
+    SignupComponent,
   ],
   imports: [
     BrowserModule,
@@ -45,7 +52,8 @@ import {MatTableModule} from '@angular/material/table';
     GoogleChartsModule.forRoot('AIzaSyB_O_MOsbttHQ9gAXE1iO7gCa1Vgg-6AYo'),
     AgmCoreModule.forRoot({apiKey: 'AIzaSyA6L4RK2RH8CmfPnyV1VEfjrHj3BP66gmE'}),
     MatTableModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    ChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

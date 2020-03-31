@@ -1,0 +1,70 @@
+<form [formGroup]="payFastForm" (ngSubmit)="getSignature()" *ngIf="formShow">
+    <mat-card-header>{{modalContent}}</mat-card-header>
+    <mat-divider></mat-divider>
+    <mat-card-content>
+      <div class="mat-card-header mt-3">Business Name to Buy : {{itemName}}</div>
+      <mat-form-field>
+        <mat-label>Amount to pay</mat-label>
+        <input type="number" matInput formControlName="amount" placeholder="Please Insert Amount">
+        <span matSuffix>{{curSymbol}}</span>
+        <mat-error *ngIf="hasError('amount', 'required')">
+          Please insert this field.
+        </mat-error>
+        <mat-error *ngIf="hasError('amount', 'max') || hasError('amount', 'min')">
+          Buy amount have to be between 1{{curSymbol}}~{{maxAmount}}{{curSymbol}}!
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Choose the method</mat-label>
+        <mat-select multiple formControlName="fundType">
+          <mat-option *ngFor="let type of fundTypes" [value]="type['instrument']">
+            {{type['instrument']}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="hasError('fundType', 'required')">
+          Please choose your method.
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Interest Rate</mat-label>
+        <mat-select formControlName="rate">
+          <mat-option value="0%~2%">0%~2%</mat-option>
+          <mat-option value="2%~5%">2%~5%</mat-option>
+          <mat-option value="5%~10%">5%~10%</mat-option>
+          <mat-option value="10%~15%">10%~15%</mat-option>
+          <mat-option value="15%~20%">15%~20%</mat-option>
+          <mat-option value="20%~30%">20%~30%</mat-option>
+          <mat-option value="30%~">30%~</mat-option>
+        </mat-select>
+        <mat-error *ngIf="hasError('rate', 'required')">
+          Please insert your rate
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Reporting Frequency</mat-label>
+        <mat-select formControlName="frequency">
+          <mat-option value="Weekly">Weekly</mat-option>
+          <mat-option value="Bi-Weekly">Bi-Weekly</mat-option>
+          <mat-option value="Monthly">Monthly</mat-option>
+          <mat-option value="Quarterly">Quarterly</mat-option>
+          <mat-option value="Bi-Annually">Bi-Annually</mat-option>
+        </mat-select>
+        <mat-error *ngIf="hasError('frequency', 'required')">
+          Please Choose your Frequency
+        </mat-error>
+      </mat-form-field>
+      <mat-checkbox color="primary" (click)="showPart()" formControlName="agreement">I agree Terms and Policy</mat-checkbox>
+      <p *ngIf="onShow">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nos
+        trud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Dui
+        s aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu f
+        ugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+        culpa qui officia deserunt mollit anim id est laborum.
+      </p>
+    </mat-card-content>
+    <mat-card-footer class="w-100">
+      <button type="submit" mat-raised-button class="float-right" color="primary">OK</button>
+      <button type="button" mat-raised-button class="float-right mr-2" (click)="onNoClick()">Cancel</button>
+    </mat-card-footer>
+</form>
