@@ -1,1 +1,95 @@
-<p>contactus works!</p>
+<div class="p-header">Contact Us</div>
+<div class="p-title">We are looking for your suggestion</div>
+<div class="map">
+  <agm-map [latitude]="lat" [zoom]="zoom" [longitude]="lng" [mapTypeId]="mapId">
+    <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+    <agm-marker *ngFor="let data of rowData; let i = index" [latitude]="data.lat"
+                [longitude]="data.lng">
+    </agm-marker>
+  </agm-map>
+</div>
+<div class="row">
+  <div class="col-lg-8">
+    <mat-card>
+      <mat-card-header>Contact Us</mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <p class="mt-4">
+          Feel free to drop us a line via this contact form, or visit out headquarter. The NDA Sport team
+          is always looking for feedbacks and comments from you to improve our service quality. Our
+          working hours is from 9:00AM to 5:00 from Monday to Friday (except holidays and weekends).
+        </p>
+        <div class="row">
+          <div class="col-md-6">
+            <mat-card-header>
+              <mat-icon color="primary">phone_forwarded</mat-icon>
+              &nbsp; Contact Us
+            </mat-card-header>
+            <mat-card-content>
+              <p>30 Beer Runnel, Avenue 15th, Randall District.</p>
+              <p>Washington.</p>
+            </mat-card-content>
+          </div>
+          <div class="col-md-6">
+            <mat-card-header>
+              <mat-icon color="primary">room</mat-icon>
+              &nbsp; Phone
+            </mat-card-header>
+            <mat-card-content>
+              <p>Mobile: +61 3 9987 5654</p>
+              <p>Fax: +61 5 7855 7888</p>
+            </mat-card-content>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <mat-card-header>
+              <mat-icon color="primary">assignment_turned_in</mat-icon>
+              &nbsp; Opening Hours
+            </mat-card-header>
+            <mat-card-content>
+              <p>Monday to Friday: 8: AM - 8:00PM Saturday & Sunday: 10:00AM - 6:00PM</p>
+            </mat-card-content>
+          </div>
+          <div class="col-md-6">
+            <mat-card-header>
+              <mat-icon color="primary">mail</mat-icon>
+              &nbsp; Email
+            </mat-card-header>
+            <mat-card-content>
+              <p>hi@sellersmith.com</p>
+              <p>support@pagetly.io</p>
+            </mat-card-content>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="col-lg-4">
+    <mat-card>
+      <mat-card-header>Get In Touch</mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <mat-form-field>
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name" type="text">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" type="email">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Phone Number</mat-label>
+          <input matInput formControlName="phone_number" type="number">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Your Message</mat-label>
+          <textarea matInput formControlName="message" rows="3"></textarea>
+        </mat-form-field>
+      </mat-card-content>
+      <mat-card-footer class="text-center d-block">
+        <button mat-raised-button color="primary" class="mb-3">Contact Us</button>
+      </mat-card-footer>
+    </mat-card>
+  </div>
+</div>

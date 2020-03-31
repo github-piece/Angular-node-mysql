@@ -103,7 +103,6 @@ export class AboutusComponent implements OnInit {
     this.articleService.setArticle(formData).subscribe(result => this.rowData = result);
   }
   chooseImage() {
-    this.fileInput.nativeElement.click();
   }
   imageCropped(event: ImageCroppedEvent) {
     this.croppedImage = event.base64;

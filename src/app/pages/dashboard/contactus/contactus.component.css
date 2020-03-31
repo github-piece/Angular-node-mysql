@@ -1,0 +1,15 @@
+.map {
+  height: 480px;
+  width: 100%;
+}
+agm-map {
+  height: 100%;
+}
+@media (max-width: 768px) {
+  .map {
+    height: 40vh;
+  }
+}
+mat-form-field {
+  width: 100%;
+}

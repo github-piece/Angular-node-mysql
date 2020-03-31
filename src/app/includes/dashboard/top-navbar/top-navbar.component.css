@@ -79,4 +79,6 @@ mat-sidenav-content {
     height: calc(100vh - 56px);
   }
 }
-
+.search-btn mat-icon {
+  vertical-align: initial!important;
+}
