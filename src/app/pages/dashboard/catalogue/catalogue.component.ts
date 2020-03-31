@@ -9,6 +9,7 @@ import {MatDialog, MatDialogRef} from '@angular/material';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {PayFast} from '../../../../config/url.service';
 import {AppUrl} from '../../../../config/url.service';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 @Component({
   selector: 'app-catalogue',
@@ -37,7 +38,6 @@ export class CatalogueComponent implements OnInit {
   stakeholdersProvince = [];
   stakeholdersDistrict = [];
   stakeholdersMunicipality = [];
-  show = false;
   nameSearch = '';
   countrySearch = '';
   goalSearch = '';
@@ -58,10 +58,12 @@ export class CatalogueComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private catalogueService: CatalogueService,
     private buysellService: BuysellService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.userData = this.authenticationService.currentUserSubject.value;
     this.getBusinessList();
     this.radarChartLabels = [
@@ -135,7 +137,7 @@ export class CatalogueComponent implements OnInit {
       this.stakeholdersProvince = this.stakeholders.province;
       this.stakeholdersDistrict = this.stakeholders.district;
       this.stakeholdersMunicipality = this.stakeholders.municipality;
-      this.show = true;
+      this.spinner.hide();
     } else {
       this.unSdg = data.unSdg;
     }

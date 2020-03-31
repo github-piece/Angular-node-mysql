@@ -4,6 +4,7 @@ import {BusinessService} from '../../../_services/business/business.service';
 import {BuysellService} from '../../../_services/buysell/buysell.service';
 import {MatTableDataSource, PageEvent} from '@angular/material';
 import {MatPaginator} from '@angular/material/paginator';
+import {NgxSpinnerService} from 'ngx-spinner';
 @Component({
   selector: 'app-portfolio',
   templateUrl: './portfolio.component.html',
@@ -30,7 +31,6 @@ export class PortfolioComponent implements OnInit {
   tenureList = [];
   goalList = [];
   tableData = [];
-  show = false;
   dataSource: any;
   contractBuySource: any;
   contractSellSource: any;
@@ -46,10 +46,12 @@ export class PortfolioComponent implements OnInit {
   constructor(
     private authenticationService: AuthenticationService,
     private businessService: BusinessService,
-    private buysellService: BuysellService
+    private buysellService: BuysellService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.userData = this.authenticationService.currentUserSubject.value;
     this.getBusinessList(this.userData.userId);
     this.getSellHistory();
@@ -222,7 +224,7 @@ export class PortfolioComponent implements OnInit {
     this.dataSource = part;
     this.contractBuySource = detailPart;
     this.contractSellSource = sellPart;
-    this.show = true;
+    this.spinner.hide();
   }
   handlePage(event?: PageEvent) {
     this.currentPage = event.pageIndex;

@@ -1,4 +1,3 @@
-<!--<div class="loading"><img src="assets/images/loading.gif"></div>-->
 <div class="p-header">Home</div>
 <div class="p-title">Hi, please see what happens!</div>
 <mat-card class="mb-3">
@@ -18,17 +17,17 @@
     </div>
     <agm-map [latitude]="lat" [zoom]="zoom" [longitude]="lng">
       <agm-marker *ngFor="let map of mapData" [latitude]="map.lat" [longitude]="map.lng">
-      <agm-info-window>
-        <div class="feed">
-          <img [src]="map.pic">
-          <div class="content">
-            {{map.name}}<br/>
-            {{map.address}}<br/>
-            <span>by</span> {{map.userName}}
+        <agm-info-window>
+          <div class="feed">
+            <img [src]="map.pic">
+            <div class="content">
+              {{map.name}}<br/>
+              {{map.address}}<br/>
+              <span>by</span> {{map.userName}}
+            </div>
           </div>
-        </div>
-      </agm-info-window>
-    </agm-marker>
+        </agm-info-window>
+      </agm-marker>
     </agm-map>
   </mat-card-content>
 </mat-card>

@@ -4,6 +4,7 @@ import {BusinessService} from '../../../_services/business/business.service';
 import {Server} from '../../../../config/url.service';
 import {MatTableDataSource} from '@angular/material';
 import {MatPaginator} from '@angular/material/paginator';
+import {NgxSpinnerService} from 'ngx-spinner';
 export interface PeriodicElement {
   name: string;
   no: number;
@@ -35,14 +36,17 @@ export class MaindashboardComponent implements OnInit, AfterViewInit {
   businessList = [['treeMap', null, 0, 0]];
   tenureList = [];
   goalList = [];
+  show = false;
   tableData: PeriodicElement[] = [];
   dataSource = new MatTableDataSource<PeriodicElement>(this.tableData);
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   constructor(
     private authenticationService: AuthenticationService,
-    private businessService: BusinessService
+    private businessService: BusinessService,
+    private spinner: NgxSpinnerService
   ) { }
   ngOnInit() {
+    this.spinner.show();
     this.userData = this.authenticationService.currentUserSubject.value;
     this.getBusiness(this.userData.userId);
   }
@@ -187,6 +191,7 @@ export class MaindashboardComponent implements OnInit, AfterViewInit {
   }
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
+    this.spinner.hide();
   }
 }
 

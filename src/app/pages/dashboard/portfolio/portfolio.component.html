@@ -1,74 +1,131 @@
-<div *ngIf="!show">
-  <div class="loading"><img src="assets/images/loading.gif"></div>
-</div>
-<div *ngIf="show">
-  <div class="p-header">Portfolio</div>
-  <div class="p-title">Here are contractions between users</div>
-  <mat-tab-group>
-    <mat-tab label="Portfolio">
-      <div *ngIf="historyList.length" style="overflow: hidden">
-        <mat-card>
-          <mat-card-header>{{charts[0].title}}</mat-card-header>
-          <mat-divider></mat-divider>
-          <google-chart [type]="charts[0].type"
-                        [data]="charts[0].data"
-                        [columnNames]="charts[0].columnNames"
-                        [roles]="charts[0].roles"
-                        [options]="charts[0].options"
-                        style="width: 100%; height: 480px; padding-top: 16px; pointer-events: none"
-          >
-          </google-chart>
-        </mat-card>
-        <div class="row">
-          <div class="col-lg-4">
-            <mat-card>
-              <mat-card-header>{{charts[1].title}}</mat-card-header>
-              <mat-divider></mat-divider>
-              <google-chart [type]="charts[1].type"
-                            [data]="charts[1].data"
-                            [columnNames]="charts[1].columnNames"
-                            [roles]="charts[1].roles"
-                            [options]="charts[1].options"
-                            style="width: 100%;padding-top: 16px; height: 300px"
-              >
-              </google-chart>
-            </mat-card>
-          </div>
-          <div class="col-lg-8">
-            <mat-card>
-              <mat-card-header>{{charts[2].title}}</mat-card-header>
-              <mat-divider></mat-divider>
-              <google-chart [type]="charts[2].type"
-                            [data]="charts[2].data"
-                            [columnNames]="charts[2].columnNames"
-                            [roles]="charts[2].roles"
-                            [options]="charts[2].options"
-                            style="width: 100%; height: 480px; padding-top: 16px"
-              >
-              </google-chart>
-            </mat-card>
-          </div>
+<div class="p-header">Portfolio</div>
+<div class="p-title">Here are contractions between users</div>
+<mat-tab-group>
+  <mat-tab label="Portfolio">
+    <div *ngIf="historyList.length" style="overflow: hidden">
+      <mat-card>
+        <mat-card-header>{{charts[0].title}}</mat-card-header>
+        <mat-divider></mat-divider>
+        <google-chart [type]="charts[0].type"
+                      [data]="charts[0].data"
+                      [columnNames]="charts[0].columnNames"
+                      [roles]="charts[0].roles"
+                      [options]="charts[0].options"
+                      style="width: 100%; height: 480px; padding-top: 16px; pointer-events: none"
+        >
+        </google-chart>
+      </mat-card>
+      <div class="row">
+        <div class="col-lg-4">
+          <mat-card>
+            <mat-card-header>{{charts[1].title}}</mat-card-header>
+            <mat-divider></mat-divider>
+            <google-chart [type]="charts[1].type"
+                          [data]="charts[1].data"
+                          [columnNames]="charts[1].columnNames"
+                          [roles]="charts[1].roles"
+                          [options]="charts[1].options"
+                          style="width: 100%;padding-top: 16px; height: 300px"
+            >
+            </google-chart>
+          </mat-card>
         </div>
-        <mat-card>
-          <mat-card-header>Business List</mat-card-header>
-          <mat-divider></mat-divider>
-          <mat-card-content>
+        <div class="col-lg-8">
+          <mat-card>
+            <mat-card-header>{{charts[2].title}}</mat-card-header>
+            <mat-divider></mat-divider>
+            <google-chart [type]="charts[2].type"
+                          [data]="charts[2].data"
+                          [columnNames]="charts[2].columnNames"
+                          [roles]="charts[2].roles"
+                          [options]="charts[2].options"
+                          style="width: 100%; height: 480px; padding-top: 16px"
+            >
+            </google-chart>
+          </mat-card>
+        </div>
+      </div>
+      <mat-card>
+        <mat-card-header>Business List</mat-card-header>
+        <mat-divider></mat-divider>
+        <mat-card-content>
+          <div class="table-responsive">
+            <table class="mat-table">
+              <thead>
+              <tr>
+                <th>No.</th>
+                <th>Business Name</th>
+                <th>Business Location</th>
+                <th>Business Address</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let task of dataSource">
+                <td>{{task.no}}</td>
+                <td>{{task.name}}</td>
+                <td>{{task.location}}</td>
+                <td>{{task.address}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true" [length]="detailsSize"
+                         [pageIndex]="currentPage" (page)="handlePage($event)">
+          </mat-paginator>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div *ngIf="!historyList.length" class="text-center" style="margin-top: 35vh">
+      <div class="p-title">There is no data!</div>
+    </div>
+  </mat-tab>
+  <mat-tab label="Funders">
+    <div *ngIf="myBusiness.length || historyBuyList.length" style="overflow: hidden">
+      <div class="row">
+        <div class="col-lg-3 col-md-4 col-sm-6" *ngIf="myBusiness.length">
+          <div class="p-title pt-5 mb-0" style="font-size: 1.2em">My Business</div>
+          <mat-card *ngFor="let business of myBusiness">
+            <div class="mat-card-header" style="font-size: 14px">Business Info</div>
+            <mat-divider></mat-divider>
+            <div class="table-responsive">
+              <table class="mat-table">
+                <tr><td>Business Name</td><td>{{business.name}}</td></tr>
+                <tr><td>Business Amount</td><td>{{business.amount}}</td></tr>
+                <tr><td>Business Address</td><td>{{business.address}}</td></tr>
+                <tr><td>Business Country</td><td>{{business.country}}</td></tr>
+              </table>
+            </div>
+          </mat-card>
+        </div>
+        <div *ngIf="!myBusiness.length" class="col-12">
+          <div class="p-title pt-5 mb-0" style="font-size: 1.2em">Contractions</div>
+          <mat-card *ngIf="contractBuySource.length">
+            <mat-card-header>Business List</mat-card-header>
+            <mat-divider></mat-divider>
             <div class="table-responsive">
               <table class="mat-table">
                 <thead>
                 <tr>
-                  <th>No.</th>
+                  <th>Number</th>
+                  <th>Date</th>
                   <th>Business Name</th>
-                  <th>Business Location</th>
-                  <th>Business Address</th>
+                  <th>Amount</th>
+                  <th>Instrument Type</th>
+                  <th>Rate</th>
+                  <th>Next Payment</th>
+                  <th>Frequency of Reporting</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let task of dataSource">
-                  <td>{{task.no}}</td>
-                  <td>{{task.name}}</td>
-                  <td>{{task.location}}</td>
-                  <td>{{task.address}}</td>
+                <tr *ngFor="let detail of contractBuySource; index as index">
+                  <td>{{index+1}}</td>
+                  <td>{{detail.date_created | date:'medium'}}</td>
+                  <td>{{detail.businessName}}</td>
+                  <td>{{detail.amount}}</td>
+                  <td>{{detail.fundtype}}</td>
+                  <td>{{detail.rate}}</td>
+                  <td>{{detail.nextDate | date:'medium'}}</td>
+                  <td>{{detail.frequency}}</td>
                 </tr>
                 </tbody>
               </table>
@@ -76,147 +133,85 @@
             <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true" [length]="detailsSize"
                            [pageIndex]="currentPage" (page)="handlePage($event)">
             </mat-paginator>
-          </mat-card-content>
-        </mat-card>
-      </div>
-      <div *ngIf="!historyList.length" class="text-center" style="margin-top: 35vh">
-        <div class="p-title">There is no data!</div>
-      </div>
-    </mat-tab>
-    <mat-tab label="Funders">
-      <div *ngIf="myBusiness.length || historyBuyList.length" style="overflow: hidden">
-        <div class="row">
-          <div class="col-lg-3 col-md-4 col-sm-6" *ngIf="myBusiness.length">
-            <div class="p-title pt-5 mb-0" style="font-size: 1.2em">My Business</div>
-            <mat-card *ngFor="let business of myBusiness">
-              <div class="mat-card-header" style="font-size: 14px">Business Info</div>
-              <mat-divider></mat-divider>
-              <div class="table-responsive">
-                <table class="mat-table">
-                  <tr><td>Business Name</td><td>{{business.name}}</td></tr>
-                  <tr><td>Business Amount</td><td>{{business.amount}}</td></tr>
-                  <tr><td>Business Address</td><td>{{business.address}}</td></tr>
-                  <tr><td>Business Country</td><td>{{business.country}}</td></tr>
-                </table>
-              </div>
-            </mat-card>
-          </div>
-          <div *ngIf="!myBusiness.length" class="col-12">
-            <div class="p-title pt-5 mb-0" style="font-size: 1.2em">Contractions</div>
-            <mat-card *ngIf="contractBuySource.length">
-              <mat-card-header>Business List</mat-card-header>
-              <mat-divider></mat-divider>
-              <div class="table-responsive">
-                <table class="mat-table">
-                  <thead>
-                  <tr>
-                    <th>Number</th>
-                    <th>Date</th>
-                    <th>Business Name</th>
-                    <th>Amount</th>
-                    <th>Instrument Type</th>
-                    <th>Rate</th>
-                    <th>Next Payment</th>
-                    <th>Frequency of Reporting</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr *ngFor="let detail of contractBuySource; index as index">
-                    <td>{{index+1}}</td>
-                    <td>{{detail.date_created | date:'medium'}}</td>
-                    <td>{{detail.businessName}}</td>
-                    <td>{{detail.amount}}</td>
-                    <td>{{detail.fundtype}}</td>
-                    <td>{{detail.rate}}</td>
-                    <td>{{detail.nextDate | date:'medium'}}</td>
-                    <td>{{detail.frequency}}</td>
-                  </tr>
-                  </tbody>
-                </table>
-              </div>
-              <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true" [length]="detailsSize"
-                             [pageIndex]="currentPage" (page)="handlePage($event)">
-              </mat-paginator>
-            </mat-card>
-          </div>
-          <div class="col-lg-9 col-md-8 col-sm-6" *ngIf="myBusiness.length">
-            <div class="p-title pt-5 mb-0" style="font-size: 1.2em">Contractions</div>
-            <mat-card style="margin-bottom: 32px" *ngIf="contractSellSource.length">
-              <mat-card-header>Contract Sell List</mat-card-header>
-              <mat-divider></mat-divider>
-              <div class="table-responsive">
-                <table class="mat-table">
-                  <thead><tr>
-                    <th>Number</th>
-                    <th>Date</th>
-                    <th>Business Name</th>
-                    <th>User Name</th>
-                    <th>Amount</th>
-                    <th>Instrument Type</th>
-                    <th>Rate</th>
-                    <th>Next Payment</th>
-                    <th>Frequency of Reporting</th>
-                  </tr></thead>
-                  <tbody><tr *ngFor="let sell of contractSellSource; index as index">
-                    <td>{{index+1}}</td>
-                    <td>{{sell.date_created | date:'medium'}}</td>
-                    <td>{{sell.businessName}}</td>
-                    <td>{{sell.userName}}</td>
-                    <td>{{sell.amount}}</td>
-                    <td>{{sell.fundtype}}</td>
-                    <td>{{sell.rate}}</td>
-                    <td>{{sell.nextDate | date:'medium'}}</td>
-                    <td>{{sell.frequency}}</td>
-                  </tr></tbody>
-                </table>
-              </div>
-              <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true" [length]="sellSize"
-                             [pageIndex]="currentPage" (page)="handlePage($event)">
-              </mat-paginator>
-            </mat-card>
-            <mat-card style="margin-bottom: 32px" *ngIf="contractBuySource.length">
-              <mat-card-header>Contract Buy List</mat-card-header>
-              <mat-divider></mat-divider>
-              <div class="table-responsive">
-                <table class="mat-table">
-                  <thead><tr>
-                    <th>Number</th>
-                    <th>Date</th>
-                    <th>Business Name</th>
-                    <th>Amount</th>
-                    <th>Instrument Type</th>
-                    <th>Rate</th>
-                    <th>Next Payment</th>
-                    <th>Frequency of Reporting</th>
-                  </tr></thead>
-                  <tbody><tr *ngFor="let detail of contractBuySource; index as index">
-                    <td>{{index+1}}</td>
-                    <td>{{detail.date_created | date:'medium'}}</td>
-                    <td>
-                      <div *ngIf="detail.ownerId == userData.userId">{{detail.userName}}</div>
-                      <div *ngIf="detail.ownerId != userData.userId">{{detail.businessName}}</div>
-                    </td>
-                    <td>{{detail.amount}}</td>
-                    <td>{{detail.fundtype}}</td>
-                    <td>{{detail.rate}}</td>
-                    <td>{{detail.nextDate | date:'medium'}}</td>
-                    <td>{{detail.frequency}}</td>
-                  </tr></tbody>
-                </table>
-              </div>
-              <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true" [length]="detailsSize"
-                             [pageIndex]="currentPage" (page)="handlePage($event)">
-              </mat-paginator>
-            </mat-card>
-            <div *ngIf="myBusiness.length && !historyBuyList.length && !historySellList.length" class="text-center" style="margin-top: 30vh">
-              <div class="p-title">There is no data!</div>
+          </mat-card>
+        </div>
+        <div class="col-lg-9 col-md-8 col-sm-6" *ngIf="myBusiness.length">
+          <div class="p-title pt-5 mb-0" style="font-size: 1.2em">Contractions</div>
+          <mat-card style="margin-bottom: 32px" *ngIf="contractSellSource.length">
+            <mat-card-header>Contract Sell List</mat-card-header>
+            <mat-divider></mat-divider>
+            <div class="table-responsive">
+              <table class="mat-table">
+                <thead><tr>
+                  <th>Number</th>
+                  <th>Date</th>
+                  <th>Business Name</th>
+                  <th>User Name</th>
+                  <th>Amount</th>
+                  <th>Instrument Type</th>
+                  <th>Rate</th>
+                  <th>Next Payment</th>
+                  <th>Frequency of Reporting</th>
+                </tr></thead>
+                <tbody><tr *ngFor="let sell of contractSellSource; index as index">
+                  <td>{{index+1}}</td>
+                  <td>{{sell.date_created | date:'medium'}}</td>
+                  <td>{{sell.businessName}}</td>
+                  <td>{{sell.userName}}</td>
+                  <td>{{sell.amount}}</td>
+                  <td>{{sell.fundtype}}</td>
+                  <td>{{sell.rate}}</td>
+                  <td>{{sell.nextDate | date:'medium'}}</td>
+                  <td>{{sell.frequency}}</td>
+                </tr></tbody>
+              </table>
             </div>
+            <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true" [length]="sellSize"
+                           [pageIndex]="currentPage" (page)="handlePage($event)">
+            </mat-paginator>
+          </mat-card>
+          <mat-card style="margin-bottom: 32px" *ngIf="contractBuySource.length">
+            <mat-card-header>Contract Buy List</mat-card-header>
+            <mat-divider></mat-divider>
+            <div class="table-responsive">
+              <table class="mat-table">
+                <thead><tr>
+                  <th>Number</th>
+                  <th>Date</th>
+                  <th>Business Name</th>
+                  <th>Amount</th>
+                  <th>Instrument Type</th>
+                  <th>Rate</th>
+                  <th>Next Payment</th>
+                  <th>Frequency of Reporting</th>
+                </tr></thead>
+                <tbody><tr *ngFor="let detail of contractBuySource; index as index">
+                  <td>{{index+1}}</td>
+                  <td>{{detail.date_created | date:'medium'}}</td>
+                  <td>
+                    <div *ngIf="detail.ownerId == userData.userId">{{detail.userName}}</div>
+                    <div *ngIf="detail.ownerId != userData.userId">{{detail.businessName}}</div>
+                  </td>
+                  <td>{{detail.amount}}</td>
+                  <td>{{detail.fundtype}}</td>
+                  <td>{{detail.rate}}</td>
+                  <td>{{detail.nextDate | date:'medium'}}</td>
+                  <td>{{detail.frequency}}</td>
+                </tr></tbody>
+              </table>
+            </div>
+            <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true" [length]="detailsSize"
+                           [pageIndex]="currentPage" (page)="handlePage($event)">
+            </mat-paginator>
+          </mat-card>
+          <div *ngIf="myBusiness.length && !historyBuyList.length && !historySellList.length" class="text-center" style="margin-top: 30vh">
+            <div class="p-title">There is no data!</div>
           </div>
         </div>
       </div>
-      <div *ngIf="!myBusiness.length && !historyBuyList.length && !historySellList.length" class="text-center" style="margin-top: 35vh">
-        <div class="p-title">There is no data!</div>
-      </div>
-    </mat-tab>
-  </mat-tab-group>
-</div>
+    </div>
+    <div *ngIf="!myBusiness.length && !historyBuyList.length && !historySellList.length" class="text-center" style="margin-top: 35vh">
+      <div class="p-title">There is no data!</div>
+    </div>
+  </mat-tab>
+</mat-tab-group>

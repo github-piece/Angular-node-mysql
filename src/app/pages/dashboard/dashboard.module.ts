@@ -43,6 +43,7 @@ import {ChartsModule} from 'ng2-charts';
 import {BuymodalComponent} from './catalogue/catalogue.component';
 import {UserCreateModalComponent} from './userpage/usercreate.component';
 import {ImageCropperModule} from 'ngx-image-cropper';
+import {NgxSpinnerModule} from 'ngx-spinner';
 
 @NgModule({
   declarations: [
@@ -90,7 +91,8 @@ import {ImageCropperModule} from 'ngx-image-cropper';
     ChartsModule,
     MatCheckboxModule,
     MatSlideToggleModule,
-    ImageCropperModule
+    ImageCropperModule,
+    NgxSpinnerModule
   ],
   exports: [
     TopNavbarComponent,

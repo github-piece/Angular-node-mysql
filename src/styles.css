@@ -7845,12 +7845,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .arrow-none .carousel-control-next, .carousel-control-prev{display: none!important;}
 .testimonial-area .carousel-indicators {bottom: -50px!important;}.testimonial-area .carousel-indicators li{}
 button:active, button:focus {outline:0;border:none;-moz-outline-style:none;}
-.loading {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
 .p-header {
   font-size: 11px;
   font-weight: 500;

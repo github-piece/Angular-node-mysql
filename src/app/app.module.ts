@@ -25,6 +25,7 @@ import {GoogleChartsModule} from 'angular-google-charts';
 import {AgmCoreModule} from '@agm/core';
 import {MatTableModule} from '@angular/material/table';
 import {ChartsModule} from 'ng2-charts';
+import {NgxSpinnerModule} from 'ngx-spinner';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import {ChartsModule} from 'ng2-charts';
     AgmCoreModule.forRoot({apiKey: 'AIzaSyA6L4RK2RH8CmfPnyV1VEfjrHj3BP66gmE'}),
     MatTableModule,
     MatPaginatorModule,
-    ChartsModule
+    ChartsModule,
+    NgxSpinnerModule
   ],
   providers: [],
   bootstrap: [AppComponent]

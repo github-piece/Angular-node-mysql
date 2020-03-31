@@ -1,604 +1,599 @@
-<div *ngIf="!show">
-  <div class="loading"><img src="assets/images/loading.gif" alt="loading"/></div>
+<div class="p-header">Catalogue</div>
+<div class="p-title">Here are all businesses</div>
+<div class="row search-box">
+  <mat-form-field class="col-md-6">
+    <mat-label>Name</mat-label>
+    <mat-select>
+      <mat-option *ngFor="let businessName of mainBusiness" [value]="businessName['business name']" (click)="businessSearch(businessName['business name'], countrySearch, goalSearch)">
+        {{businessName['business name']}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="col-md-3">
+    <mat-label>Country</mat-label>
+    <mat-select>
+      <mat-option *ngFor="let countryName of countryList" [value]="countryName['country']" (click)="businessSearch(nameSearch, countryName['country'], goalSearch)">
+        {{countryName['country']}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="col-md-3">
+    <mat-label>Goal</mat-label>
+    <mat-select>
+      <mat-option *ngFor="let goalName of goalList" [value]="goalName['goal_name']" (click)="businessSearch(nameSearch, countrySearch, goalName['goal_name'])">
+        {{goalName['goal_name']}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
 </div>
-<div *ngIf="show">
-  <div class="p-header">Catalogue</div>
-  <div class="p-title">Here are all businesses</div>
-  <div class="row search-box">
-    <mat-form-field class="col-md-6">
-      <mat-label>Name</mat-label>
-      <mat-select>
-        <mat-option *ngFor="let businessName of mainBusiness" [value]="businessName['business name']" (click)="businessSearch(businessName['business name'], countrySearch, goalSearch)">
-          {{businessName['business name']}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field class="col-md-3">
-      <mat-label>Country</mat-label>
-      <mat-select>
-        <mat-option *ngFor="let countryName of countryList" [value]="countryName['country']" (click)="businessSearch(nameSearch, countryName['country'], goalSearch)">
-          {{countryName['country']}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field class="col-md-3">
-      <mat-label>Goal</mat-label>
-      <mat-select>
-        <mat-option *ngFor="let goalName of goalList" [value]="goalName['goal_name']" (click)="businessSearch(nameSearch, countrySearch, goalName['goal_name'])">
-          {{goalName['goal_name']}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
-  <div *ngIf="businessMatch">
-    <ul>
-      <li *ngFor="let business of showBusiness | paginate: { itemsPerPage: 10, currentPage: p } let index = index">
-        <mat-accordion>
-          <mat-expansion-panel class="my-2">
-            <mat-expansion-panel-header>
-              <mat-panel-title class="mat-card-header p-0">{{business['business name']}}</mat-panel-title>
-            </mat-expansion-panel-header>
-            <div class="text-right">
-              <div class="mat-card-header d-block">Total {{amount[index]}} : {{business["how much they're raising"]}} remaining...</div>
-            </div>
-            <div class="mb-4">
-              <button mat-raised-button class="float-left" [matMenuTriggerFor]="submenu" style="font-size: 18px">
-                <mat-icon>menu</mat-icon>
+<div *ngIf="businessMatch">
+  <ul>
+    <li *ngFor="let business of showBusiness | paginate: { itemsPerPage: 10, currentPage: p } let index = index">
+      <mat-accordion>
+        <mat-expansion-panel class="my-2">
+          <mat-expansion-panel-header>
+            <mat-panel-title class="mat-card-header p-0">{{business['business name']}}</mat-panel-title>
+          </mat-expansion-panel-header>
+          <div class="text-right">
+            <div class="mat-card-header d-block">Total {{amount[index]}} : {{business["how much they're raising"]}} remaining...</div>
+          </div>
+          <div class="mb-4">
+            <button mat-raised-button class="float-left" [matMenuTriggerFor]="submenu" style="font-size: 18px">
+              <mat-icon>menu</mat-icon>
+            </button>
+            <mat-menu #submenu="matMenu">
+              <button mat-menu-item (click)="groupShow(0)">Business Summary</button>
+              <button mat-menu-item (click)="groupShow(1)">Financial Summary</button>
+              <button mat-menu-item (click)="groupShow(2)">Sustainability Measures</button>
+              <button mat-menu-item (click)="groupShow(3)">Scoring Summary</button>
+              <button mat-menu-item (click)="groupShow(4)">Funding Channels</button>
+              <button mat-menu-item (click)="groupShow(5)">Badges</button>
+            </mat-menu>
+            <div class="mat-card-header pb-0 text-right d-block">
+              <button mat-raised-button color="primary" (click)="catalogueService.populateForm()">
+                Edit
+              </button>&nbsp;
+              <button mat-raised-button (click)="onDelete()">
+                Delete
               </button>
-              <mat-menu #submenu="matMenu">
-                <button mat-menu-item (click)="groupShow(0)">Business Summary</button>
-                <button mat-menu-item (click)="groupShow(1)">Financial Summary</button>
-                <button mat-menu-item (click)="groupShow(2)">Sustainability Measures</button>
-                <button mat-menu-item (click)="groupShow(3)">Scoring Summary</button>
-                <button mat-menu-item (click)="groupShow(4)">Funding Channels</button>
-                <button mat-menu-item (click)="groupShow(5)">Badges</button>
-              </mat-menu>
-              <div class="mat-card-header pb-0 text-right d-block">
-                <button mat-raised-button color="primary" (click)="catalogueService.populateForm()">
-                  Edit
-                </button>&nbsp;
-                <button mat-raised-button (click)="onDelete()">
-                  Delete
-                </button>
-              </div>
             </div>
-            <mat-tab-group *ngIf="tabNum == 0">
-              <mat-tab label="Business Information">
-                <div style="overflow: hidden">
-                  <div class="row mt-2" >
-                    <div class="col-lg-5 text-center d-block">
-                      <img src="{{mainBusiness[index]['image for front page']}}" alt="Business Image" class="bg"/>
+          </div>
+          <mat-tab-group *ngIf="tabNum == 0">
+            <mat-tab label="Business Information">
+              <div style="overflow: hidden">
+                <div class="row mt-2" >
+                  <div class="col-lg-5 text-center d-block">
+                    <img src="{{mainBusiness[index]['image for front page']}}" alt="Business Image" class="bg"/>
+                  </div>
+                  <div class="col-lg-7">
+                    <div class="table-responsive">
+                      <table class="mat-table">
+                        <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+                        <tbody>
+                        <tr><td>Business Name:</td><td>{{business['business name']}}</td></tr>
+                        <tr><td>Listing Date:</td><td>{{business['date completed']}}</td></tr>
+                        <tr><td>ShortName:</td><td>{{business['short name']}}</td></tr>
+                        <tr><td>Sector:</td><td>{{business['sector']}}</td></tr>
+                        <tr><td>Number of employees:</td><td>{{business['number of employees']}}</td></tr>
+                        <tr><td>Is company registered?</td><td>{{business['registration status']}}</td></tr>
+                        <tr><td>Amount they are seeking:</td><td>{{business['how much they\'re raising']}}</td></tr>
+                        <tr><td>Year's in business:</td><td>{{business['years in business']}}</td></tr>
+                        <tr><td>Tenure to see return on:</td><td>{{business['tenure to see return']}}</td></tr>
+                        </tbody>
+                      </table>
                     </div>
-                    <div class="col-lg-7">
-                      <div class="table-responsive">
-                        <table class="mat-table">
-                          <thead><tr><th>Metric</th><th>Value</th></tr></thead>
-                          <tbody>
-                          <tr><td>Business Name:</td><td>{{business['business name']}}</td></tr>
-                          <tr><td>Listing Date:</td><td>{{business['date completed']}}</td></tr>
-                          <tr><td>ShortName:</td><td>{{business['short name']}}</td></tr>
-                          <tr><td>Sector:</td><td>{{business['sector']}}</td></tr>
-                          <tr><td>Number of employees:</td><td>{{business['number of employees']}}</td></tr>
-                          <tr><td>Is company registered?</td><td>{{business['registration status']}}</td></tr>
-                          <tr><td>Amount they are seeking:</td><td>{{business['how much they\'re raising']}}</td></tr>
-                          <tr><td>Year's in business:</td><td>{{business['years in business']}}</td></tr>
-                          <tr><td>Tenure to see return on:</td><td>{{business['tenure to see return']}}</td></tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
                   </div>
                 </div>
-              </mat-tab>
-            </mat-tab-group>
-            <mat-tab-group *ngIf="tabNum == 1">
-              <mat-tab label="Financial Information">
-                <div style="overflow: hidden">
-                  <div class="table-responsive">
-                    <table class="mat-table">
-                      <thead>
-                      <tr>
-                        <th>Metric</th>
-                        <th>Value</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      <tr>
-                        <td>Number of employees:</td>
-                        <td>{{business['number of employees']}}</td>
-                      </tr>
-                      <tr>
-                        <td>Average Wages</td>
-                        <td>{{round(business['average wages'])}}</td>
-                      </tr>
-                      <tr>
-                        <td>Annual Sales Forecast</td>
-                        <td>{{round(business['annual sales forecast'])}}</td>
-                      </tr>
-                      <tr>
-                        <td>Total Asset Turnover</td>
-                        <td>{{round(business['total asset turnover'])}}</td>
-                      </tr>
-                      <tr>
-                        <td>Fixed Asset Turnover</td>
-                        <td>{{round(business['fixed asset turnover'])}}</td>
-                      </tr>
-                      <tr>
-                        <td>Inventory Turnover:I think wrong8</td>
-                        <td>{{round(business['inventory turnover'])}}</td>
-                      </tr>
-                      <tr>
-                        <td>Current Ratio</td>
-                        <td>{{round(business['current ratio'])}}</td>
-                      </tr>
-                      <tr>
-                        <td>Cash Ratio</td>
-                        <td>{{round(business['cash ratio'])}}</td>
-                      </tr>
-                      <tr>
-                        <td>Defensive Interval</td>
-                        <td>{{round(business['defensive interval'])}}</td>
-                      </tr>
-                      <tr>
-                        <td>Debt-to-Equity</td>
-                        <td>{{round(business['debt-to-equity'])}}</td>
-                      </tr>
-                      <tr>
-                        <td>Debt-to-Asset</td>
-                        <td>{{round(business['debt-to-asset'])}}</td>
-                      </tr>
-                      <tr>
-                        <td>Cash Conversion Cycle</td>
-                        <td>{{round(business['cash conversion cycle'])}}</td>
-                      </tr>
-                      <tr>
-                        <td>Net Profit Margin</td>
-                        <td>{{round(business['net profit margin'])}}</td>
-                      </tr>
-                      <tr>
-                        <td>Gross Margin</td>
-                        <td>{{round(business['gross margin'])}}</td>
-                      </tr>
-                      <tr>
-                        <td>Annual Projected CoGS</td>
-                        <td>{{round(business['annual projected cogs'])}}</td>
-                      </tr>
-                      <tr>
-                        <td>Return on Assets</td>
-                        <td>{{round(business['return on assets'])}}</td>
-                      </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </mat-tab>
-              <mat-tab label="Balance Sheet">
-                <div style="overflow: hidden">
-                  <div class="table-responsive">
-                    <table class="mat-table">
-                      <thead>
-                      <tr>
-                        <th>Item Type</th>
-                        <th>Amount</th>
-                        <th>Date Submitted</th>
-                        <th>Comments</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      <tr>
-                        <td>Current Asset</td>
-                        <td>{{round(business['current assets'])}}</td>
-                        <td>{{business['date completed']}}</td>
-                        <td><button mat-raised-button color="primary">Button 1</button></td>
-                      </tr>
-                      <tr>
-                        <td>Non - Current Asset</td>
-                        <td>{{round(business['non-current assets'])}}</td>
-                        <td>{{business['date completed']}}</td>
-                        <td><button mat-raised-button color="primary">Button 2</button></td>
-                      </tr>
-                      <tr>
-                        <td>Total Asset</td>
-                        <td>{{round(business['total assets'])}}</td>
-                        <td>{{business['date completed']}}</td>
-                        <td><button mat-raised-button color="primary">Button 2</button></td>
-                      </tr>
-                      <tr>
-                        <td>Current Liability</td>
-                        <td>{{round(business['current liabilities'])}}</td>
-                        <td>{{business['date completed']}}</td>
-                        <td><button mat-raised-button color="primary">Button 2</button></td>
-                      </tr>
-                      <tr>
-                        <td>Non - Current Liability</td>
-                        <td>{{round(business['non-current liabilities'])}}</td>
-                        <td>{{business['date completed']}}</td>
-                        <td><button mat-raised-button color="primary">Button 2</button></td>
-                      </tr>
-                      <tr>
-                        <td>Total Liability</td>
-                        <td>{{round(business['total liabilites'])}}</td>
-                        <td>{{business['date completed']}}</td>
-                        <td><button mat-raised-button color="primary">Button 2</button></td>
-                      </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </mat-tab>
-              <mat-tab label="Income Statement">
-                <div style="overflow: hidden">
-                  <div class="table-responsive">
-                    <table class="mat-table">
-                      <thead>
-                      <tr>
-                        <th>Income State Items</th>
-                        <th>Amount</th>
-                        <th>Comments</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      <tr *ngFor="let item of mainBusiness[index]['income items'].split(','); let item_index = index;">
-                        <td>{{item}}</td>
-                        <td>{{round(mainBusiness[index]['income amounts'].split(',')[item_index])}}</td>
-                        <td><button mat-raised-button color="primary">Button 1</button></td>
-                      </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </mat-tab>
-              <mat-tab label="Cash Flow Statement">
-                <div style="overflow: hidden">
-                  <div class="table-responsive">
-                    <table class="mat-table">
-                      <thead>
-                      <tr>
-                        <th>Cash Flow Items</th>
-                        <th>Amount</th>
-                        <th>Comments</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      <tr>
-                        <td>Cash Paid for Operational Reasons</td>
-                        <td>{{business['cash paid for operational reasons']}}</td>
-                        <td><button mat-raised-button color="primary">Button 1</button></td>
-                      </tr>
-                      <tr>
-                        <td>Cash Paid for Investing Activities</td>
-                        <td>{{business['cash paid for investing activities']}}</td>
-                        <td><button mat-raised-button color="primary">Button 1</button></td>
-                      </tr>
-                      <tr>
-                        <td>Cash Paid for Financing Activities</td>
-                        <td>{{business['cash paid for financing activities']}}</td>
-                        <td><button mat-raised-button color="primary">Button 1</button></td>
-                      </tr>
-                      <tr>
-                        <td>Cash Received from Operations</td>
-                        <td>{{business['cash received from operations']}}</td>
-                        <td><button mat-raised-button color="primary">Button 1</button></td>
-                      </tr>
-                      <tr>
-                        <td>Cash Received from Investing Activities</td>
-                        <td>{{business['cash received from investing activities']}}</td>
-                        <td><button mat-raised-button color="primary">Button 1</button></td>
-                      </tr>
-                      <tr>
-                        <td>Cash Received from Financing Activities</td>
-                        <td>{{business['cash received from financing activities']}}</td>
-                        <td><button mat-raised-button color="primary">Button 1</button></td>
-                      </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </mat-tab>
-            </mat-tab-group>
-            <mat-tab-group *ngIf="tabNum == 2">
-              <mat-tab label="UN SDG's">
-                <div style="overflow: hidden"><div class="table-responsive">
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+          <mat-tab-group *ngIf="tabNum == 1">
+            <mat-tab label="Financial Information">
+              <div style="overflow: hidden">
+                <div class="table-responsive">
                   <table class="mat-table">
                     <thead>
                     <tr>
-                      <th>Symbol</th>
-                      <th>Goal Number</th>
-                      <th>Goal Description</th>
-                      <th>Comment</th>
-                      <th>Scout Comment</th>
+                      <th>Metric</th>
+                      <th>Value</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <ng-container *ngIf="unSdg.length">
-                      <tr *ngFor="let unSdg_path of unSdg[index]['path']; let sdg_index = index;">
-                        <td><img [src]="'assets/catalogue/'+unSdg_path" alt="unSdg" style="width: 80px"></td>
-                        <td>{{unSdg[index]['goal_number'][sdg_index]}}</td>
-                        <td>{{unSdg[index]['goal_description'][sdg_index]}}</td>
-                        <td><button mat-raised-button color="primary">Button 1</button></td>
-                        <td><button mat-raised-button color="primary">Button 1</button></td>
-                      </tr>
-                    </ng-container>
+                    <tr>
+                      <td>Number of employees:</td>
+                      <td>{{business['number of employees']}}</td>
+                    </tr>
+                    <tr>
+                      <td>Average Wages</td>
+                      <td>{{round(business['average wages'])}}</td>
+                    </tr>
+                    <tr>
+                      <td>Annual Sales Forecast</td>
+                      <td>{{round(business['annual sales forecast'])}}</td>
+                    </tr>
+                    <tr>
+                      <td>Total Asset Turnover</td>
+                      <td>{{round(business['total asset turnover'])}}</td>
+                    </tr>
+                    <tr>
+                      <td>Fixed Asset Turnover</td>
+                      <td>{{round(business['fixed asset turnover'])}}</td>
+                    </tr>
+                    <tr>
+                      <td>Inventory Turnover:I think wrong8</td>
+                      <td>{{round(business['inventory turnover'])}}</td>
+                    </tr>
+                    <tr>
+                      <td>Current Ratio</td>
+                      <td>{{round(business['current ratio'])}}</td>
+                    </tr>
+                    <tr>
+                      <td>Cash Ratio</td>
+                      <td>{{round(business['cash ratio'])}}</td>
+                    </tr>
+                    <tr>
+                      <td>Defensive Interval</td>
+                      <td>{{round(business['defensive interval'])}}</td>
+                    </tr>
+                    <tr>
+                      <td>Debt-to-Equity</td>
+                      <td>{{round(business['debt-to-equity'])}}</td>
+                    </tr>
+                    <tr>
+                      <td>Debt-to-Asset</td>
+                      <td>{{round(business['debt-to-asset'])}}</td>
+                    </tr>
+                    <tr>
+                      <td>Cash Conversion Cycle</td>
+                      <td>{{round(business['cash conversion cycle'])}}</td>
+                    </tr>
+                    <tr>
+                      <td>Net Profit Margin</td>
+                      <td>{{round(business['net profit margin'])}}</td>
+                    </tr>
+                    <tr>
+                      <td>Gross Margin</td>
+                      <td>{{round(business['gross margin'])}}</td>
+                    </tr>
+                    <tr>
+                      <td>Annual Projected CoGS</td>
+                      <td>{{round(business['annual projected cogs'])}}</td>
+                    </tr>
+                    <tr>
+                      <td>Return on Assets</td>
+                      <td>{{round(business['return on assets'])}}</td>
+                    </tr>
                     </tbody>
                   </table>
-                </div></div>
-              </mat-tab>
-              <mat-tab label="Interactions">
-                <div style="overflow: hidden"><ng-container *ngIf="unSdg.length && interactions.length">
-                  <div class="row">
-                    <div class="col-lg-3">
-                      <div class="mat-card-header mt-4 pb-2">*Please select goal interaction.</div>
-                      <mat-form-field class="mt-1 w-100" *ngFor="let goal_number of unSdg[index]['goal_number']">
-                        <mat-label>{{goal_number}} Interaction</mat-label>
-                        <mat-select>
-                          <mat-option *ngFor="let interaction of interactions[index][goal_number]; let goal_index = index;" value="" (click)="explain_content(goal_index, goal_number)">
-                            {{interaction['goal_main']}}  -  {{interaction['goal_alternative_1']}}
-                          </mat-option>
-                        </mat-select>
-                      </mat-form-field>
-                    </div>
-                    <div class="col-lg-9">
-                      <div *ngFor="let interactionItem of interactions[index] | keyvalue" class="mt-4">
-                        <ng-container *ngFor="let interaction of interactionItem.value ; let goal_index = index;">
-                          <ng-container *ngIf="(explainNumber==interactionItem.key)&&(explainIndex==goal_index)">
-                            <ng-container *ngFor="let interact of interaction| keyvalue">
-                              <ng-container *ngIf="interact.value">
-                                <div class="mat-card-header">- {{interact.key}}</div>
-                                <p>{{interact.value}}</p>
-                              </ng-container>
+                </div>
+              </div>
+            </mat-tab>
+            <mat-tab label="Balance Sheet">
+              <div style="overflow: hidden">
+                <div class="table-responsive">
+                  <table class="mat-table">
+                    <thead>
+                    <tr>
+                      <th>Item Type</th>
+                      <th>Amount</th>
+                      <th>Date Submitted</th>
+                      <th>Comments</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                      <td>Current Asset</td>
+                      <td>{{round(business['current assets'])}}</td>
+                      <td>{{business['date completed']}}</td>
+                      <td><button mat-raised-button color="primary">Button 1</button></td>
+                    </tr>
+                    <tr>
+                      <td>Non - Current Asset</td>
+                      <td>{{round(business['non-current assets'])}}</td>
+                      <td>{{business['date completed']}}</td>
+                      <td><button mat-raised-button color="primary">Button 2</button></td>
+                    </tr>
+                    <tr>
+                      <td>Total Asset</td>
+                      <td>{{round(business['total assets'])}}</td>
+                      <td>{{business['date completed']}}</td>
+                      <td><button mat-raised-button color="primary">Button 2</button></td>
+                    </tr>
+                    <tr>
+                      <td>Current Liability</td>
+                      <td>{{round(business['current liabilities'])}}</td>
+                      <td>{{business['date completed']}}</td>
+                      <td><button mat-raised-button color="primary">Button 2</button></td>
+                    </tr>
+                    <tr>
+                      <td>Non - Current Liability</td>
+                      <td>{{round(business['non-current liabilities'])}}</td>
+                      <td>{{business['date completed']}}</td>
+                      <td><button mat-raised-button color="primary">Button 2</button></td>
+                    </tr>
+                    <tr>
+                      <td>Total Liability</td>
+                      <td>{{round(business['total liabilites'])}}</td>
+                      <td>{{business['date completed']}}</td>
+                      <td><button mat-raised-button color="primary">Button 2</button></td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </mat-tab>
+            <mat-tab label="Income Statement">
+              <div style="overflow: hidden">
+                <div class="table-responsive">
+                  <table class="mat-table">
+                    <thead>
+                    <tr>
+                      <th>Income State Items</th>
+                      <th>Amount</th>
+                      <th>Comments</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let item of mainBusiness[index]['income items'].split(','); let item_index = index;">
+                      <td>{{item}}</td>
+                      <td>{{round(mainBusiness[index]['income amounts'].split(',')[item_index])}}</td>
+                      <td><button mat-raised-button color="primary">Button 1</button></td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </mat-tab>
+            <mat-tab label="Cash Flow Statement">
+              <div style="overflow: hidden">
+                <div class="table-responsive">
+                  <table class="mat-table">
+                    <thead>
+                    <tr>
+                      <th>Cash Flow Items</th>
+                      <th>Amount</th>
+                      <th>Comments</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                      <td>Cash Paid for Operational Reasons</td>
+                      <td>{{business['cash paid for operational reasons']}}</td>
+                      <td><button mat-raised-button color="primary">Button 1</button></td>
+                    </tr>
+                    <tr>
+                      <td>Cash Paid for Investing Activities</td>
+                      <td>{{business['cash paid for investing activities']}}</td>
+                      <td><button mat-raised-button color="primary">Button 1</button></td>
+                    </tr>
+                    <tr>
+                      <td>Cash Paid for Financing Activities</td>
+                      <td>{{business['cash paid for financing activities']}}</td>
+                      <td><button mat-raised-button color="primary">Button 1</button></td>
+                    </tr>
+                    <tr>
+                      <td>Cash Received from Operations</td>
+                      <td>{{business['cash received from operations']}}</td>
+                      <td><button mat-raised-button color="primary">Button 1</button></td>
+                    </tr>
+                    <tr>
+                      <td>Cash Received from Investing Activities</td>
+                      <td>{{business['cash received from investing activities']}}</td>
+                      <td><button mat-raised-button color="primary">Button 1</button></td>
+                    </tr>
+                    <tr>
+                      <td>Cash Received from Financing Activities</td>
+                      <td>{{business['cash received from financing activities']}}</td>
+                      <td><button mat-raised-button color="primary">Button 1</button></td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+          <mat-tab-group *ngIf="tabNum == 2">
+            <mat-tab label="UN SDG's">
+              <div style="overflow: hidden"><div class="table-responsive">
+                <table class="mat-table">
+                  <thead>
+                  <tr>
+                    <th>Symbol</th>
+                    <th>Goal Number</th>
+                    <th>Goal Description</th>
+                    <th>Comment</th>
+                    <th>Scout Comment</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <ng-container *ngIf="unSdg.length">
+                    <tr *ngFor="let unSdg_path of unSdg[index]['path']; let sdg_index = index;">
+                      <td><img [src]="'assets/catalogue/'+unSdg_path" alt="unSdg" style="width: 80px"></td>
+                      <td>{{unSdg[index]['goal_number'][sdg_index]}}</td>
+                      <td>{{unSdg[index]['goal_description'][sdg_index]}}</td>
+                      <td><button mat-raised-button color="primary">Button 1</button></td>
+                      <td><button mat-raised-button color="primary">Button 1</button></td>
+                    </tr>
+                  </ng-container>
+                  </tbody>
+                </table>
+              </div></div>
+            </mat-tab>
+            <mat-tab label="Interactions">
+              <div style="overflow: hidden"><ng-container *ngIf="unSdg.length && interactions.length">
+                <div class="row">
+                  <div class="col-lg-3">
+                    <div class="mat-card-header mt-4 pb-2">*Please select goal interaction.</div>
+                    <mat-form-field class="mt-1 w-100" *ngFor="let goal_number of unSdg[index]['goal_number']">
+                      <mat-label>{{goal_number}} Interaction</mat-label>
+                      <mat-select>
+                        <mat-option *ngFor="let interaction of interactions[index][goal_number]; let goal_index = index;" value="" (click)="explain_content(goal_index, goal_number)">
+                          {{interaction['goal_main']}}  -  {{interaction['goal_alternative_1']}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-lg-9">
+                    <div *ngFor="let interactionItem of interactions[index] | keyvalue" class="mt-4">
+                      <ng-container *ngFor="let interaction of interactionItem.value ; let goal_index = index;">
+                        <ng-container *ngIf="(explainNumber==interactionItem.key)&&(explainIndex==goal_index)">
+                          <ng-container *ngFor="let interact of interaction| keyvalue">
+                            <ng-container *ngIf="interact.value">
+                              <div class="mat-card-header">- {{interact.key}}</div>
+                              <p>{{interact.value}}</p>
                             </ng-container>
                           </ng-container>
                         </ng-container>
-                      </div>
+                      </ng-container>
                     </div>
                   </div>
-                </ng-container></div>
-              </mat-tab>
-              <mat-tab label="Stakeholders">
-                <div *ngIf="stakeholders" style="overflow: hidden">
-                  <div class="row">
-                    <div class="my-2 col-lg-2 btn_stake_group">
-                      <button mat-raised-button color="primary" class="w-100" (click)="explain_content('stake_country',index)">Country</button>
-                      <button mat-raised-button color="primary" class="w-100" (click)="explain_content('stake_button_3', index)">Button 3</button>
-                      <button mat-raised-button color="primary" class="w-100" (click)="explain_content('stake_button_4', index)">Button 4</button>
-                      <button mat-raised-button color="primary" class="w-100" (click)="explain_content('stake_consideration', index)">Considerations</button>
-                      <button mat-raised-button color="primary" class="w-100" (click)="explain_content('Province', index)">Province</button>
-                      <button mat-raised-button color="primary" class="w-100" (click)="explain_content('District', index)">District</button>
-                      <button mat-raised-button color="primary" class="w-100" (click)="explain_content('Municipality', index)">Municipality</button>
+                </div>
+              </ng-container></div>
+            </mat-tab>
+            <mat-tab label="Stakeholders">
+              <div *ngIf="stakeholders" style="overflow: hidden">
+                <div class="row">
+                  <div class="my-2 col-lg-2 btn_stake_group">
+                    <button mat-raised-button color="primary" class="w-100" (click)="explain_content('stake_country',index)">Country</button>
+                    <button mat-raised-button color="primary" class="w-100" (click)="explain_content('stake_button_3', index)">Button 3</button>
+                    <button mat-raised-button color="primary" class="w-100" (click)="explain_content('stake_button_4', index)">Button 4</button>
+                    <button mat-raised-button color="primary" class="w-100" (click)="explain_content('stake_consideration', index)">Considerations</button>
+                    <button mat-raised-button color="primary" class="w-100" (click)="explain_content('Province', index)">Province</button>
+                    <button mat-raised-button color="primary" class="w-100" (click)="explain_content('District', index)">District</button>
+                    <button mat-raised-button color="primary" class="w-100" (click)="explain_content('Municipality', index)">Municipality</button>
+                  </div>
+                  <div class="my-2 col-lg-6">
+                    <ng-container *ngIf="(explainIndex=='stake_country')&&(explainNumber==index)&&stakeholdersCountry">
+                      <ng-container *ngFor="let stakeholder_country_item of stakeholdersCountry[index]">
+                        <ng-container *ngIf="stakeholder_country_item">
+                          <ng-container *ngFor="let item of stakeholder_country_item|keyvalue">
+                            <h5>- {{item.key}}.</h5>
+                            <p>{{item.value}}</p>
+                          </ng-container>
+                        </ng-container>
+                      </ng-container>
+                    </ng-container>
+                    <ng-container *ngIf="(explainIndex=='stake_button_3')&&(explainNumber==index)&&stakeholdersButton3">
+                      <ng-container *ngFor="let stakeholder_button3_item of stakeholdersButton3[index]">
+                        <ng-container *ngIf="stakeholder_button3_item">
+                          <ng-container *ngFor="let item of stakeholder_button3_item | keyvalue">
+                            <h5>- {{item.key}}.</h5>
+                            <p>{{item.value}}</p>
+                          </ng-container>
+                        </ng-container>
+                      </ng-container>
+                    </ng-container>
+                    <ng-container *ngIf="(explainIndex=='stake_button_4')&&(explainNumber==index)&&stakeholdersButton4">
+                      <ng-container *ngFor="let stakeholder_button4_item of stakeholdersButton4[index]">
+                        <ng-container *ngIf="stakeholder_button4_item">
+                          <ng-container *ngFor="let item of stakeholder_button4_item|keyvalue">
+                            <h5>- {{item.key}}.</h5>
+                            <p>{{item.value}}</p>
+                          </ng-container>
+                        </ng-container>
+                      </ng-container>
+                    </ng-container>
+                    <ng-container  *ngIf="(explainIndex=='stake_consideration')&&(explainNumber==index)&&stakeholdersConsideration">
+                      <ng-container *ngFor="let stakeholder_consideration_item of stakeholdersConsideration[index]">
+                        <ng-container *ngIf="stakeholder_consideration_item">
+                          <ng-container *ngFor="let item of stakeholder_consideration_item|keyvalue">
+                            <h5>- {{item.key}}.</h5>
+                            <p>{{item.value}}</p>
+                          </ng-container>
+                        </ng-container>
+                      </ng-container>
+                    </ng-container>
+                    <ng-container  *ngIf="(explainIndex=='Province')&&(explainNumber==index)&&stakeholdersProvince">
+                      <ng-container *ngFor="let stakeholder_province_item of stakeholdersProvince[index]">
+                        <ng-container *ngFor="let stakeholder_province of stakeholder_province_item">
+                          <ng-container *ngIf="stakeholder_province">
+                            <h5>- {{stakeholder_province.question1}}.</h5>
+                            <p>{{stakeholder_province.result}}</p>
+                            <h5>- {{stakeholder_province.question2}}.</h5>
+                            <p>{{stakeholder_province.result}}</p>
+                            <h5>- {{stakeholder_province.question3}}.</h5>
+                            <p>{{stakeholder_province.result}}</p>
+                            <h5>- {{stakeholder_province.question4}}.</h5>
+                            <p>{{stakeholder_province.result}}</p>
+                            <mat-divider></mat-divider>
+                          </ng-container>
+                        </ng-container>
+                      </ng-container>
+                    </ng-container>
+                    <ng-container  *ngIf="(explainIndex=='District')&&(explainNumber==index)&&stakeholdersDistrict">
+                      <ng-container *ngFor="let stakeholder_district_item of stakeholdersDistrict[index]">
+                        <ng-container *ngFor="let stakeholder_district of stakeholder_district_item">
+                          <ng-container *ngIf="stakeholder_district">
+                            <h5>- {{stakeholder_district.question1}}.</h5>
+                            <p>{{stakeholder_district.result}}</p>
+                            <h5>- {{stakeholder_district.question2}}.</h5>
+                            <p>{{stakeholder_district.result}}</p>
+                            <h5>- {{stakeholder_district.question3}}.</h5>
+                            <p>{{stakeholder_district.result}}</p>
+                            <h5>- {{stakeholder_district.question4}}.</h5>
+                            <p>{{stakeholder_district.result}}</p>
+                            <mat-divider></mat-divider>
+                          </ng-container>
+                        </ng-container>
+                      </ng-container>
+                    </ng-container>
+                    <ng-container *ngIf="(explainIndex=='Municipality')&&(explainNumber==index)&&stakeholdersMunicipality">
+                      <ng-container *ngFor="let stakeholder_municipality_item of stakeholdersMunicipality[index]">
+                        <ng-container *ngFor="let stakeholder_municipality of stakeholder_municipality_item">
+                          <ng-container *ngIf="stakeholder_municipality">
+                            <h5>- {{stakeholder_municipality.question1}}.</h5>
+                            <p>{{stakeholder_municipality.result}}</p>
+                            <h5>- {{stakeholder_municipality.question2}}.</h5>
+                            <p>{{stakeholder_municipality.result}}</p>
+                            <h5>- {{stakeholder_municipality.question3}}.</h5>
+                            <p>{{stakeholder_municipality.result}}</p>
+                            <h5>- {{stakeholder_municipality.question4}}.</h5>
+                            <p>{{stakeholder_municipality.result}}</p>
+                            <mat-divider></mat-divider>
+                          </ng-container>
+                        </ng-container>
+                      </ng-container>
+                    </ng-container>
+                  </div>
+                  <div class="my-2 col-lg-4">
+                    <div class="p-title">Stakeholder Map</div>
+                    <table class="mat-table" *ngIf="stakeholdersMap">
+                      <thead>
+                      <tr>
+                        <th>Categorization</th>
+                        <th>Stakeholder Members</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr *ngFor="let stakeholder of stakeholdersMap[index] | keyvalue">
+                        <td>{{stakeholder.key}}</td>
+                        <td>
+                          <ng-container *ngIf="stakeholder.value">
+                            <ng-container *ngFor="let stakeholder_item of stakeholder.value">
+                              <span>{{stakeholder_item}}</span>
+                            </ng-container>
+                          </ng-container>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+          <mat-tab-group *ngIf="tabNum == 3">
+            <mat-tab label="Scoring Summary">
+              <div style="overflow: hidden">
+                <div class="row mt-2">
+                  <div class="col-lg-4 pl-5">
+                    <div class="p-title">Skills distribution</div>
+                    <div class="mat-card-header">By team members</div>
+                    <div>
+                      <canvas baseChart
+                              [datasets]="radarChartData[index]"
+                              [options]="radarChartOptions"
+                              [labels]="radarChartLabels"
+                              [chartType]="radarChartType">
+                      </canvas>
                     </div>
-                    <div class="my-2 col-lg-6">
-                      <ng-container *ngIf="(explainIndex=='stake_country')&&(explainNumber==index)&&stakeholdersCountry">
-                        <ng-container *ngFor="let stakeholder_country_item of stakeholdersCountry[index]">
-                          <ng-container *ngIf="stakeholder_country_item">
-                            <ng-container *ngFor="let item of stakeholder_country_item|keyvalue">
-                              <h5>- {{item.key}}.</h5>
-                              <p>{{item.value}}</p>
-                            </ng-container>
-                          </ng-container>
-                        </ng-container>
-                      </ng-container>
-                      <ng-container *ngIf="(explainIndex=='stake_button_3')&&(explainNumber==index)&&stakeholdersButton3">
-                        <ng-container *ngFor="let stakeholder_button3_item of stakeholdersButton3[index]">
-                          <ng-container *ngIf="stakeholder_button3_item">
-                            <ng-container *ngFor="let item of stakeholder_button3_item | keyvalue">
-                              <h5>- {{item.key}}.</h5>
-                              <p>{{item.value}}</p>
-                            </ng-container>
-                          </ng-container>
-                        </ng-container>
-                      </ng-container>
-                      <ng-container *ngIf="(explainIndex=='stake_button_4')&&(explainNumber==index)&&stakeholdersButton4">
-                        <ng-container *ngFor="let stakeholder_button4_item of stakeholdersButton4[index]">
-                          <ng-container *ngIf="stakeholder_button4_item">
-                            <ng-container *ngFor="let item of stakeholder_button4_item|keyvalue">
-                              <h5>- {{item.key}}.</h5>
-                              <p>{{item.value}}</p>
-                            </ng-container>
-                          </ng-container>
-                        </ng-container>
-                      </ng-container>
-                      <ng-container  *ngIf="(explainIndex=='stake_consideration')&&(explainNumber==index)&&stakeholdersConsideration">
-                        <ng-container *ngFor="let stakeholder_consideration_item of stakeholdersConsideration[index]">
-                          <ng-container *ngIf="stakeholder_consideration_item">
-                            <ng-container *ngFor="let item of stakeholder_consideration_item|keyvalue">
-                              <h5>- {{item.key}}.</h5>
-                              <p>{{item.value}}</p>
-                            </ng-container>
-                          </ng-container>
-                        </ng-container>
-                      </ng-container>
-                      <ng-container  *ngIf="(explainIndex=='Province')&&(explainNumber==index)&&stakeholdersProvince">
-                        <ng-container *ngFor="let stakeholder_province_item of stakeholdersProvince[index]">
-                          <ng-container *ngFor="let stakeholder_province of stakeholder_province_item">
-                            <ng-container *ngIf="stakeholder_province">
-                              <h5>- {{stakeholder_province.question1}}.</h5>
-                              <p>{{stakeholder_province.result}}</p>
-                              <h5>- {{stakeholder_province.question2}}.</h5>
-                              <p>{{stakeholder_province.result}}</p>
-                              <h5>- {{stakeholder_province.question3}}.</h5>
-                              <p>{{stakeholder_province.result}}</p>
-                              <h5>- {{stakeholder_province.question4}}.</h5>
-                              <p>{{stakeholder_province.result}}</p>
-                              <mat-divider></mat-divider>
-                            </ng-container>
-                          </ng-container>
-                        </ng-container>
-                      </ng-container>
-                      <ng-container  *ngIf="(explainIndex=='District')&&(explainNumber==index)&&stakeholdersDistrict">
-                        <ng-container *ngFor="let stakeholder_district_item of stakeholdersDistrict[index]">
-                          <ng-container *ngFor="let stakeholder_district of stakeholder_district_item">
-                            <ng-container *ngIf="stakeholder_district">
-                              <h5>- {{stakeholder_district.question1}}.</h5>
-                              <p>{{stakeholder_district.result}}</p>
-                              <h5>- {{stakeholder_district.question2}}.</h5>
-                              <p>{{stakeholder_district.result}}</p>
-                              <h5>- {{stakeholder_district.question3}}.</h5>
-                              <p>{{stakeholder_district.result}}</p>
-                              <h5>- {{stakeholder_district.question4}}.</h5>
-                              <p>{{stakeholder_district.result}}</p>
-                              <mat-divider></mat-divider>
-                            </ng-container>
-                          </ng-container>
-                        </ng-container>
-                      </ng-container>
-                      <ng-container *ngIf="(explainIndex=='Municipality')&&(explainNumber==index)&&stakeholdersMunicipality">
-                        <ng-container *ngFor="let stakeholder_municipality_item of stakeholdersMunicipality[index]">
-                          <ng-container *ngFor="let stakeholder_municipality of stakeholder_municipality_item">
-                            <ng-container *ngIf="stakeholder_municipality">
-                              <h5>- {{stakeholder_municipality.question1}}.</h5>
-                              <p>{{stakeholder_municipality.result}}</p>
-                              <h5>- {{stakeholder_municipality.question2}}.</h5>
-                              <p>{{stakeholder_municipality.result}}</p>
-                              <h5>- {{stakeholder_municipality.question3}}.</h5>
-                              <p>{{stakeholder_municipality.result}}</p>
-                              <h5>- {{stakeholder_municipality.question4}}.</h5>
-                              <p>{{stakeholder_municipality.result}}</p>
-                              <mat-divider></mat-divider>
-                            </ng-container>
-                          </ng-container>
-                        </ng-container>
-                      </ng-container>
-                    </div>
-                    <div class="my-2 col-lg-4">
-                      <div class="p-title">Stakeholder Map</div>
-                      <table class="mat-table" *ngIf="stakeholdersMap">
+                  </div>
+                  <div class="col-lg-8">
+                    <div class="table-responsive">
+                      <table class="mat-table">
                         <thead>
                         <tr>
-                          <th>Categorization</th>
-                          <th>Stakeholder Members</th>
+                          <th>Category</th>
+                          <th>Resource Counter</th>
+                          <th>Opportunity Counter</th>
+                          <th>Venture Life Cycle</th>
+                          <th>Liability of Age Size</th>
+                          <th>Organisation</th>
+                          <th>Entrepreneur</th>
+                          <th>Environment</th>
+                          <th>Impact Sector</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr *ngFor="let stakeholder of stakeholdersMap[index] | keyvalue">
-                          <td>{{stakeholder.key}}</td>
-                          <td>
-                            <ng-container *ngIf="stakeholder.value">
-                              <ng-container *ngFor="let stakeholder_item of stakeholder.value">
-                                <span>{{stakeholder_item}}</span>
-                              </ng-container>
-                            </ng-container>
-                          </td>
+                        <tr>
+                          <td>{{business['business name']}}</td>
+                          <td>{{business['resource counter']}}</td>
+                          <td>{{business['opportunity counter']}}</td>
+                          <td>{{business['venture life cycle']}}</td>
+                          <td>{{business['liability of age size']}}</td>
+                          <td>{{business['organisation']}}</td>
+                          <td>{{business['entrepreneur']}}</td>
+                          <td>{{business['environment']}}</td>
+                          <td>{{business['impact sector']}}</td>
+                        </tr>
+                        <tr>
+                          <td>Average</td>
+                          <td>{{round(business['resource counter']/businessInfo['business_length'])}}</td>
+                          <td>{{round(business['opportunity counter']/businessInfo['business_length'])}}</td>
+                          <td>{{round(business['venture life cycle']/businessInfo['business_length'])}}</td>
+                          <td>{{round(business['liability of age size']/businessInfo['business_length'])}}</td>
+                          <td>{{round(business['organisation']/businessInfo['business_length'])}}</td>
+                          <td>{{round(business['entrepreneur']/businessInfo['business_length'])}}</td>
+                          <td>{{round(business['environment']/businessInfo['business_length'])}}</td>
+                          <td>{{round(business['impact sector']/businessInfo['business_length'])}}</td>
                         </tr>
                         </tbody>
                       </table>
                     </div>
                   </div>
                 </div>
-              </mat-tab>
-            </mat-tab-group>
-            <mat-tab-group *ngIf="tabNum == 3">
-              <mat-tab label="Scoring Summary">
-                <div style="overflow: hidden">
-                  <div class="row mt-2">
-                    <div class="col-lg-4 pl-5">
-                      <div class="p-title">Skills distribution</div>
-                      <div class="mat-card-header">By team members</div>
-                      <div>
-                        <canvas baseChart
-                                [datasets]="radarChartData[index]"
-                                [options]="radarChartOptions"
-                                [labels]="radarChartLabels"
-                                [chartType]="radarChartType">
-                        </canvas>
-                      </div>
-                    </div>
-                    <div class="col-lg-8">
-                      <div class="table-responsive">
-                        <table class="mat-table">
-                          <thead>
-                          <tr>
-                            <th>Category</th>
-                            <th>Resource Counter</th>
-                            <th>Opportunity Counter</th>
-                            <th>Venture Life Cycle</th>
-                            <th>Liability of Age Size</th>
-                            <th>Organisation</th>
-                            <th>Entrepreneur</th>
-                            <th>Environment</th>
-                            <th>Impact Sector</th>
-                          </tr>
-                          </thead>
-                          <tbody>
-                          <tr>
-                            <td>{{business['business name']}}</td>
-                            <td>{{business['resource counter']}}</td>
-                            <td>{{business['opportunity counter']}}</td>
-                            <td>{{business['venture life cycle']}}</td>
-                            <td>{{business['liability of age size']}}</td>
-                            <td>{{business['organisation']}}</td>
-                            <td>{{business['entrepreneur']}}</td>
-                            <td>{{business['environment']}}</td>
-                            <td>{{business['impact sector']}}</td>
-                          </tr>
-                          <tr>
-                            <td>Average</td>
-                            <td>{{round(business['resource counter']/businessInfo['business_length'])}}</td>
-                            <td>{{round(business['opportunity counter']/businessInfo['business_length'])}}</td>
-                            <td>{{round(business['venture life cycle']/businessInfo['business_length'])}}</td>
-                            <td>{{round(business['liability of age size']/businessInfo['business_length'])}}</td>
-                            <td>{{round(business['organisation']/businessInfo['business_length'])}}</td>
-                            <td>{{round(business['entrepreneur']/businessInfo['business_length'])}}</td>
-                            <td>{{round(business['environment']/businessInfo['business_length'])}}</td>
-                            <td>{{round(business['impact sector']/businessInfo['business_length'])}}</td>
-                          </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+          <mat-tab-group *ngIf="tabNum == 4">
+            <mat-tab label="Funding Chanel">
+              <div style="overflow: hidden">
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 col-sm-6">
+                    <button mat-raised-button color="primary" class="w-100 my-3">Button 1</button>
+                  </div>
+                  <div class="col-lg-3 col-md-4 col-sm-6">
+                    <button mat-raised-button color="primary" class="w-100 my-3">Button 2</button>
+                  </div>
+                  <div class="col-lg-3 col-md-4 col-sm-6">
+                    <button mat-raised-button color="primary" class="w-100 my-3">Button 3</button>
+                  </div>
+                  <div class="col-lg-3 col-md-4 col-sm-6">
+                    <button mat-raised-button color="primary" class="w-100 my-3">Button 4</button>
                   </div>
                 </div>
-              </mat-tab>
-            </mat-tab-group>
-            <mat-tab-group *ngIf="tabNum == 4">
-              <mat-tab label="Funding Chanel">
-                <div style="overflow: hidden">
-                  <div class="row">
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-                      <button mat-raised-button color="primary" class="w-100 my-3">Button 1</button>
-                    </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-                      <button mat-raised-button color="primary" class="w-100 my-3">Button 2</button>
-                    </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-                      <button mat-raised-button color="primary" class="w-100 my-3">Button 3</button>
-                    </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-                      <button mat-raised-button color="primary" class="w-100 my-3">Button 4</button>
-                    </div>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+          <mat-tab-group *ngIf="tabNum == 5">
+            <mat-tab label="Badges">
+              <div *ngIf="unSdg.length" style="overflow: hidden">
+                <div class="row">
+                  <div class="col-sm-3 text-sm-center d-block mt-3" *ngFor="let goal_list of unSdg[index]['path']">
+                    <div class="bg" [style.background-image] ="'url(assets/catalogue/'+goal_list+')'" style="background-position: center"></div>
                   </div>
                 </div>
-              </mat-tab>
-            </mat-tab-group>
-            <mat-tab-group *ngIf="tabNum == 5">
-              <mat-tab label="Badges">
-                <div *ngIf="unSdg.length" style="overflow: hidden">
-                  <div class="row">
-                    <div class="col-sm-3 text-sm-center d-block mt-3" *ngFor="let goal_list of unSdg[index]['path']">
-                      <div class="bg" [style.background-image] ="'url(assets/catalogue/'+goal_list+')'" style="background-position: center"></div>
-                    </div>
-                  </div>
-                </div>
-              </mat-tab>
-            </mat-tab-group>
-            <div class="card-header text-md-right text-center d-block">
-              <button mat-raised-button color="primary" class="mr-3" (click)="buy(business['u_id'], business)">
-                FUND BUSINESS
-              </button>
-              <button mat-raised-button color="primary"(click)="sell(businessUser.id)" *ngIf="businessInfo.sell_enabled">
-                SELL FINANCIAL INTEREST
-              </button>
-              <button mat-raised-button *ngIf="!businessInfo.sell_enabled">
-                You cannot Sell!
-              </button>
-            </div>
-          </mat-expansion-panel>
-        </mat-accordion>
-      </li>
-    </ul>
-    <pagination-controls class="pagination" (pageChange)="p = $event"></pagination-controls>
-  </div>
-  <div *ngIf="!businessMatch" class="text-center" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)">
-    <div class="p-title">There is no suitable data!</div>
-    <button mat-raised-button (click)="showAllBusiness()">Show All</button>
-  </div>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+          <div class="card-header text-md-right text-center d-block">
+            <button mat-raised-button color="primary" class="mr-3" (click)="buy(business['u_id'], business)">
+              FUND BUSINESS
+            </button>
+            <button mat-raised-button color="primary"(click)="sell(businessUser.id)" *ngIf="businessInfo.sell_enabled">
+              SELL FINANCIAL INTEREST
+            </button>
+            <button mat-raised-button *ngIf="!businessInfo.sell_enabled">
+              You cannot Sell!
+            </button>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </li>
+  </ul>
+  <pagination-controls class="pagination" (pageChange)="p = $event"></pagination-controls>
+</div>
+<div *ngIf="!businessMatch" class="text-center" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)">
+  <div class="p-title">There is no suitable data!</div>
+  <button mat-raised-button (click)="showAllBusiness()">Show All</button>
 </div>
