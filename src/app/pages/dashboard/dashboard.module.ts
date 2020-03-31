@@ -42,6 +42,7 @@ import {NgxPaginationModule} from 'ngx-pagination';
 import {ChartsModule} from 'ng2-charts';
 import {BuymodalComponent} from './catalogue/catalogue.component';
 import {UserCreateModalComponent} from './userpage/usercreate.component';
+import {ImageCropperModule} from 'ngx-image-cropper';
 
 @NgModule({
   declarations: [
@@ -88,7 +89,8 @@ import {UserCreateModalComponent} from './userpage/usercreate.component';
     MatExpansionModule,
     ChartsModule,
     MatCheckboxModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    ImageCropperModule
   ],
   exports: [
     TopNavbarComponent,

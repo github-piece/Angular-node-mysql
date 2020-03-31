@@ -1,0 +1,39 @@
+.description {
+  background: #f4f6f8
+}
+.header div {
+  font-size: 3.6rem;
+  font-weight: 400;
+  letter-spacing: 20px;
+  text-align: center;
+  height: 80px;
+  padding-top: 26px
+}
+.header img {
+  width: 100px;
+  position: absolute;
+  top: 0
+}
+@media (max-width: 767px) {
+  .header div {
+    padding: 16px;
+    height: auto;
+  }
+}
+.description {
+  font-size: 16px;
+  line-height: 24px;
+}
+.dashboard-card {
+  width: 350px;
+  margin: auto;
+  background: #f4f6f8;
+}
+.user-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-color: transparent;
+  padding: 2px;
+  border: 2px solid white;
+}
