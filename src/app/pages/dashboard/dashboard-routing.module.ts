@@ -11,6 +11,7 @@ import {FaqsComponent} from './faqs/faqs.component';
 import {AboutusComponent} from './aboutus/aboutus.component';
 import {TermPolicyComponent} from './term-policy/term-policy.component';
 import {ContactusComponent} from './contactus/contactus.component';
+import {OverviewComponent} from './overview/overview.component';
 
 
 const routes: Routes = [
@@ -18,7 +19,8 @@ const routes: Routes = [
     path: '',
     component: DashboardComponent,
     children: [
-      {path: '', redirectTo: 'maindashboard', pathMatch: 'full'},
+      {path: '', redirectTo: 'overview', pathMatch: 'full'},
+      {path: 'overview', component: OverviewComponent},
       {path: 'maindashboard', component: MaindashboardComponent},
       {path: 'newsfeed', component: NewsfeedComponent},
       {path: 'howtopage', component: InvestComponent},

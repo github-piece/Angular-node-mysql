@@ -1,0 +1,51 @@
+mat-progress-bar {
+  margin: 10px 16px 0 16px
+}
+mat-icon {
+  margin-top: 8px;
+  font-size: 64px;
+  margin-right: 36px;
+}
+td mat-icon {
+  font-size: 36px;
+  margin: 0;
+}
+.p-header {
+  margin-top: 16px
+}
+mat-radio-button span {
+  position: absolute;
+  right: 16px;
+  font-weight: 400;
+}
+mat-radio-button {
+  color: #263238;
+  font-size: 16px;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.05px;
+  display: flex;
+  align-items: center;
+}
+.dv {
+  background-image: linear-gradient(180deg, #5c6bc0 0%, #3f51b5 100%);
+}
+.area {
+  background-image: linear-gradient(180deg, #263238 0%, #607d8b 100%);
+  color: white
+}
+.area .mat-progress-bar.mat-accent .mat-progress-bar-background {
+  fill: white;
+}
+::ng-deep .mat-progress-bar-fill::after {
+  background-color: #ff5722;
+}
+
+::ng-deep .area .mat-progress-bar-buffer {
+  background: white;
+}
+
+::ng-deep .mat-progress-bar {
+  border-radius: 2px;
+}

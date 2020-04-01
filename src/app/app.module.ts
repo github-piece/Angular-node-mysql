@@ -58,6 +58,8 @@ import {NgxSpinnerModule} from 'ngx-spinner';
     NgxSpinnerModule
   ],
   providers: [],
+  exports: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

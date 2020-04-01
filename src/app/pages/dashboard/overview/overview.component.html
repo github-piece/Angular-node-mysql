@@ -1,0 +1,163 @@
+<div *ngIf="show">
+  <div class="p-header">overview</div>
+  <div class="p-title">Good Morning, {{myData.username}}</div>
+  <p class="mat-card-header">{{today | date: 'EEEE'}}, {{today | date: 'dd'}} of {{today | date: 'MMMM'}}</p>
+  <div class="row">
+    <div class="col-md-4 col-sm-12">
+      <mat-card>
+        <div class="float-right mr-0">
+          <mat-icon color="primary">offline_bolt</mat-icon>
+        </div>
+        <div class="p-header">CPU USAGE</div>
+        <div class="d-flex">
+          <div class="p-title">30%</div>
+          <mat-progress-bar value="30"></mat-progress-bar>
+        </div>
+      </mat-card>
+    </div>
+    <div class="col-md-4 col-sm-12">
+      <mat-card>
+        <div class="float-right mr-0">
+          <mat-icon color="primary">check_circle</mat-icon>
+        </div>
+        <div class="p-header">MEMORY USAGE</div>
+        <div class="d-flex">
+          <div class="p-title">30%</div>
+          <mat-progress-bar value="30"></mat-progress-bar>
+        </div>
+      </mat-card>
+    </div>
+    <div class="col-md-4 col-sm-12">
+      <mat-card class="area">
+        <div class="float-right mr-0">
+          <mat-icon>swap_vertical_circle</mat-icon>
+        </div>
+        <div class="p-header">DISK USAGE</div>
+        <div class="d-flex">
+          <div class="p-title">30%</div>
+          <mat-progress-bar value="30"></mat-progress-bar>
+        </div>
+      </mat-card>
+    </div>
+    <div class="col-md-4">
+      <mat-card>
+        <div [ngSwitch]="weather.type" class="float-right" style="margin-top: -8px">
+          <img *ngSwitchCase="weatherType.fog" src="assets/weather/fog.png" alt="fog">
+          <img *ngSwitchCase="weatherType.rain" src="assets/weather/rain.png" alt="rain">
+          <img *ngSwitchCase="weatherType.snow" src="assets/weather/snow.png" alt="snow">
+          <img *ngSwitchCase="weatherType.lightning" src="assets/weather/lightning.png" alt="lightning">
+          <img *ngSwitchCase="weatherType.unknown" src="assets/weather/unknown.png" alt="unknown">
+          <ng-container *ngSwitchCase="weatherType.clear">
+            <img *ngIf="isDay()" src="assets/weather/sun.png" alt="clear day">
+            <img *ngIf="!isDay()" src="assets/weather/moon.png" alt="clear night">
+          </ng-container>
+          <ng-container *ngSwitchCase="weatherType.partialClear">
+            <img *ngIf="isDay()" src="assets/weather/partial-sun.png" alt="partial clear day">
+            <img *ngIf="!isDay()" src="assets/weather/partial-moon.png" alt="partial clear night">
+          </ng-container>
+        </div>
+        <mat-card-header>Weather</mat-card-header>
+        <mat-card-content>
+          <div class="p-title text-danger">{{weather.temperature | number:'1.1-1'}}&#8451;</div>
+          <ng-container *ngIf="failedToLoad">
+            <div class="p-title">Weather is not available.</div>
+            <p>Try looking out the window.</p>
+          </ng-container>
+          <div class="mat-card-header">{{city | uppercase }}&nbsp;&nbsp;<span class="text-danger">{{today | date: 'dd'}}</span></div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card>
+        <mat-card-header>Alerts</mat-card-header>
+        <mat-card-content>
+          <mat-radio-button color="warn">
+            Learn Angular 8
+            <span class="ml-30">2:45 pm</span>
+          </mat-radio-button>
+          <mat-divider></mat-divider>
+        </mat-card-content>
+        <mat-card-content>
+          <mat-radio-button color="warn">
+            Learn Angular 8
+            <span class="ml-30">2:45 pm</span>
+          </mat-radio-button>
+          <mat-divider></mat-divider>
+        </mat-card-content>
+        <mat-card-content>
+          <mat-radio-button color="warn">
+            Learn Angular 8
+            <span class="ml-30">2:45 pm</span>
+          </mat-radio-button>
+          <mat-divider></mat-divider>
+        </mat-card-content>
+      </mat-card>
+      <mat-card>
+        <mat-card-header>ToDo List</mat-card-header>
+        <mat-card-content>
+          <mat-radio-button color="warn" checked>
+            Learn Angular 4.0
+            <span class="ml-30">2:45 PM</span>
+          </mat-radio-button>
+          <mat-divider></mat-divider>
+        </mat-card-content>
+        <mat-card-content>
+          <mat-radio-button color="warn">
+            Learn Angular Material
+            <span class="ml-30">3:20 PM</span>
+          </mat-radio-button>
+          <mat-divider></mat-divider>
+        </mat-card-content>
+        <mat-card-content>
+          <mat-radio-button color="warn">
+            Write documentation
+            <span class="ml-30">6:00 PM</span>
+          </mat-radio-button>
+          <mat-divider></mat-divider>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-8">
+      <mat-card>
+        <mat-card-header>STOCKS</mat-card-header>
+        <mat-card-content>
+          <div class="table-responsive">
+            <table class="mat-table odd">
+              <tr><td>NASDAQ</td><td>4,492.87</td><td>-0.29%</td></tr>
+              <tr><td>NYSE</td><td>10,046.81</td><td>-0.53%</td></tr>
+              <tr><td>DOWJ</td><td>17,046.81</td><td>-0.14%</td></tr>
+              <tr><td>APPL</td><td>100.89</td><td>+0.75%</td></tr>
+            </table>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card>
+        <mat-card-header>Messages</mat-card-header>
+        <mat-card-content>
+          <div class="table-responsive">
+            <table class="mat-table odd">
+              <tr>
+                <td><mat-icon color="primary">home</mat-icon></td>
+                <td>Promotion<p class="mb-0">Important Message</p></td>
+                <td>June 4</td>
+              </tr>
+              <tr>
+                <td><mat-icon color="primary">home</mat-icon></td>
+                <td>Updates<p class="mb-0">Important Message</p></td>
+                <td>June 2</td>
+              </tr>
+              <tr>
+                <td><mat-icon color="primary">home</mat-icon></td>
+                <td>Completed 2 proyects<p class="mb-0">Important Message</p></td>
+                <td>May 28</td>
+              </tr>
+              <tr>
+                <td><mat-icon color="primary">home</mat-icon></td>
+                <td>Added Jim to contact list<p class="mb-0">Important Message</p></td>
+                <td>May 28</td>
+              </tr>
+            </table>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

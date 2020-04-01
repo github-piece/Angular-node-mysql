@@ -2,6 +2,8 @@ mat-toolbar {
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.32);
   position: fixed;
   z-index: 2;
+  background: #263238;
+  color: white
 }
 .logo {
   letter-spacing: 8px;
@@ -42,6 +44,9 @@ mat-toolbar {
   font-size: 28px;
   height: 28px;
 }
+.search-btn mat-icon {
+  vertical-align: initial!important;
+}
 .pl-14 {
   padding-left: 18px!important;
 }
@@ -58,23 +63,27 @@ mat-toolbar {
   position: fixed;
   z-index: 2;
 }
-.side-menu mat-sidenav {
+mat-sidenav-container {
+  top: 64px;
+}
+mat-sidenav {
   width: 220px;
 }
-.side-menu mat-nav-list {
+.notification-menu mat-sidenav {
+  width: 220px;
+}
+mat-nav-list {
   overflow: hidden;
   padding-top: 20px
 }
-mat-sidenav-container {
-  top: 64px
-}
-.side-menu mat-sidenav-content {
-  padding: 16px;
+mat-sidenav-content {
+  padding: 24px 16px;
   height: calc(100vh - 64px);
   margin-left: 60px;
 }
-.notification-bar mat-sidenav {
-  width: 220px;
+mat-sidenav.notification-bar {
+  width: 360px;
+  padding: 24px
 }
 mat-sidenav:not(.mat-drawer-opened) {
   transform: translate3d(0, 0, 0) !important;
@@ -113,20 +122,15 @@ mat-sidenav:not(.mat-drawer-opened) .menu-item-title {
   margin-right: 14px;
 }
 @media (max-width: 600px) {
-  .side-menu mat-sidenav-container {
-    top: 56px
-  }
-  .side-menu mat-sidenav-content {
-    height: calc(100vh - 56px);
-  }
-  mat-sidenav:not(.mat-drawer-opened) {
-    width: 0!important;
-  }
   mat-sidenav-container {
     top: 56px
   }
-  .side-menu mat-sidenav-content {
+  mat-sidenav-content {
+    height: calc(100vh - 56px);
     margin-left: 0;
+  }
+  mat-sidenav:not(.mat-drawer-opened) {
+    width: 0!important;
   }
 }
 

@@ -21,7 +21,7 @@ import {
   MatSidenavModule,
   MatToolbarModule,
   MatExpansionModule,
-  MatCheckboxModule, MatSlideToggleModule
+  MatCheckboxModule, MatSlideToggleModule, MatProgressBarModule, MatRadioModule
 } from '@angular/material';
 import {MatIconModule} from '@angular/material';
 import {ReactiveFormsModule} from '@angular/forms';
@@ -43,6 +43,7 @@ import {BuymodalComponent} from './catalogue/catalogue.component';
 import {UserCreateModalComponent} from './userpage/usercreate.component';
 import {ImageCropperModule} from 'ngx-image-cropper';
 import {NgxSpinnerModule} from 'ngx-spinner';
+import { OverviewComponent } from './overview/overview.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +61,8 @@ import {NgxSpinnerModule} from 'ngx-spinner';
     ContactusComponent,
     InvestDetailComponent,
     BuymodalComponent,
-    UserCreateModalComponent
+    UserCreateModalComponent,
+    OverviewComponent
   ],
   imports: [
     CommonModule,
@@ -90,10 +92,12 @@ import {NgxSpinnerModule} from 'ngx-spinner';
     MatCheckboxModule,
     MatSlideToggleModule,
     ImageCropperModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    MatProgressBarModule,
+    MatRadioModule
   ],
   exports: [
-    TopNavbarComponent
+    TopNavbarComponent,
   ],
   entryComponents: [
     InvestDetailComponent,
