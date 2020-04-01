@@ -94,10 +94,10 @@ import { OverviewComponent } from './overview/overview.component';
     ImageCropperModule,
     NgxSpinnerModule,
     MatProgressBarModule,
-    MatRadioModule
+    MatRadioModule,
   ],
   exports: [
-    TopNavbarComponent,
+    TopNavbarComponent
   ],
   entryComponents: [
     InvestDetailComponent,

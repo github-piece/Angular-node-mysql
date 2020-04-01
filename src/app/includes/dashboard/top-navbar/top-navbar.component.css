@@ -44,21 +44,13 @@ mat-toolbar {
   font-size: 28px;
   height: 28px;
 }
-.search-btn mat-icon {
-  vertical-align: initial!important;
-}
 .pl-14 {
   padding-left: 18px!important;
 }
 .mat-badge-medium.mat-badge-overlap.mat-badge-after .mat-badge-content {
   right: -16px!important;
 }
-.avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  cursor: pointer;
-}
+
 .is-mobile {
   position: fixed;
   z-index: 2;
@@ -120,6 +112,42 @@ mat-sidenav:not(.mat-drawer-opened) .menu-item-title {
 {
   font-size: 24px;
   margin-right: 14px;
+}
+.avatar {
+  width: 48px;
+  height: 48px;
+  margin: 22px 14px;
+}
+.d-flex .mat-card-header {
+  font-size: 14px;
+}
+.message-text {
+  font-weight: 500;
+  color: #263238;
+}
+.message-text span {
+  font-weight: initial;
+}
+.message-text p {
+  margin-top: 8px;
+  font-weight: initial;
+}
+.d-flex mat-icon {
+  font-size: 36px;
+  margin-right: 24px;
+  margin-top: 24px
+}
+.pointer {
+  cursor: pointer;
+}
+.pointer:hover {
+  background: #f2f4f6;
+}
+mat-card-actions {
+  margin-top: 8px
+}
+.search-btn mat-icon {
+  vertical-align: initial!important;
 }
 @media (max-width: 600px) {
   mat-sidenav-container {

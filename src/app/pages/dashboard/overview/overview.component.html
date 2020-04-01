@@ -1,7 +1,7 @@
 <div *ngIf="show">
   <div class="p-header">overview</div>
   <div class="p-title">Good Morning, {{myData.username}}</div>
-  <p class="mat-card-header">{{today | date: 'EEEE'}}, {{today | date: 'dd'}} of {{today | date: 'MMMM'}}</p>
+  <p class="mat-card-header mb-0">{{today | date: 'EEEE'}}, {{today | date: 'dd'}} of {{today | date: 'MMMM'}}</p>
   <div class="row">
     <div class="col-md-4 col-sm-12">
       <mat-card>
@@ -10,8 +10,9 @@
         </div>
         <div class="p-header">CPU USAGE</div>
         <div class="d-flex">
-          <div class="p-title">30%</div>
-          <mat-progress-bar value="30"></mat-progress-bar>
+          <div class="p-title">25%</div>
+          <mat-progress-bar value="25"></mat-progress-bar>
+          <div class="p-header">348 processes. 1/4 cores</div>
         </div>
       </mat-card>
     </div>
@@ -22,25 +23,27 @@
         </div>
         <div class="p-header">MEMORY USAGE</div>
         <div class="d-flex">
-          <div class="p-title">30%</div>
-          <mat-progress-bar value="30"></mat-progress-bar>
+          <div class="p-title">45%</div>
+          <mat-progress-bar value="45"></mat-progress-bar>
+          <div class="p-header">7.5/16 GB</div>
         </div>
       </mat-card>
     </div>
     <div class="col-md-4 col-sm-12">
-      <mat-card class="area">
+      <mat-card>
         <div class="float-right mr-0">
-          <mat-icon>swap_vertical_circle</mat-icon>
+          <mat-icon color="primary">swap_vertical_circle</mat-icon>
         </div>
         <div class="p-header">DISK USAGE</div>
         <div class="d-flex">
-          <div class="p-title">30%</div>
-          <mat-progress-bar value="30"></mat-progress-bar>
+          <div class="p-title">90%</div>
+          <mat-progress-bar value="90"></mat-progress-bar>
+          <div class="p-header">0.9/1 TB</div>
         </div>
       </mat-card>
     </div>
     <div class="col-md-4">
-      <mat-card>
+      <mat-card class="mb-3">
         <div [ngSwitch]="weather.type" class="float-right" style="margin-top: -8px">
           <img *ngSwitchCase="weatherType.fog" src="assets/weather/fog.png" alt="fog">
           <img *ngSwitchCase="weatherType.rain" src="assets/weather/rain.png" alt="rain">
@@ -58,15 +61,15 @@
         </div>
         <mat-card-header>Weather</mat-card-header>
         <mat-card-content>
-          <div class="p-title text-danger">{{weather.temperature | number:'1.1-1'}}&#8451;</div>
+          <div class="p-title text-blue">{{weather.temperature | number:'1.1-1'}}&#8451;</div>
           <ng-container *ngIf="failedToLoad">
             <div class="p-title">Weather is not available.</div>
             <p>Try looking out the window.</p>
           </ng-container>
-          <div class="mat-card-header">{{city | uppercase }}&nbsp;&nbsp;<span class="text-danger">{{today | date: 'dd'}}</span></div>
+          <div class="mat-card-header">{{city | uppercase }}&nbsp;&nbsp;<span class="text-warn">{{today | date: 'dd'}}</span></div>
         </mat-card-content>
       </mat-card>
-      <mat-card>
+      <mat-card class="mb-3">
         <mat-card-header>Alerts</mat-card-header>
         <mat-card-content>
           <mat-radio-button color="warn">
@@ -90,10 +93,11 @@
           <mat-divider></mat-divider>
         </mat-card-content>
       </mat-card>
-      <mat-card>
+      <mat-card class="mb-3">
         <mat-card-header>ToDo List</mat-card-header>
+        <mat-divider></mat-divider>
         <mat-card-content>
-          <mat-radio-button color="warn" checked>
+          <mat-radio-button color="warn" checked class="mt-2">
             Learn Angular 4.0
             <span class="ml-30">2:45 PM</span>
           </mat-radio-button>
@@ -129,7 +133,7 @@
           </div>
         </mat-card-content>
       </mat-card>
-      <mat-card>
+      <mat-card class="mt-3">
         <mat-card-header>Messages</mat-card-header>
         <mat-card-content>
           <div class="table-responsive">

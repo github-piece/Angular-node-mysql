@@ -340,10 +340,16 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     font-size: 24px
   }
 }
+.messages {
+  max-height: 480px !important;
+}
 
 @media(max-width:767px) {
   .banner-area .banner-content>span {
     font-size: 14px
+  }
+  .messages {
+    max-height: calc(100vh - 56px)!important;
   }
 }
 
@@ -8000,4 +8006,14 @@ button:active, button:focus {outline:0;border:none;-moz-outline-style:none;}
 
 .file-upload-btn + label:hover {
   background-color: #f4f6f8;
+}
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.mat-menu-panel {
+  max-width: 320px!important;
+  overflow-x: hidden!important;
 }

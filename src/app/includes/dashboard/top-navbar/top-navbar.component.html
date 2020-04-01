@@ -19,7 +19,8 @@
     <img src="{{userData.useravatar}}" class="avatar" [matMenuTriggerFor]="menu">
     <button mat-button [matMenuTriggerFor]="menu" class="hidden-md">{{userData.username}}</button>
     <button mat-button class="text-left pl-14 hidden-md">
-      <mat-icon matBadge="10" matBadgeColor="warn" class="button">mail</mat-icon>
+      <mat-icon *ngIf="messages.length" [matBadge]="messages.length" matBadgeColor="warn" class="button" [matMenuTriggerFor]="message">mail</mat-icon>
+      <mat-icon *ngIf="!messages.length" class="button" [matMenuTriggerFor]="message">mail</mat-icon>
     </button>
   </div>
 </mat-toolbar>
@@ -31,65 +32,91 @@
 </mat-autocomplete>
 
 <mat-menu #menu="matMenu">
-  <button mat-menu-item class="shown-xs">Messages</button>
+  <button mat-menu-item class="shown-xs" [matMenuTriggerFor]="message">Messages</button>
   <button mat-menu-item (click)="logout()">Log out</button>
 </mat-menu>
 
-  <mat-sidenav-container>
-    <mat-sidenav #sideNav [mode]="mobileQuery.matches ? 'over' : 'side'" [opened]="mobileQuery.matches ? 'false' : 'true'">
-      <mat-nav-list>
-        <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/overview']">
-          <mat-icon>widgets</mat-icon>
-          <span class="menu-item-title">Overview</span>
-        </a>
-        <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/maindashboard']">
-          <mat-icon>dashboard_outlined</mat-icon>
-          <span class="menu-item-title">Home</span>
-        </a>
-        <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/newsfeed']">
-          <mat-icon>menu_book</mat-icon>
-          <span class="menu-item-title">News Feed</span>
-        </a>
+<mat-sidenav-container>
+  <mat-sidenav #sideNav [mode]="mobileQuery.matches ? 'over' : 'side'" [opened]="mobileQuery.matches ? 'false' : 'true'">
+    <mat-nav-list>
+      <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/overview']">
+        <mat-icon>widgets</mat-icon>
+        <span class="menu-item-title">Overview</span>
+      </a>
+      <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/maindashboard']">
+        <mat-icon>dashboard_outlined</mat-icon>
+        <span class="menu-item-title">Home</span>
+      </a>
+      <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/newsfeed']">
+        <mat-icon>menu_book</mat-icon>
+        <span class="menu-item-title">News Feed</span>
+      </a>
 
-        <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/howtopage']">
-          <mat-icon>storage</mat-icon>
-          <span class="menu-item-title">How To Invest</span>
-        </a>
+      <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/howtopage']">
+        <mat-icon>storage</mat-icon>
+        <span class="menu-item-title">How To Invest</span>
+      </a>
 
-        <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/portfolio']">
-          <mat-icon>group</mat-icon>
-          <span class="menu-item-title">Portfolio</span>
-        </a>
+      <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/portfolio']">
+        <mat-icon>group</mat-icon>
+        <span class="menu-item-title">Portfolio</span>
+      </a>
 
-        <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/catalogue']">
-          <mat-icon>monochrome_photos</mat-icon>
-          <span class="menu-item-title">Catalogue</span>
-        </a>
-        <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/userpage']">
-          <mat-icon>group_add</mat-icon>
-          <span class="menu-item-title">Userpage</span>
-        </a>
-        <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/faqs']">
-          <mat-icon>camera</mat-icon>
-          <span class="menu-item-title">FAQs</span>
-        </a>
-        <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/about']">
-          <mat-icon>folder_shared</mat-icon>
-          <span class="menu-item-title">About Us</span>
-        </a>
-        <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/terms']">
-          <mat-icon>chrome_reader_mode</mat-icon>
-          <span class="menu-item-title">T's and C's</span>
-        </a>
-        <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/contact']">
-          <mat-icon>contact_phone</mat-icon>
-          <span class="menu-item-title">Contact Us</span>
-        </a>
-      </mat-nav-list>
-    </mat-sidenav>
+      <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/catalogue']">
+        <mat-icon>monochrome_photos</mat-icon>
+        <span class="menu-item-title">Catalogue</span>
+      </a>
+      <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/userpage']">
+        <mat-icon>group_add</mat-icon>
+        <span class="menu-item-title">Userpage</span>
+      </a>
+      <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/faqs']">
+        <mat-icon>camera</mat-icon>
+        <span class="menu-item-title">FAQs</span>
+      </a>
+      <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/about']">
+        <mat-icon>folder_shared</mat-icon>
+        <span class="menu-item-title">About Us</span>
+      </a>
+      <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/terms']">
+        <mat-icon>chrome_reader_mode</mat-icon>
+        <span class="menu-item-title">T's and C's</span>
+      </a>
+      <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/contact']">
+        <mat-icon>contact_phone</mat-icon>
+        <span class="menu-item-title">Contact Us</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
 
-    <mat-sidenav-content>
-      <router-outlet></router-outlet>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
 
+<mat-menu #message="matMenu" class="messages">
+  <ng-container *ngIf="messages.length">
+    <button mat-flat-button class="float-right" style="margin-top: -4px" (click)="checkAll()">Check All</button>
+    <mat-card-header class="p-2">{{ messages.length }} Messages</mat-card-header>
+    <mat-divider></mat-divider>
+    <mat-card-content *ngFor="let message of messages" class="mb-0">
+      <div class="d-flex pointer pt-3" (click)="check(message.id)">
+        <img [src] = message.avatar alt="Owner Photo" class="avatar">
+        <div class="message-text">
+          {{ message.businessName }}
+          <span>created by</span>
+          {{ message.name }}
+          <p>{{ message.time }}</p>
+        </div>
+        <mat-icon color="primary">trending_flat</mat-icon>
+      </div>
+      <mat-divider></mat-divider>
+    </mat-card-content>
+    <mat-card-actions class="text-center d-block mb-0 p-0">
+      <button mat-flat-button>VIEW ALL MESSAGES</button>
+    </mat-card-actions>
+  </ng-container>
+  <ng-container *ngIf="!messages.length">
+    <mat-card-header class="pt-3 px-2">No Messages</mat-card-header>
+  </ng-container>
+</mat-menu>

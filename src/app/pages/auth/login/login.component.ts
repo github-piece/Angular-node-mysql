@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit {
           });
         } else {
           if (data.status === 1) {
-            this.router.navigate(['/dashboard/maindashboard']);
+            this.router.navigate(['/dashboard/overview']);
           } else {
             this.snackBar.open('Sorry, still you didn\'t register', '', {
               duration: 2000

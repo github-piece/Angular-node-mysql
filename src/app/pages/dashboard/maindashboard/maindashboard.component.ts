@@ -36,7 +36,6 @@ export class MaindashboardComponent implements OnInit, AfterViewInit {
   businessList = [['treeMap', null, 0, 0]];
   tenureList = [];
   goalList = [];
-  show = false;
   tableData: PeriodicElement[] = [];
   dataSource = new MatTableDataSource<PeriodicElement>(this.tableData);
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;

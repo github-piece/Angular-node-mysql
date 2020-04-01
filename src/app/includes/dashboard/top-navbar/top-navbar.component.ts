@@ -6,6 +6,7 @@ import {AuthenticationService} from '../../../_services/authentication/authentic
 import {Router} from '@angular/router';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {Server} from '../../../../config/url.service';
+import {MessageService} from '../../../_services/message/message.service';
 
 @Component({
   selector: 'app-top-navbar',
@@ -19,12 +20,13 @@ export class TopNavbarComponent implements OnInit, OnDestroy {
   filterOptions: Observable<Array<string>>;
   userData: any = [];
   private mobileQueryListener: () => void;
-
+  messages = [];
   constructor(
     private authenticationService: AuthenticationService,
     private router: Router,
     changeDetectorRef: ChangeDetectorRef,
-    media: MediaMatcher
+    media: MediaMatcher,
+    private messagesService: MessageService
   ) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this.mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -38,6 +40,7 @@ export class TopNavbarComponent implements OnInit, OnDestroy {
     }
     this.userData.useravatar = Server + '/avatar/' + this.userData.useravatar;
     this.filterOptions = this.searchBar.valueChanges.pipe(map(value => value ? this.filter(value) : this.options.slice()));
+    this.getMessage();
   }
   filter(val: string): Array<string> {
     return this.options.filter(option => new RegExp(`^${val}`, 'gi').test(option));
@@ -48,5 +51,28 @@ export class TopNavbarComponent implements OnInit, OnDestroy {
   logout() {
     this.authenticationService.logout();
     this.router.navigate(['/login']);
+  }
+  getMessage() {
+    this.messagesService.getMessage(this.userData.userId).subscribe(result => {
+      this.messages = result;
+      for (const message of this.messages) {
+        if (message.avatar.substr(0, 3) !== 'http') {
+          message.avatar = Server + '/avatar/' + message.avatar;
+        }
+      }
+    });
+  }
+  check(id) {
+    this.messagesService.setMessage(id, this.userData.userId).subscribe(result => {
+      this.messages = result;
+      for (const message of this.messages) {
+        if (message.avatar.substr(0, 3) !== 'http') {
+          message.avatar = Server + '/avatar/' + message.avatar;
+        }
+      }
+    });
+  }
+  checkAll() {
+    this.messagesService.setAllMessage(this.userData.userId).subscribe(result => this.messages = result);
   }
 }
