@@ -26,6 +26,8 @@ import {AgmCoreModule} from '@agm/core';
 import {MatTableModule} from '@angular/material/table';
 import {ChartsModule} from 'ng2-charts';
 import {NgxSpinnerModule} from 'ngx-spinner';
+import { SuccessComponent } from './pages/payfast/success/success.component';
+import { CancelComponent } from './pages/payfast/cancel/cancel.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +39,8 @@ import {NgxSpinnerModule} from 'ngx-spinner';
     ContactComponent,
     LoginComponent,
     SignupComponent,
+    SuccessComponent,
+    CancelComponent,
   ],
   imports: [
     BrowserModule,

@@ -12,6 +12,8 @@ import {AboutusComponent} from './aboutus/aboutus.component';
 import {TermPolicyComponent} from './term-policy/term-policy.component';
 import {ContactusComponent} from './contactus/contactus.component';
 import {OverviewComponent} from './overview/overview.component';
+import {ArticleComponent} from './article/article.component';
+import {BusinessComponent} from './business/business.component';
 
 
 const routes: Routes = [
@@ -30,7 +32,9 @@ const routes: Routes = [
       {path: 'faqs', component: FaqsComponent},
       {path: 'about', component: AboutusComponent},
       {path: 'terms', component: TermPolicyComponent},
-      {path: 'contact', component: ContactusComponent}
+      {path: 'contact', component: ContactusComponent},
+      {path: 'article', component: ArticleComponent},
+      {path: 'business', component: BusinessComponent}
     ]
   }
 ];

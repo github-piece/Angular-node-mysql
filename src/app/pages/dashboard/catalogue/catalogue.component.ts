@@ -10,6 +10,7 @@ import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from '
 import {PayFast} from '../../../../config/url.service';
 import {AppUrl} from '../../../../config/url.service';
 import {NgxSpinnerService} from 'ngx-spinner';
+import {PayfastService} from '../../../_services/payfast/payfast.service';
 
 @Component({
   selector: 'app-catalogue',
@@ -236,12 +237,11 @@ export class CatalogueComponent implements OnInit {
   styleUrls: ['./catalogue.component.css']
 })
 export class BuymodalComponent implements OnInit {
+  userData: any;
   businessId: any;
   businessRemain: any;
   modalContent: any;
   action: any;
-  userId: any;
-  userName: string;
   commission: any;
   platformFee: any;
   itemName: any;
@@ -264,7 +264,8 @@ export class BuymodalComponent implements OnInit {
     private dialogRef: MatDialogRef<BuymodalComponent>,
     private authenticationService: AuthenticationService,
     private buysellService: BuysellService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private payfastService: PayfastService
   ) {
     this.formData = new FormData();
     this.payFastForm = this.fb.group({
@@ -284,8 +285,7 @@ export class BuymodalComponent implements OnInit {
     this.initModal();
   }
   initModal() {
-    this.userId = this.authenticationService.currentUserSubject.value.uId;
-    this.userName = this.authenticationService.currentUserSubject.value.uName;
+    this.userData = this.authenticationService.currentUserSubject.value;
     this.modalContent = '';
     this.action = '';
     this.businessId = this.buysellService.businessId;
@@ -330,11 +330,12 @@ export class BuymodalComponent implements OnInit {
     this.formData.append('payment_method', this.commission.payment_method);
     this.formData.append('businessId', this.businessId);
     this.formData.append('balance', this.businessRemain);
-    this.formData.append('userId', this.userId);
+    this.formData.append('userId', this.userData.userId);
     this.generateSignature(this.formData);
     this.formShow = false;
   }
   generateSignature(formData) {
+    this.payfastService.generateSignature(formData).subscribe(result => console.log(result));
     // return this.payfast.generateSignature(formData)
     //   .pipe(first()).subscribe((res: any) => {
     //     this.signature = res;

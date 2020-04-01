@@ -44,6 +44,8 @@ import {UserCreateModalComponent} from './userpage/usercreate.component';
 import {ImageCropperModule} from 'ngx-image-cropper';
 import {NgxSpinnerModule} from 'ngx-spinner';
 import { OverviewComponent } from './overview/overview.component';
+import { ArticleComponent } from './article/article.component';
+import { BusinessComponent } from './business/business.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +64,9 @@ import { OverviewComponent } from './overview/overview.component';
     InvestDetailComponent,
     BuymodalComponent,
     UserCreateModalComponent,
-    OverviewComponent
+    OverviewComponent,
+    ArticleComponent,
+    BusinessComponent
   ],
   imports: [
     CommonModule,

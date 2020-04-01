@@ -1,0 +1,77 @@
+<div class="p-header">Write Story</div>
+<div class="p-title">Please submit your story</div>
+<form enctype="multipart/form-data" [formGroup]="articleForm" (ngSubmit)="submitArticle()">
+  <mat-card>
+    <mat-card-header>Submit Article</mat-card-header>
+    <mat-divider></mat-divider>
+    <mat-tab-group>
+      <mat-tab label="Text">
+        <mat-form-field class="mt-2">
+          <mat-label>Headline</mat-label>
+          <input matInput type="text" formControlName="headline" [ngClass]="{ 'is-invalid': submitted && f.headline.errors }">
+          <mat-error *ngIf="hasError('headline', 'required')">
+            Please insert this field.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Section1</mat-label>
+          <textarea formControlName="section0" matInput [ngClass]="{ 'is-invalid': submitted && f.section1.errors }"></textarea>
+          <mat-error *ngIf="hasError('section0', 'required')">
+            Please insert this field.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Section2</mat-label>
+          <textarea formControlName="section1" matInput [ngClass]="{ 'is-invalid': submitted && f.section1.errors }"></textarea>
+          <mat-error *ngIf="hasError('section1', 'required')">
+            Please insert this field.
+          </mat-error>
+        </mat-form-field>
+      </mat-tab>
+      <mat-tab label="Image">
+        <div style="overflow: hidden">
+          <div class="row mt-2">
+            <div class="col-md-6" *ngFor="let show of showImage; let index = index">
+              <input [id]="'file' + index" class="file-upload-btn" type="file" name="file" accept='image/*' (change)="previewImage($event.target, index)"/>
+              <label [for]="'file' + index" class="label-btn">Choose a file</label>
+              <div *ngIf="show" class="text-center">
+                <img [src]="imgURL[index]" height="360" *ngIf="imgURL[index]">
+              </div>
+            </div>
+          </div>
+          <button mat-raised-button type="submit" color="primary" class="float-right mt-2">
+            Submit Article
+          </button>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card>
+</form>
+<mat-card *ngIf="articleData.length">
+  <mat-card-header>Last Story</mat-card-header>
+  <mat-card-content>
+    <div class="table-responsive">
+      <table class="mat-table">
+        <thead>
+        <tr>
+          <th>No</th>
+          <th>Headline</th>
+          <th>Created</th>
+          <th>Account Type</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let task of dataSource">
+          <td>{{task.no}}</td>
+          <td>{{task.headline}}</td>
+          <td>{{task.article_createdate}}</td>
+          <td>{{task.u_accounttype}}</td>
+        </tr>
+        </tbody>
+      </table>
+      <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[4, 8, 12]" [showFirstLastButtons]="true" [length]="totalSize"
+                     [pageIndex]="currentPage" (page)="handlePage($event)">
+      </mat-paginator>
+    </div>
+  </mat-card-content>
+</mat-card>
