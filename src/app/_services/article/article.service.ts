@@ -20,4 +20,7 @@ export class ArticleService {
   deleteArticle(articleId) {
     return this.http.post<any>(`${Server}/deleteArticle`, {articleId});
   }
+  updateArticle(formData) {
+    return this.http.post<any>(`${Server}/updateArticle`, formData);
+  }
 }

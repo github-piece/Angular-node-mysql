@@ -19,7 +19,6 @@ export class UserpageComponent implements OnInit {
   freezeFlag: any;
   onShow = false;
   submitted = false;
-  imagePath: any;
   file: File = null;
   uploadImageShow = false;
   dataSource: any;
@@ -103,7 +102,6 @@ export class UserpageComponent implements OnInit {
       return;
     }
     const reader = new FileReader();
-    this.imagePath = event.files;
     reader.readAsDataURL(event.files[0]);
     reader.onload = () => {
       this.myData.useravatar = reader.result;
@@ -113,9 +111,18 @@ export class UserpageComponent implements OnInit {
     const formData = new FormData();
     formData.append('userId', this.myData.userId);
     formData.append('file', this.file);
-    formData.append('action', 'upload');
-    this.userService.uploadPhoto(formData)
-      .subscribe(result => console.log(result));
+    formData.append('userEmail', this.myData.useremail);
+    formData.append('userPassword', this.myData.userpassword);
+    this.userService.uploadPhoto(formData).subscribe(result => {
+      this.authenticationService.reset(result);
+      this.snackBar.open('Successfully Changed!', '', {
+        duration: 2000
+      });
+    }, () => {
+      this.snackBar.open('Server error!', '', {
+        duration: 2000
+      });
+    });
   }
   onChange() {
     if (this.myData.provider) {

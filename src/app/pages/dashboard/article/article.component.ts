@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthenticationService} from '../../../_services/authentication/authentication.service';
 import {ArticleService} from '../../../_services/article/article.service';
-import {MatPaginator, MatTableDataSource, PageEvent} from '@angular/material';
+import {MatPaginator, MatSnackBar, MatTableDataSource, PageEvent} from '@angular/material';
 
 @Component({
   selector: 'app-article',
@@ -18,7 +18,6 @@ export class ArticleComponent implements OnInit {
   imgURL: any = [];
   message: string;
   file: File[] = [];
-  imagePath: any;
   dataSource: any;
   tasks: any[];
   pageSize = 4;
@@ -30,12 +29,12 @@ export class ArticleComponent implements OnInit {
     private formBuilder: FormBuilder,
     private authenticationService: AuthenticationService,
     private articleService: ArticleService,
+    private snackBar: MatSnackBar
   ) {
     this.articleForm = this.formBuilder.group({
       headline: ['', Validators.required],
       section0: ['', Validators.required],
       section1: ['', Validators.required],
-      file0: ''
     });
   }
   ngOnInit() {
@@ -60,7 +59,6 @@ export class ArticleComponent implements OnInit {
       return;
     }
     const reader = new FileReader();
-    this.imagePath = target.files;
     reader.readAsDataURL(target.files[0]);
     reader.onload = () => {
       this.imgURL[index] = reader.result;
@@ -75,14 +73,23 @@ export class ArticleComponent implements OnInit {
     }
     const formData = new FormData();
     formData.append('userId', this.userData.userId);
-    formData.append('userParentId', this.userData.userparentid);
     formData.append('accountType', this.userData.useraccounttype);
     formData.append('file', this.file[0]);
     formData.append('file', this.file[1]);
     formData.append('section1', this.articleForm.get('section0').value);
     formData.append('section2', this.articleForm.get('section1').value);
     formData.append('headline', this.articleForm.get('headline').value);
-    this.articleService.setArticle(formData).subscribe(result => console.log(result));
+    this.articleService.setArticle(formData).subscribe(result => {
+      this.articleData = result;
+      this.getTask();
+      this.snackBar.open('Successfully Saved!', '', {
+        duration: 2000
+      });
+    }, () => {
+      this.snackBar.open('Server error', '', {
+        duration: 2000
+      });
+    });
   }
   getTask() {
     const data = this.articleData;

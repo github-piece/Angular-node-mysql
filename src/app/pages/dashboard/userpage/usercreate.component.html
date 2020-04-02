@@ -14,48 +14,40 @@
       <mat-form-field>
         <mat-label>User Name</mat-label>
         <input matInput type="text" formControlName="userName">
-        <mat-error *ngIf="submitted && f.userName.errors">
-          <div *ngIf="f.userName.errors.required">
-            User Name is required
-          </div>
+        <mat-error *ngIf="hasError('userName', 'required')">
+          User Name is <strong>required</strong>
         </mat-error>
       </mat-form-field>
       <mat-form-field>
         <mat-label>User Email</mat-label>
         <input matInput type="email" formControlName="userEmail">
-        <mat-error *ngIf="submitted && f.userEmail.errors">
-          <div *ngIf="f.userEmail.errors.required">
-            User Email is required
-          </div>
-          <div *ngIf="f.userEmail.errors.email">
-            Email type is not correct!
-          </div>
+        <mat-error *ngIf="hasError('userEmail', 'required')">
+          User Email is <strong>required</strong>
+        </mat-error>
+        <mat-error *ngIf="!hasError('userEmail', 'required') && hasError('userEmail', 'email')">
+          User Email is <strong>required</strong>
         </mat-error>
       </mat-form-field>
       <mat-form-field>
         <mat-label>User Password</mat-label>
         <input matInput type="password" formControlName="password">
         <mat-hint>Password must be at least 6 characters</mat-hint>
-        <mat-error *ngIf="submitted && f.password.errors">
-          <div *ngIf="f.password.errors.required">
-            Password is required
-          </div>
-          <div *ngIf="f.password.errors.minlength">
-            Password must be at least 6 characters
-          </div>
+        <mat-error *ngIf="hasError('password', 'required')">
+          User Email is <strong>required</strong>
+        </mat-error>
+        <mat-error *ngIf="!hasError('password', 'required') && hasError('password', 'minlength')">
+          User Email is <strong>required</strong>
         </mat-error>
       </mat-form-field>
       <mat-form-field>
         <mat-label>Confirm Password</mat-label>
         <input matInput type="password" formControlName="confirmPassword">
         <mat-hint>Please type your password again!</mat-hint>
-        <mat-error *ngIf="submitted && f.confirmPassword.errors">
-          <div *ngIf="f.confirmPassword.errors.required">
-            Confirm Password is required
-          </div>
-          <div *ngIf="f.confirmPassword.errors.mustMatch">
-            Passwords must match
-          </div>
+        <mat-error *ngIf="hasError('confirmPassword', 'required')">
+          Confirm Password is <strong>required</strong>
+        </mat-error>
+        <mat-error *ngIf="!hasError('confirmPassword', 'required') && hasError('confirmPassword', 'mustMatch')">
+          User Email is <strong>required</strong>
         </mat-error>
       </mat-form-field>
     </div>

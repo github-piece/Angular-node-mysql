@@ -81,4 +81,7 @@ export class UserCreateModalComponent implements OnInit {
     this.file = event.files.item(0);
     this.uploadImageShow = true;
   }
+  hasError = (controlName: string, errorName: string) => {
+    return this.createForm.controls[controlName].hasError(errorName);
+  }
 }

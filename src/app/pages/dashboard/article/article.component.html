@@ -10,21 +10,21 @@
           <mat-label>Headline</mat-label>
           <input matInput type="text" formControlName="headline" [ngClass]="{ 'is-invalid': submitted && f.headline.errors }">
           <mat-error *ngIf="hasError('headline', 'required')">
-            Please insert this field.
+            Title is <strong>required</strong>
           </mat-error>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Section1</mat-label>
           <textarea formControlName="section0" matInput [ngClass]="{ 'is-invalid': submitted && f.section1.errors }"></textarea>
           <mat-error *ngIf="hasError('section0', 'required')">
-            Please insert this field.
+            Content is <strong>required</strong>
           </mat-error>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Section2</mat-label>
           <textarea formControlName="section1" matInput [ngClass]="{ 'is-invalid': submitted && f.section1.errors }"></textarea>
           <mat-error *ngIf="hasError('section1', 'required')">
-            Please insert this field.
+            Content is <strong>required</strong>
           </mat-error>
         </mat-form-field>
       </mat-tab>

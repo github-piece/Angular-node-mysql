@@ -6,33 +6,33 @@
   <mat-card-content>
     <mat-form-field class="mt-4">
       <mat-label>Title</mat-label>
-      <input matInput type="text" [value]="data.cardData.headline" formControlName="headline">
+      <input matInput type="text" formControlName="headline">
     </mat-form-field>
     <div class="row edit-card">
       <div class="col-md-6">
         <mat-card>
-          <img [src]="data.cardData.imgurl1">
-          <label for="file0">
-            <button mat-flat-button class="photo-upload" color="primary"><mat-icon>add_a_photo</mat-icon></button>
+          <img [src]="fSectionImage">
+          <label for="file0" class="photo-upload" *ngIf="enable">
+            <mat-icon>add_a_photo</mat-icon>
           </label>
           <mat-form-field class="w-100 mt-4">
             <mat-label>First Section</mat-label>
-            <textarea matInput type="text" [value]="data.cardData.section1" rows="5" formControlName="section1"></textarea>
+            <textarea matInput type="text" rows="5" formControlName="section1"></textarea>
           </mat-form-field>
-          <input type="file" name="file" id="file0" class="file-upload-btn">
+          <input type="file" name="file" id="file0" class="file-upload-btn" (change)="preview($event.target, 0)">
         </mat-card>
       </div>
       <div class="col-md-6">
         <mat-card>
-          <img [src]="data.cardData.imgurl2">
-          <label for="file1">
-            <button mat-flat-button class="photo-upload" color="primary"><mat-icon>add_a_photo</mat-icon></button>
+          <img [src]="sSectionImage">
+          <label for="file1" class="photo-upload" *ngIf="enable">
+            <mat-icon>add_a_photo</mat-icon>
           </label>
           <mat-form-field class="w-100 mt-4">
             <mat-label>Second Section</mat-label>
-            <textarea matInput type="text" [value]="data.cardData.section2" rows="5" formControlName="section2"></textarea>
+            <textarea matInput type="text" rows="5" formControlName="section2"></textarea>
           </mat-form-field>
-          <input type="file" name="file" id="file1" class="file-upload-btn">
+          <input id="file1" class="file-upload-btn" type="file" accept='image/*' (change)="preview($event.target, 1)">
         </mat-card>
       </div>
     </div>

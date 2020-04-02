@@ -7945,6 +7945,7 @@ button:active, button:focus {outline:0;border:none;-moz-outline-style:none;}
 .profile-picture img {
   border-radius: 50%;
   width: 120px;
+  height: 120px;
 }
 .profile-picture .profile-name {
   color: #263238;

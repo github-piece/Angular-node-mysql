@@ -50,6 +50,17 @@
   position: absolute;
   right: 24px;
   top: 24px;
+  width: 56px;
+  background: #607d8b;
+  color: white;
+  height: 32px;
+  border-radius: 4px;
+  padding-top: 2px;
+}
+.photo-upload:hover {
+  background: #cfd8dc;
+  color: #607d8b;
+  cursor: pointer;
 }
 .edit-card mat-card {
   background: #f4f6f8;

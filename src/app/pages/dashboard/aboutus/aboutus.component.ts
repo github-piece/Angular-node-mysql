@@ -2,7 +2,6 @@ import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthenticationService} from '../../../_services/authentication/authentication.service';
 import {ArticleService} from '../../../_services/article/article.service';
-import {UserService} from '../../../_services/user/user.service';
 import {ImageCroppedEvent} from 'ngx-image-cropper';
 import {Server} from '../../../../config/url.service';
 import {MatDialog} from '@angular/material';
@@ -30,8 +29,6 @@ export class AboutusComponent implements OnInit {
   showCropper = false;
   rowData = [];
   imgUrl: any;
-  freezeFlag: any;
-  showActions = false;
   submitted = false;
   rowSelectId: any;
   aboutForm: FormGroup;
@@ -113,7 +110,6 @@ export class AboutusComponent implements OnInit {
     formData.append('userParentId', this.userParentId);
     formData.append('userAccountType', this.userAccountType);
     formData.append('id', this.rowSelectId);
-
     formData.append('imgUrl', this.imgUrl);
     formData.append('section1', this.aboutForm.get('section1').value);
     formData.append('section2', this.aboutForm.get('section2').value);
