@@ -106,7 +106,7 @@
     <mat-divider></mat-divider>
     <mat-card-content *ngFor="let message of messages" class="mb-0">
       <div class="d-flex pointer pt-3" (click)="check(message.id)">
-        <img [src] = message.avatar alt="Owner Photo" class="avatar">
+        <img [src] = message.avatar alt="Owner Photo" class="avatar my-3 mx-4">
         <div class="message-text">
           {{ message.businessName }}
           <span>created by</span>

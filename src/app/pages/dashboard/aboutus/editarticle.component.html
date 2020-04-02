@@ -1,0 +1,44 @@
+<form [formGroup]="editServiceForm" (ngSubmit)="updateCard()">
+  <button type="button" mat-raised-button color="primary" class="float-right" style="margin-top: -8px" (click)="enableEdit()">Edit</button>
+  <button type="button" mat-raised-button class="float-right mr-2" style="margin-top: -8px" (click)="deleteArticle()">Delete</button>
+  <mat-card-header>Edit Article</mat-card-header>
+  <mat-divider></mat-divider>
+  <mat-card-content>
+    <mat-form-field class="mt-4">
+      <mat-label>Title</mat-label>
+      <input matInput type="text" [value]="data.cardData.headline" formControlName="headline">
+    </mat-form-field>
+    <div class="row edit-card">
+      <div class="col-md-6">
+        <mat-card>
+          <img [src]="data.cardData.imgurl1">
+          <label for="file0">
+            <button mat-flat-button class="photo-upload" color="primary"><mat-icon>add_a_photo</mat-icon></button>
+          </label>
+          <mat-form-field class="w-100 mt-4">
+            <mat-label>First Section</mat-label>
+            <textarea matInput type="text" [value]="data.cardData.section1" rows="5" formControlName="section1"></textarea>
+          </mat-form-field>
+          <input type="file" name="file" id="file0" class="file-upload-btn">
+        </mat-card>
+      </div>
+      <div class="col-md-6">
+        <mat-card>
+          <img [src]="data.cardData.imgurl2">
+          <label for="file1">
+            <button mat-flat-button class="photo-upload" color="primary"><mat-icon>add_a_photo</mat-icon></button>
+          </label>
+          <mat-form-field class="w-100 mt-4">
+            <mat-label>Second Section</mat-label>
+            <textarea matInput type="text" [value]="data.cardData.section2" rows="5" formControlName="section2"></textarea>
+          </mat-form-field>
+          <input type="file" name="file" id="file1" class="file-upload-btn">
+        </mat-card>
+      </div>
+    </div>
+  </mat-card-content>
+  <mat-card-actions class="text-right d-block">
+    <button type="button" mat-raised-button class="mr-2" (click)="onNoClick()">Cancel</button>
+    <button type="submit" mat-raised-button color="primary">Save</button>
+  </mat-card-actions>
+</form>

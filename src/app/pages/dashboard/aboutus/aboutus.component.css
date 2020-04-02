@@ -37,3 +37,27 @@
   padding: 2px;
   border: 2px solid white;
 }
+.mat-card-image {
+  max-height: 320px;
+}
+.about-card {
+  background: #f4f6f8;
+}
+.about-card button {
+  margin-top: -8px
+}
+.photo-upload {
+  position: absolute;
+  right: 24px;
+  top: 24px;
+}
+.edit-card mat-card {
+  background: #f4f6f8;
+}
+.edit-card img {
+  max-height: 320px;
+  max-width: 100%;
+}
+.edit-card {
+  text-align: center;
+}

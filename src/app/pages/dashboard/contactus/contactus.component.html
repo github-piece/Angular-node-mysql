@@ -66,30 +66,47 @@
     </mat-card>
   </div>
   <div class="col-lg-4">
+    <form [formGroup]="contactForm" (ngSubmit)="submit()">
     <mat-card>
       <mat-card-header>Get In Touch</mat-card-header>
       <mat-divider></mat-divider>
       <mat-card-content>
-        <mat-form-field>
+        <mat-form-field class="mt-3">
           <mat-label>Name</mat-label>
           <input matInput formControlName="name" type="text">
+          <mat-error *ngIf="hasError('name', 'required')">
+            Name is <strong>required</strong>
+          </mat-error>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Email</mat-label>
           <input matInput formControlName="email" type="email">
+          <mat-error *ngIf="hasError('email', 'required')">
+            Email is <strong>required</strong>
+          </mat-error>
+          <mat-error *ngIf="hasError('email', 'email') && !hasError('email', 'required')">
+            Please enter a valid email address
+          </mat-error>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Phone Number</mat-label>
-          <input matInput formControlName="phone_number" type="number">
+          <input matInput formControlName="phoneNumber" type="number">
+          <mat-error *ngIf="hasError('phoneNumber', 'required')">
+            Phone Number is <strong>required</strong>
+          </mat-error>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Your Message</mat-label>
           <textarea matInput formControlName="message" rows="3"></textarea>
+          <mat-error *ngIf="hasError('message', 'required')">
+            Message is <strong>required</strong>
+          </mat-error>
         </mat-form-field>
       </mat-card-content>
       <mat-card-footer class="text-center d-block">
-        <button mat-raised-button color="primary" class="mb-3">Contact Us</button>
+        <button mat-raised-button color="primary" type="submit" class="mb-3">Contact Us</button>
       </mat-card-footer>
     </mat-card>
+    </form>
   </div>
 </div>

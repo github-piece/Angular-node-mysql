@@ -49,7 +49,6 @@ export class PortfolioComponent implements OnInit {
     private buysellService: BuysellService,
     private spinner: NgxSpinnerService
   ) { }
-
   ngOnInit() {
     this.spinner.show();
     this.userData = this.authenticationService.currentUserSubject.value;
@@ -58,21 +57,19 @@ export class PortfolioComponent implements OnInit {
     this.getBuyHistory();
   }
   getBusinessList(userId) {
-    this.businessService.getBusinessList(userId).subscribe(data => { this.businessData = data; });
+    this.businessService.getBusinessList(userId).subscribe(data => this.businessData = data );
   }
   getSellHistory() {
-    this.buysellService.getSellHistory(this.userData.userId)
-      .subscribe(data => {
-        this.historySellList = data;
-        for (const history of this.historySellList) {
-          const date = new Date(history.date_created);
-          history.nextDate = new Date(date.setFullYear(date.getFullYear() + 1)).toString();
-        }
-      });
+    this.buysellService.getSellHistory(this.userData.userId).subscribe(data => {
+      this.historySellList = data;
+      for (const history of this.historySellList) {
+        const date = new Date(history.date_created);
+        history.nextDate = new Date(date.setFullYear(date.getFullYear() + 1)).toString();
+      }
+    });
   }
   getBuyHistory() {
-    this.buysellService.getBuyHistory(this.userData.userId)
-      .subscribe(data => {
+    this.buysellService.getBuyHistory(this.userData.userId).subscribe(data => {
         this.historyBuyList = data;
         for (const history of this.historyBuyList) {
           for (const business of this.businessData) {
@@ -198,18 +195,15 @@ export class PortfolioComponent implements OnInit {
       });
   }
   getTasks() {
-    const data = this.tableData;
-    const buyContracts = this.historyBuyList;
-    const sellContracts = this.historySellList;
-    this.dataSource = new MatTableDataSource<any>(data);
-    this.contractBuySource = new MatTableDataSource<any>(buyContracts);
-    this.contractSellSource = new MatTableDataSource<any>(sellContracts);
+    this.dataSource = new MatTableDataSource<any>(this.tableData);
+    this.contractBuySource = new MatTableDataSource<any>(this.historyBuyList);
+    this.contractSellSource = new MatTableDataSource<any>(this.historySellList);
     this.dataSource.paginator = this.paginator;
     this.contractBuySource.paginator = this.paginator;
     this.contractSellSource.paginator = this.paginator;
-    this.tasks = data;
-    this.details = buyContracts;
-    this.sell = sellContracts;
+    this.tasks = this.tableData;
+    this.details = this.historyBuyList;
+    this.sell = this.historySellList;
     this.totalSize = this.tasks.length;
     this.detailsSize = this.details.length;
     this.sellSize = this.sell.length;

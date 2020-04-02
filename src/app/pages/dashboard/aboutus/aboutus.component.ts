@@ -5,7 +5,11 @@ import {ArticleService} from '../../../_services/article/article.service';
 import {UserService} from '../../../_services/user/user.service';
 import {ImageCroppedEvent} from 'ngx-image-cropper';
 import {Server} from '../../../../config/url.service';
-
+import {MatDialog} from '@angular/material';
+import {EditArticleComponent} from './editarticle.component';
+export interface DialogData {
+  cardData: any;
+}
 @Component({
   selector: 'app-aboutus',
   templateUrl: './aboutus.component.html',
@@ -31,11 +35,13 @@ export class AboutusComponent implements OnInit {
   submitted = false;
   rowSelectId: any;
   aboutForm: FormGroup;
+  p = 1;
   @ViewChild('fileInput', {static: true}) fileInput: ElementRef;
   constructor(
     private formBuilder: FormBuilder,
     private authenticationService: AuthenticationService,
-    private articleService: ArticleService
+    private articleService: ArticleService,
+    private dialog: MatDialog
   ) {
     this.aboutForm = this.formBuilder.group({
       headline: ['', Validators.required],
@@ -63,11 +69,24 @@ export class AboutusComponent implements OnInit {
     const formData = new FormData();
     formData.append('userId', this.myData.userId);
     formData.append('userParentId', this.userParentId);
-    formData.append('imgUrl', this.imgUrl);
     formData.append('userAccountType', this.userAccountType);
-    this.articleService.getArticleList(formData).subscribe(result => this.rowData = result);
+    this.articleService.getArticleList(formData).subscribe(result => {
+      this.rowData = result;
+      for (const data of this.rowData) {
+        data.imgurl1 = Server + '/article/' + data.imgurl1;
+        data.imgurl2 = Server + '/article/' + data.imgurl2;
+      }
+    });
   }
-  updateCard(updateData) {}
+  updateCard(cardData) {
+    const dialogRef = this.dialog.open(EditArticleComponent, {
+      autoFocus: false,
+      data: {cardData}
+    });
+    dialogRef.afterClosed().subscribe(() => {
+      this.getArticleList();
+    });
+  }
   setStep(index: number) {
     this.step = index;
   }
@@ -100,7 +119,13 @@ export class AboutusComponent implements OnInit {
     formData.append('section2', this.aboutForm.get('section2').value);
     formData.append('section2', this.aboutForm.get('section2').value);
     formData.append('headline', this.aboutForm.get('headline').value);
-    this.articleService.setArticle(formData).subscribe(result => this.rowData = result);
+    this.articleService.setArticle(formData).subscribe(result => {
+      this.rowData = result;
+      for (const data of this.rowData) {
+        data.imgurl1 = Server + '/article/' + data.imgurl1;
+        data.imgurl2 = Server + '/article/' + data.imgurl2;
+      }
+    });
   }
   chooseImage() {
   }

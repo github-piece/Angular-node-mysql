@@ -8007,13 +8007,16 @@ button:active, button:focus {outline:0;border:none;-moz-outline-style:none;}
 .file-upload-btn + label:hover {
   background-color: #f4f6f8;
 }
-.avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  cursor: pointer;
-}
 .mat-menu-panel {
   max-width: 320px!important;
   overflow-x: hidden!important;
+}
+.about-tab .mat-tab-header-pagination-controls-enabled .mat-tab-header-pagination {
+  display: none!important;
+}
+.about-tab .mat-tab-label {
+  min-width: 50%;
+}
+.about-tab .mat-tab-body-wrapper {
+  height: 360px;
 }

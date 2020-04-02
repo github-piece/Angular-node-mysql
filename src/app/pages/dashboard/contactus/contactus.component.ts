@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthenticationService} from '../../../_services/authentication/authentication.service';
 import {ArticleService} from '../../../_services/article/article.service';
 
@@ -22,10 +22,18 @@ export class ContactusComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private articleService: ArticleService,
     private formBuilder: FormBuilder
-  ) { }
+  ) {
+
+  }
 
   ngOnInit() {
     this.userData = this.authenticationService.currentUserSubject.value;
+    this.contactForm = this.formBuilder.group({
+      name: [this.userData.username, Validators.required],
+      email: [this.userData.useremail, [Validators.required, Validators.email]],
+      phoneNumber: [this.userData.userphonenum, Validators.required],
+      message: ['', Validators.required]
+    });
     this.viewMap();
   }
   viewMap() {
@@ -37,5 +45,9 @@ export class ContactusComponent implements OnInit {
     if (this.contactForm.invalid) {
       return;
     }
+    console.log(this.contactForm.value);
+  }
+  hasError = (controlName: string, errorName: string) => {
+    return this.contactForm.controls[controlName].hasError(errorName);
   }
 }

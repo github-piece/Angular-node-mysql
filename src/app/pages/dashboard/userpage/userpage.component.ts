@@ -3,7 +3,7 @@ import {AuthenticationService} from '../../../_services/authentication/authentic
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MustMatch} from '../../../_helpers/must-match';
 import {UserService} from '../../../_services/user/user.service';
-import {MatDialog, MatPaginator, MatTableDataSource, PageEvent} from '@angular/material';
+import {MatDialog, MatPaginator, MatSnackBar, MatTableDataSource, PageEvent} from '@angular/material';
 import {UserCreateModalComponent} from './usercreate.component';
 
 @Component({
@@ -28,11 +28,13 @@ export class UserpageComponent implements OnInit {
   currentPage = 0;
   totalSize = 0;
   @ViewChild(MatPaginator, {static : false}) paginator: MatPaginator;
+  get f() { return this.registerForm.controls; }
   constructor(
     private authenticationService: AuthenticationService,
     private formBuilder: FormBuilder,
     private userService: UserService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {
     this.registerForm = this.formBuilder.group({
       oldPassword: ['', Validators.required],
@@ -41,9 +43,6 @@ export class UserpageComponent implements OnInit {
     }, {
       validator: MustMatch('newPassword', 'confirmPassword')
     });
-  }
-  get f() {
-    return this.registerForm.controls;
   }
   ngOnInit() {
     this.myData = this.authenticationService.currentUserSubject.value;
@@ -68,11 +67,10 @@ export class UserpageComponent implements OnInit {
     this.userService.getFreezeFlag(userId).subscribe(result => this.freezeFlag = result.u_freezedflag );
   }
   getUserList() {
-    this.userService.getUserList(this.myData.useraccounttype, this.myData.userId)
-      .subscribe(result => {
-        this.rowData = result;
-        this.getSelect();
-      });
+    this.userService.getUserList(this.myData.useraccounttype, this.myData.userId).subscribe(result => {
+      this.rowData = result;
+      this.getSelect();
+    });
   }
   getSelect() {
     let selectedRole;
@@ -135,10 +133,18 @@ export class UserpageComponent implements OnInit {
     if (this.registerForm.invalid) {
       return;
     }
-    this.userService.changePwd(this.f.confirmPassword.value, this.myData.userId, this.myData.useraccounttype, this.myData.useremail)
-      .subscribe(result => {
-        this.authenticationService.reset(result.userData);
+    // tslint:disable-next-line:max-line-length
+    this.userService.changePwd(this.f.confirmPassword.value, this.myData.userId, this.myData.useraccounttype, this.myData.useremail).subscribe(result => {
+      this.authenticationService.reset(result.userData);
+      this.onChange();
+      this.snackBar.open('Password is successfully Changed', '', {
+        duration: 2000
       });
+    }, () => {
+      this.snackBar.open('Server error!', '', {
+        duration: 2000
+      });
+    });
   }
   iterator() {
     const end = (this.currentPage + 1) * this.pageSize;
@@ -162,9 +168,25 @@ export class UserpageComponent implements OnInit {
     });
   }
   freezeUser(userId, param) {
-    this.userService.freezeUser(this.myData.userId, this.myData.accounttype, userId, param).subscribe();
+    this.userService.freezeUser(this.myData.userId, this.myData.accounttype, userId, param).subscribe(() => {
+      this.snackBar.open('Successfully Changed', '', {
+        duration: 2000
+      });
+    }, () => {
+      this.snackBar.open('Server error', '', {
+        duration: 2000
+      });
+    });
   }
   changeRole(event, selectedId) {
-    this.userService.updateUser(this.myData.useraccounttype, selectedId, event.value).subscribe();
+    this.userService.updateUser(this.myData.useraccounttype, selectedId, event.value).subscribe(() => {
+      this.snackBar.open('Successfully Changed', '', {
+        duration: 2000
+      });
+    }, () => {
+      this.snackBar.open('Server error', '', {
+        duration: 2000
+      });
+    });
   }
 }

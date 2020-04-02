@@ -24,6 +24,8 @@ export class ArticleComponent implements OnInit {
   pageSize = 4;
   currentPage = 0;
   totalSize = 0;
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
+  get f() { return this.articleForm.controls; }
   constructor(
     private formBuilder: FormBuilder,
     private authenticationService: AuthenticationService,
@@ -36,8 +38,6 @@ export class ArticleComponent implements OnInit {
       file0: ''
     });
   }
-  get f() { return this.articleForm.controls; }
-  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
   ngOnInit() {
     this.showImage[0] = false; this.showImage[1] = false;
     this.file[0] = null; this.file[1] = null;
@@ -45,12 +45,10 @@ export class ArticleComponent implements OnInit {
     this.getArticleList();
   }
   getArticleList() {
-    const formData = new FormData();
-    formData.append('userId', this.userData.userId);
-    formData.append('userParentId', this.userData.userparentid);
-    formData.append('userAccountType', this.userData.useraccounttype);
-    this.articleService.getArticleList(formData).subscribe(result => this.articleData = result);
-    this.getTask();
+    this.articleService.getArticle(this.userData.useraccounttype, this.userData.userId).subscribe(result => {
+      this.articleData = result;
+      this.getTask();
+    });
   }
   previewImage(target, index) {
     if (target.files.length === 0) {

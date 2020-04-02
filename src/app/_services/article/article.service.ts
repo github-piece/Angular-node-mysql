@@ -17,4 +17,7 @@ export class ArticleService {
   setArticle(formData) {
     return this.http.post<any>(`${Server}/setArticle`, formData);
   }
+  deleteArticle(articleId) {
+    return this.http.post<any>(`${Server}/deleteArticle`, {articleId});
+  }
 }

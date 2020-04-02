@@ -18,6 +18,7 @@ export class OverviewComponent implements OnInit {
   city = 'London';
   failedToLoad: boolean;
   show = false;
+  notifications = [];
   constructor(
     private weatherService: WeatherService,
     private route: ActivatedRoute,
@@ -27,6 +28,7 @@ export class OverviewComponent implements OnInit {
 
   ngOnInit() {
     this.spinner.show();
+    this.notifications = notifications;
     this.myData = this.authenticationService.currentUserSubject.value;
     this.getData();
   }
@@ -49,3 +51,19 @@ export class OverviewComponent implements OnInit {
     return (this.weather.sunrise < now && this.weather.sunset > now);
   }
 }
+export const notifications = [
+  {
+    type: 'social',
+    title: 'Social',
+    text: 'Important Message',
+    time: 'JUST NOW',
+    icon: 'unsubscribe'
+  },
+  {
+    type: 'alert',
+    title: 'Removed 6 items...',
+    text: 'Important Message',
+    time: 'Yesterday',
+    icon: 'error'
+  }
+];

@@ -46,6 +46,7 @@ import {NgxSpinnerModule} from 'ngx-spinner';
 import { OverviewComponent } from './overview/overview.component';
 import { ArticleComponent } from './article/article.component';
 import { BusinessComponent } from './business/business.component';
+import {AlertArticleComponent, EditArticleComponent} from './aboutus/editarticle.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +67,9 @@ import { BusinessComponent } from './business/business.component';
     UserCreateModalComponent,
     OverviewComponent,
     ArticleComponent,
-    BusinessComponent
+    BusinessComponent,
+    EditArticleComponent,
+    AlertArticleComponent
   ],
   imports: [
     CommonModule,
@@ -106,7 +109,9 @@ import { BusinessComponent } from './business/business.component';
   entryComponents: [
     InvestDetailComponent,
     BuymodalComponent,
-    UserCreateModalComponent
+    UserCreateModalComponent,
+    EditArticleComponent,
+    AlertArticleComponent
   ]
 })
 export class DashboardModule { }

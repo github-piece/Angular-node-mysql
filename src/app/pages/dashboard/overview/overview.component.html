@@ -12,8 +12,8 @@
         <div class="d-flex">
           <div class="p-title">25%</div>
           <mat-progress-bar value="25"></mat-progress-bar>
-          <div class="p-header">348 processes. 1/4 cores</div>
         </div>
+        <div class="p-header">348 processes. 1/4 cores</div>
       </mat-card>
     </div>
     <div class="col-md-4 col-sm-12">
@@ -25,8 +25,8 @@
         <div class="d-flex">
           <div class="p-title">45%</div>
           <mat-progress-bar value="45"></mat-progress-bar>
-          <div class="p-header">7.5/16 GB</div>
         </div>
+        <div class="p-header">7.5/16 GB</div>
       </mat-card>
     </div>
     <div class="col-md-4 col-sm-12">
@@ -38,13 +38,14 @@
         <div class="d-flex">
           <div class="p-title">90%</div>
           <mat-progress-bar value="90"></mat-progress-bar>
-          <div class="p-header">0.9/1 TB</div>
         </div>
+        <div class="p-header">0.9/1 TB</div>
       </mat-card>
     </div>
     <div class="col-md-4">
       <mat-card class="mb-3">
         <div [ngSwitch]="weather.type" class="float-right" style="margin-top: -8px">
+          <img *ngSwitchCase="weatherType.cloud" src="assets/weather/cloud.png" alt="cloud">
           <img *ngSwitchCase="weatherType.fog" src="assets/weather/fog.png" alt="fog">
           <img *ngSwitchCase="weatherType.rain" src="assets/weather/rain.png" alt="rain">
           <img *ngSwitchCase="weatherType.snow" src="assets/weather/snow.png" alt="snow">
@@ -71,51 +72,40 @@
       </mat-card>
       <mat-card class="mb-3">
         <mat-card-header>Alerts</mat-card-header>
+        <mat-divider></mat-divider>
         <mat-card-content>
-          <mat-radio-button color="warn">
-            Learn Angular 8
-            <span class="ml-30">2:45 pm</span>
-          </mat-radio-button>
-          <mat-divider></mat-divider>
-        </mat-card-content>
-        <mat-card-content>
-          <mat-radio-button color="warn">
-            Learn Angular 8
-            <span class="ml-30">2:45 pm</span>
-          </mat-radio-button>
-          <mat-divider></mat-divider>
-        </mat-card-content>
-        <mat-card-content>
-          <mat-radio-button color="warn">
-            Learn Angular 8
-            <span class="ml-30">2:45 pm</span>
-          </mat-radio-button>
-          <mat-divider></mat-divider>
+          <div class="table-responsive">
+            <table class="mat-table odd">
+              <tr *ngFor="let notification of notifications">
+                <td><mat-icon>{{notification.icon}}</mat-icon></td>
+                <td>{{notification.title}}</td>
+                <td>{{notification.text}}</td>
+                <td>{{notification.time}}</td>
+              </tr>
+            </table>
+          </div>
         </mat-card-content>
       </mat-card>
       <mat-card class="mb-3">
         <mat-card-header>ToDo List</mat-card-header>
         <mat-divider></mat-divider>
         <mat-card-content>
-          <mat-radio-button color="warn" checked class="mt-2">
+          <mat-radio-button color="warn" checked class="mt-4">
             Learn Angular 4.0
             <span class="ml-30">2:45 PM</span>
           </mat-radio-button>
-          <mat-divider></mat-divider>
         </mat-card-content>
         <mat-card-content>
           <mat-radio-button color="warn">
             Learn Angular Material
             <span class="ml-30">3:20 PM</span>
           </mat-radio-button>
-          <mat-divider></mat-divider>
         </mat-card-content>
         <mat-card-content>
           <mat-radio-button color="warn">
             Write documentation
             <span class="ml-30">6:00 PM</span>
           </mat-radio-button>
-          <mat-divider></mat-divider>
         </mat-card-content>
       </mat-card>
     </div>

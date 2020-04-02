@@ -61,11 +61,11 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let task of dataSource">
-          <td>{{task.no}}</td>
+        <tr *ngFor="let task of dataSource; let index = index">
+          <td>{{index + 1}}</td>
           <td>{{task.headline}}</td>
-          <td>{{task.article_createdate}}</td>
-          <td>{{task.u_accounttype}}</td>
+          <td>{{task.article_date}}</td>
+          <td>{{task.account_type}}</td>
         </tr>
         </tbody>
       </table>

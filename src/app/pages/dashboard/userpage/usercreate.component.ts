@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Server} from '../../../../config/url.service';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {MAT_DIALOG_DATA, MatDialogRef, MatSnackBar} from '@angular/material';
 import {UserService} from '../../../_services/user/user.service';
 import {MustMatch} from '../../../_helpers/must-match';
 
@@ -25,6 +25,7 @@ export class UserCreateModalComponent implements OnInit {
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<UserCreateModalComponent>,
     private userService: UserService,
+    private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) data
   ) {
     this.type = data.type;
@@ -52,7 +53,15 @@ export class UserCreateModalComponent implements OnInit {
     formData.append('password', this.f.password.value);
     formData.append('file', this.file);
     formData.append('adminId', this.id);
-    this.userService.createUser(formData).subscribe();
+    this.userService.createUser(formData).subscribe(() => {
+      this.snackBar.open('Successfully Created', '', {
+        duration: 2000
+      });
+    }, () => {
+      this.snackBar.open('Server error', '', {
+        duration: 2000
+      });
+    });
     this.dialogRef.close();
   }
   close() {
