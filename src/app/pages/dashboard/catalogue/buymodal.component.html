@@ -68,3 +68,26 @@
       <button type="button" mat-raised-button class="float-right mr-2" (click)="onNoClick()">Cancel</button>
     </mat-card-footer>
 </form>
+<form ngNoForm [action]="url" method="post" *ngIf="!formShow" target="_black">
+  <mat-card-header>{{modalContent}}</mat-card-header>
+  <mat-divider></mat-divider>
+  <mat-card-content>
+      <table class="mat-table">
+        <thead><tr><th>Amount</th><th>Balance</th><th>Currency</th></tr></thead>
+        <tbody><tr><td>{{amountBuy}}</td><td>{{balanceValue}}</td><td>{{curSymbol}}</td></tr></tbody>
+      </table>
+  </mat-card-content>
+  <input type="hidden" name="merchant_id" value="{{commission['mse_merchant_id']}}">
+  <input type="hidden" name="merchant_key" value="{{commission['mse_merchant_key']}}">
+  <input type="hidden" name="return_url" value="{{commission['url_return']}}">
+  <input type="hidden" name="cancel_url" value="{{commission['url_cancel']}}">
+  <input type="hidden" name="notify_url" value="{{commission['url_notify']}}">
+  <input type="hidden" name="amount" [value]="amountBuy"/>
+  <input type="hidden" name="item_name" [value]="itemName">
+  <input type="hidden" name="payment_method" value="{{commission['payment_method']}}">
+  <input type="hidden" name="signature" [value]="signature">
+  <mat-card-actions class="text-right">
+    <button type="submit" mat-raised-button color="primary" class="mr-3" (click)="onCheckOut()">Check out</button>
+    <button type="button" mat-raised-button (click)="onNoClick()">Cancel</button>
+  </mat-card-actions>
+</form>

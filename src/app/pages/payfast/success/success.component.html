@@ -1,1 +1,19 @@
-<p>success works!</p>
+<mat-card>
+  <mat-card-header>
+    <img mat-card-avatar [src]="userData.useravatar" class="mr-2">
+    <mat-card-title>{{userData.username}}</mat-card-title>
+    <mat-card-subtitle style="margin-bottom: 0">{{payData['item_name']}}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-divider></mat-divider>
+  <table class="mat-table my-2">
+    <thead><tr><td>Amount</td><td>Business</td><td>Situation</td></tr></thead>
+    <tbody><tr><td>{{payData.amount}} {{payData.curSymbol}}</td><td>{{payData.item_name}}</td><td style="color: #4caf50">Success!</td></tr></tbody>
+  </table>
+  <img mat-card-image src="assets/payfast/success.jpg" alt="success">
+  <div class="mat-card-header">
+    Your payment has done successfully.
+  </div>
+  <button mat-raised-button color="primary" (click)="setHistory()">
+    Continue
+  </button>
+</mat-card>

@@ -57,6 +57,7 @@ mat-toolbar {
 }
 mat-sidenav-container {
   top: 64px;
+  background: #f4f6f8;
 }
 mat-sidenav {
   width: 220px;

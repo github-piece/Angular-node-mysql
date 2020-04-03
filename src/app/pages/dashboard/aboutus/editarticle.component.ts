@@ -17,6 +17,7 @@ export class EditArticleComponent implements OnInit {
   enable = false;
   file: File[] = [];
   onfile = [false, false];
+  userData: any;
   constructor(
     private dialogRef: MatDialogRef<EditArticleComponent>,
     private dialog: MatDialog,
@@ -39,7 +40,8 @@ export class EditArticleComponent implements OnInit {
     this.file[0] = null; this.file[1] = null;
   }
   updateCard() {
-    const userId = this.authenticationService.currentUserSubject.value.userId;
+    this.userData = this.authenticationService.currentUserSubject.value;
+    const userId = this.userData.userId;
     const updateData = new FormData();
     updateData.append('id', this.data.cardData.id);
     updateData.append('headline', this.editServiceForm.value.headline);

@@ -8,7 +8,7 @@ import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { HomeComponent } from './pages/front/home/home.component';
 import { HeaderComponent } from './includes/front/header/header.component';
 import {
-  _MatMenuDirectivesModule,
+  _MatMenuDirectivesModule, MatButtonModule, MatCardModule, MatDividerModule,
   MatIconModule,
   MatMenuModule,
   MatPaginatorModule,
@@ -28,6 +28,7 @@ import {ChartsModule} from 'ng2-charts';
 import {NgxSpinnerModule} from 'ngx-spinner';
 import { SuccessComponent } from './pages/payfast/success/success.component';
 import { CancelComponent } from './pages/payfast/cancel/cancel.component';
+import { NotificationComponent } from './pages/payfast/notification/notification.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { CancelComponent } from './pages/payfast/cancel/cancel.component';
     SignupComponent,
     SuccessComponent,
     CancelComponent,
+    NotificationComponent,
   ],
   imports: [
     BrowserModule,
@@ -59,7 +61,10 @@ import { CancelComponent } from './pages/payfast/cancel/cancel.component';
     MatTableModule,
     MatPaginatorModule,
     ChartsModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    MatCardModule,
+    MatButtonModule,
+    MatDividerModule
   ],
   providers: [],
   exports: [

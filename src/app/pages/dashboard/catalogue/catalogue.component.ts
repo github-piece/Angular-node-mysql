@@ -259,7 +259,6 @@ export class BuymodalComponent implements OnInit {
   fund: any;
   rate: any;
   frequency: any;
-  payData = {};
   constructor(
     private dialogRef: MatDialogRef<BuymodalComponent>,
     private authenticationService: AuthenticationService,
@@ -332,21 +331,27 @@ export class BuymodalComponent implements OnInit {
     this.formData.append('balance', this.businessRemain);
     this.formData.append('userId', this.userData.userId);
     this.generateSignature(this.formData);
-    this.formShow = false;
   }
   generateSignature(formData) {
-    this.payfastService.generateSignature(formData).subscribe(result => console.log(result));
-    // return this.payfast.generateSignature(formData)
-    //   .pipe(first()).subscribe((res: any) => {
-    //     this.signature = res;
-    //   });
+    this.payfastService.generateSignature(formData).subscribe(result => {
+      this.signature = result.signature;
+      this.formShow = false;
+    });
   }
   onNoClick() {
-    console.log(this.payFastForm);
     this.dialogRef.close(this.payFastForm.controls);
   }
   showPart() {
     this.onShow = !this.onShow;
+  }
+  onCheckOut() {
+    const payData = {
+      curSymbol: this.curSymbol
+    };
+    this.formData.forEach((value, key) => {
+      payData[key] = value;
+    });
+    localStorage.setItem('payData', JSON.stringify(payData));
   }
   hasError = (controlName: string, errorName: string) => {
     return this.payFastForm.controls[controlName].hasError(errorName);

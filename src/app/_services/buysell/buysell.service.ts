@@ -21,4 +21,7 @@ export class BuysellService {
   getSellHistory(userId) {
     return this.http.post(`${Server}/getSellHistory`, {userId});
   }
+  setBuyHistory(formData) {
+    return this.http.post(`${Server}/setBuyHistory`, formData);
+  }
 }
