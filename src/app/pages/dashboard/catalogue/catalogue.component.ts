@@ -76,6 +76,7 @@ export class CatalogueComponent implements OnInit {
     this.businessInfo = [];
     this.catalogueService.getBusinessList(this.userData.userId, 'read')
       .subscribe(data => {
+        this.spinner.hide();
         this.businessInfo = data;
         this.mainBusiness = this.businessInfo.mainBusiness;
         this.process();
@@ -114,9 +115,9 @@ export class CatalogueComponent implements OnInit {
       if (business['image for front page'].substring(0, 4) !== 'http') {
         business['image for front page'] = Server + '/business/' + business['image for front page'];
       }
-      for (const user of this.businessInfo.businessUser) {
-        if (business.u_id === user.u_id) {
-          business.businessUser = user.u_name;
+      for (let i = 0; i < this.businessInfo.businessUser; i++) {
+        if (business.u_id === this.businessInfo.businessUser[i]) {
+          business.businessUser = this.businessInfo.businessUser[i].u_name;
         }
       }
     }
@@ -138,7 +139,6 @@ export class CatalogueComponent implements OnInit {
       this.stakeholdersProvince = this.stakeholders.province;
       this.stakeholdersDistrict = this.stakeholders.district;
       this.stakeholdersMunicipality = this.stakeholders.municipality;
-      this.spinner.hide();
     } else {
       this.unSdg = data.unSdg;
     }

@@ -3,3 +3,81 @@
   position: absolute;
   left: 2%;
 }
+.file-upload-btn-excel {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.file-upload-btn-excel-label {
+  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  box-sizing: border-box;
+  position: relative;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  outline: 0;
+  border: none;
+  -webkit-tap-highlight-color: transparent;
+  display: inline-block;
+  white-space: nowrap;
+  text-decoration: none;
+  vertical-align: baseline;
+  text-align: center;
+  margin: 0;
+  min-width: 64px;
+  line-height: 36px;
+  padding: 0 16px;
+  border-radius: 4px;
+  overflow: visible;
+  transform: translate3d(0,0,0);
+  transition: background .4s cubic-bezier(.25,.8,.25,1),box-shadow 280ms cubic-bezier(.4,0,.2,1);
+  background-color: white;
+  color: rgba(0, 0, 0, 0.87);
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  -webkit-appearance: button;
+}
+
+.file-upload-btn-excel-label:hover {
+  background-color: #f4f6f8;
+  cursor: pointer;
+}
+.more-btn {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+}
+.detail {
+  color: #FFFFFF;
+  background-color: #3f51b5;
+  display: flex;
+  padding: 6px 16px;
+  align-items: center;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.05px;
+  margin-bottom: 16px;
+}
+.detail .mat-icon {
+  color: white;
+  margin-right: 12px;
+}
+mat-form-field {
+  width: 100%;
+}
+.d-flex mat-progress-bar {
+  margin-top: 10px
+}
+.d-flex .p-title {
+  color: #e91e63;
+}

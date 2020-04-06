@@ -13,6 +13,7 @@ export class NewsfeedComponent implements OnInit {
   articles = [];
   thisArticle = [];
   p = 1;
+  show = false;
   constructor(
     private authenticationService: AuthenticationService,
     private articleService: ArticleService
@@ -36,6 +37,7 @@ export class NewsfeedComponent implements OnInit {
       article.u_avatar = Server + '/avatar/' + article.u_avatar;
     }
     this.thisArticle = this.articles[0];
+    this.show = true;
   }
   viewArticle(id) {
     this.thisArticle = this.articles[id];

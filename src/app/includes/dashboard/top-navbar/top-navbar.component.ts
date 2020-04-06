@@ -38,7 +38,9 @@ export class TopNavbarComponent implements OnInit, OnDestroy {
     if (this.userData == null || this.userData === {}) {
       this.router.navigate(['/login']);
     }
-    this.userData.useravatar = Server + '/avatar/' + this.userData.useravatar;
+    if (this.userData.useravatar.substring(0, 4) !== 'http') {
+      this.userData.useravatar = Server + '/avatar/' + this.userData.useravatar;
+    }
     this.filterOptions = this.searchBar.valueChanges.pipe(map(value => value ? this.filter(value) : this.options.slice()));
     this.getMessage();
   }
@@ -56,7 +58,7 @@ export class TopNavbarComponent implements OnInit, OnDestroy {
     this.messagesService.getMessage(this.userData.userId).subscribe(result => {
       this.messages = result;
       for (const message of this.messages) {
-        if (message.avatar.substr(0, 3) !== 'http') {
+        if (message.avatar.substr(0, 4) !== 'http') {
           message.avatar = Server + '/avatar/' + message.avatar;
         }
       }

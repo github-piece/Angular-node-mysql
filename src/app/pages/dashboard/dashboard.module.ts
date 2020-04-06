@@ -6,23 +6,30 @@ import { DashboardComponent } from './dashboard.component';
 import {MaindashboardComponent} from './maindashboard/maindashboard.component';
 import {TopNavbarComponent} from '../../includes/dashboard/top-navbar/top-navbar.component';
 import {
-  _MatMenuDirectivesModule,
-  MatAutocompleteModule,
-  MatBadgeModule,
-  MatButtonModule,
-  MatCardModule,
-  MatDialogModule,
-  MatTabsModule,
-  MatInputModule,
-  MatListModule,
-  MatMenuModule,
-  MatPaginatorModule,
-  MatSelectModule,
-  MatSidenavModule,
-  MatToolbarModule,
-  MatExpansionModule,
-  MatCheckboxModule, MatSlideToggleModule, MatProgressBarModule, MatRadioModule
+    _MatMenuDirectivesModule,
+    MatAutocompleteModule,
+    MatBadgeModule,
+    MatButtonModule,
+    MatCardModule,
+    MatDialogModule,
+    MatTabsModule,
+    MatInputModule,
+    MatListModule,
+    MatMenuModule,
+    MatPaginatorModule,
+    MatSelectModule,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatExpansionModule,
+    MatCheckboxModule,
+    MatSlideToggleModule,
+    MatProgressBarModule,
+    MatRadioModule,
+    MatChipsModule,
+    MatDatepickerModule,
+    MatGridListModule, MatTreeModule
 } from '@angular/material';
+import {MatNativeDateModule} from '@angular/material';
 import {MatIconModule} from '@angular/material';
 import {ReactiveFormsModule} from '@angular/forms';
 import { NewsfeedComponent } from './newsfeed/newsfeed.component';
@@ -45,8 +52,10 @@ import {ImageCropperModule} from 'ngx-image-cropper';
 import {NgxSpinnerModule} from 'ngx-spinner';
 import { OverviewComponent } from './overview/overview.component';
 import { ArticleComponent } from './article/article.component';
-import { BusinessComponent } from './business/business.component';
+import {BusinessComponent} from './business/business.component';
 import {AlertArticleComponent, EditArticleComponent} from './aboutus/editarticle.component';
+import {NgxMatIntlTelInputModule} from 'ngx-mat-intl-tel-input';
+import {GooglePlaceModule} from 'ngx-google-places-autocomplete/ngx-google-places-autocomplete.module';
 
 @NgModule({
   declarations: [
@@ -69,40 +78,47 @@ import {AlertArticleComponent, EditArticleComponent} from './aboutus/editarticle
     ArticleComponent,
     BusinessComponent,
     EditArticleComponent,
-    AlertArticleComponent
+    AlertArticleComponent,
   ],
-  imports: [
-    CommonModule,
-    DashboardRoutingModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatAutocompleteModule,
-    MatBadgeModule,
-    MatCardModule,
-    _MatMenuDirectivesModule,
-    MatMenuModule,
-    MatSidenavModule,
-    MatListModule,
-    MatSelectModule,
-    AgmCoreModule,
-    GoogleChartsModule,
-    MatTableModule,
-    MatPaginatorModule,
-    NgxPaginationModule,
-    MatDialogModule,
-    MatTabsModule,
-    MatExpansionModule,
-    ChartsModule,
-    MatCheckboxModule,
-    MatSlideToggleModule,
-    ImageCropperModule,
-    NgxSpinnerModule,
-    MatProgressBarModule,
-    MatRadioModule,
-  ],
+    imports: [
+        CommonModule,
+        DashboardRoutingModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatIconModule,
+        MatInputModule,
+        ReactiveFormsModule,
+        MatAutocompleteModule,
+        MatBadgeModule,
+        MatCardModule,
+        _MatMenuDirectivesModule,
+        MatMenuModule,
+        MatSidenavModule,
+        MatListModule,
+        MatSelectModule,
+        AgmCoreModule,
+        GoogleChartsModule,
+        MatTableModule,
+        MatPaginatorModule,
+        NgxPaginationModule,
+        MatDialogModule,
+        MatTabsModule,
+        MatExpansionModule,
+        ChartsModule,
+        MatCheckboxModule,
+        MatSlideToggleModule,
+        ImageCropperModule,
+        NgxSpinnerModule,
+        MatProgressBarModule,
+        MatRadioModule,
+        MatChipsModule,
+        NgxMatIntlTelInputModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatGridListModule,
+        GooglePlaceModule,
+        MatTreeModule,
+    ],
   exports: [
     TopNavbarComponent
   ],
@@ -111,7 +127,7 @@ import {AlertArticleComponent, EditArticleComponent} from './aboutus/editarticle
     BuymodalComponent,
     UserCreateModalComponent,
     EditArticleComponent,
-    AlertArticleComponent
+    AlertArticleComponent,
   ]
 })
 export class DashboardModule { }

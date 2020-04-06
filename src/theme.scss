@@ -2,8 +2,8 @@
 @include mat-core();
 
 $my-app-primary: mat-palette($mat-blue-grey);
-$my-app-accent:  mat-palette($mat-indigo);
-$my-app-warn:    mat-palette($mat-pink);
+$my-app-accent:  mat-palette($mat-pink);
+$my-app-warn:    mat-palette($mat-red, A700);
 $my-app-theme: mat-light-theme($my-app-primary, $my-app-accent, $my-app-warn);
 
 @include angular-material-theme($my-app-theme);

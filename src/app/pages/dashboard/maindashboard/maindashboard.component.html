@@ -7,7 +7,7 @@
   <mat-divider></mat-divider>
   <mat-card-content>
     <div class="row">
-      <mat-form-field class="ml-auto mr-2 mt-2 w-50">
+      <mat-form-field class="ml-auto mr-2 mt-2 w-50" color="secondary">
         <mat-label>Please insert place address</mat-label>
         <mat-select>
           <mat-option *ngFor="let business of businessData" value="{{business.name}}" (click)="onAddress(business.id)">{{business.name}}</mat-option>

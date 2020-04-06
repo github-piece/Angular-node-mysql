@@ -1,1 +1,14 @@
-<p>cancel works!</p>
+<mat-card>
+  <mat-card-header>
+    <img mat-card-avatar [src]="userData.useravatar" class="mr-3">
+    <mat-card-title>{{userData.username}}</mat-card-title>
+    <mat-card-subtitle style="margin-bottom: 0">{{payData['item_name']}}</mat-card-subtitle>
+  </mat-card-header>
+  <img mat-card-image src="assets/payfast/cancel.jpg" alt="Cancel">
+  <div class="mat-card-header">
+    Your payment has been cancelled.
+  </div>
+  <button mat-raised-button class="btn-danger" (click)="return()">
+    Continue
+  </button>
+</mat-card>

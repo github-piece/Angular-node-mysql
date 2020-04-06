@@ -57,13 +57,15 @@ export const notifications = [
     title: 'Social',
     text: 'Important Message',
     time: 'JUST NOW',
-    icon: 'unsubscribe'
+    icon: 'unsubscribe',
+    color: 'primary'
   },
   {
     type: 'alert',
     title: 'Removed 6 items...',
     text: 'Important Message',
     time: 'Yesterday',
-    icon: 'error'
+    icon: 'error',
+    color: 'warn'
   }
 ];

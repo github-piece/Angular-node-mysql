@@ -1,15 +1,658 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AuthenticationService} from '../../../_services/authentication/authentication.service';
+import {QuestionService} from '../../../_services/question/question.service';
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {MatChipInputEvent, MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material';
+import {Router} from '@angular/router';
+import {FlatTreeControl} from '@angular/cdk/tree';
+import {SelectionModel} from '@angular/cdk/collections';
 
+type AOA = any[][];
+export class TodoItemNode {
+  children: TodoItemNode[];
+  item: string;
+}
+export class TodoItemFlatNode {
+  item: string;
+  level: number;
+  expandable: boolean;
+}
 @Component({
   selector: 'app-business',
   templateUrl: './business.component.html',
   styleUrls: ['./business.component.css']
 })
 export class BusinessComponent implements OnInit {
+  flatNodeMap = new Map<TodoItemFlatNode, TodoItemNode>();
+  nestedNodeMap = new Map<TodoItemNode, TodoItemFlatNode>();
+  treeControl: FlatTreeControl<TodoItemFlatNode>;
+  treeFlattener: MatTreeFlattener<TodoItemNode, TodoItemFlatNode>;
+  dataSource: MatTreeFlatDataSource<TodoItemNode, TodoItemFlatNode>;
+  checklistSelection = new SelectionModel<TodoItemFlatNode>(true /* multiple */);
 
-  constructor() { }
+  currentStep = 0;
+  businessAnswers: AOA;
+  userData: any;
+  showProfile = false;
+  showActions = false;
+  onFinish = true;
+  loading = false;
+  address: string;
+  action =  'insert';
+  profile: string;
+  imagePath: any;
+  imgURL = [];
+  showImage = [];
 
+  progress = '1';
+  questionForm: FormGroup;
+  questionData = [];
+  rowData: any = [];
+  colValidator: any = {};
+  uploadIndex = [];
+  formData = new FormData();
+  validatorMessage = {  };
+  domFlag = false;
+  domPositionClick = false;
+  country = [];
+  selectedCountry: any;
+  municipalityIndex = [];
+  municipalityZero = false;
+  provinces = [];
+  province = [[]];
+  municipalities = [];
+  municipality = [[]];
+  file: File[] = [null];
+  chips: any = [];
+
+  removable = true;
+  muniTemp = [[]];
+  instruments = [];
+  currencyCode: any;
+  currencySymbol: any = '';
+  currencyAmount: any = '';
+  stakeholder = [];
+  goals = [];
+  balances = [];
+  incomes = [];
+  domPosition: number;
+  cashFlows = [];
+  stakeholderRings = [];
+  rings: any = {};
+  explainIndex: any;
+  addItemFlag = false;
+  rangeMain = [];
+  rangeExtra = [];
+  rangeExtraDomAddItem = [];
+  addItemRowsData: any = [];
+  addItemColData: any = [];
+  questionTypeID: any;
+  sectors: any;
+  sectorData = '';
+  hidden = 1;
+  domAddItemFlag = false;
+  message: string;
+  clickFlag: number;
+  businessId = '';
+  currency = {};
+  excelAnswers = [];
+  chipsRow = [];
+  sectorCount = 0;
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+  chipsTemp: string[] = [];
+  @ViewChild('tagInput', {static: false}) tagInput: ElementRef<HTMLInputElement>;
+  constructor(
+    private authenticationService: AuthenticationService,
+    private questionService: QuestionService,
+    private formBuilder: FormBuilder,
+    private router: Router
+  ) {
+    this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
+    this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
+    this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+  }
   ngOnInit() {
+    this.userData = this.authenticationService.currentUserSubject.value;
+  }
+  getBusinessQuiz(profile) {
+    this.profile = profile;
+    this.questionService.getBusinessQuiz(this.userData.userId, profile).subscribe(result => {
+      if (this.action === 'restart') {
+        this.currentStep = 0;
+        this.action = 'insert';
+      } else {
+        if (result.rememberValue[0] !== undefined && result.rememberValue[0].id_business_quiz !== 134)  {
+          this.currentStep = result.rememberValue[0].id_business_quiz;
+          this.businessId = result.rememberValue[0].business_id;
+          this.questionTypeID = this.businessId;
+          this.action = 'update';
+        }
+      }
+      this.questionData = result.data;
+      this.country = result.country;
+      this.instruments = result.instruments;
+      this.currencyCode = result.currency_code;
+      this.stakeholder = result.stakeholder;
+      this.goals = result.goals;
+      this.balances = result.balances;
+      this.incomes = result.incomes;
+      this.cashFlows = result.cashFlows;
+      this.stakeholderRings = result.stakeholderRings;
+      this.sectors = this.getTreeStructure(result.sectors);
+      this.sectors = this.buildFileTree(this.sectors, 0);
+      this.dataSource.data = this.sectors;
+      this.provinces = result.provinceList;
+      this.municipalities = result.Municipalities;
+      this.questionStart(this.currentStep);
+    });
+  }
+  questionStart(step) {
+    this.formData = new FormData();
+    let required;
+    this.initVar();
+    this.rowData = this.questionData[step];
+    if (this.rowData.notes === 'Dom manipulation required') {
+      this.domPosition = parseInt(this.rowData.dom_position, 10);
+      this.domValidator();
+    } else if (this.rowData.notes === 'Add Item Option') {
+      this.addItemValidator();
+    } else if (this.rowData.notes.includes('Dom manipulation required') && this.rowData.notes.includes('Add Item Option')) {
+      this.domAddItemValidator();
+    } else {
+      for (let m = 0; m < 10; m++) {
+        this.rangeMain.push(m);
+      }
+      if (this.rowData.required) {
+        required = 1;
+      } else {
+        required = 0;
+      }
+      this.formValidator(required);
+    }
+  }
+  formValidator(required) {
+    if (required) {
+      for (let i = 0; i < 10; i++) {
+        if (this.rowData['col_' + i + '_header']) {
+          if (this.rowData['col_' + i] === 'email') {
+            this.colValidator['col_' + i + '_header'] = new FormControl('', [Validators.required, Validators.email]);
+          } else if (this.rowData['col_' + i] === 'SelectionAndDetails') {
+            this.colValidator['col_' + i + '_header'] = new FormControl('');
+          } else if (this.rowData['col_' + i].toLowerCase().includes('tag')) {
+            this.colValidator['col_' + i + '_header'] = new FormControl('');
+          } else {
+            this.colValidator['col_' + i + '_header'] = new FormControl('', [Validators.required]);
+          }
+        }
+      }
+    } else {
+      for (let i = 0; i < 10; i++) {
+        if (this.rowData['col_' + i + '_header']) {
+          this.colValidator['col_' + i + '_header'] = new FormControl('');
+        }
+      }
+    }
+    this.questionForm = this.formBuilder.group(
+      this.colValidator
+    );
+    this.showProfile = true;
+  }
+  domValidator() {
+    for (let i = 0; i <= 10; i++) {
+      if (this.rowData['col_' + i + '_header']) {
+        this.colValidator['col_' + i + '_header'] = new FormControl('');
+      }
+    }
+    this.colValidator.other = this.formBuilder.array([]);
+    this.questionForm = this.formBuilder.group(
+      this.colValidator
+    );
+    for (let i = 0; i <= this.domPosition; i++) {
+      this.rangeMain.push(i);
+    }
+    for (let i = this.domPosition + 1; i < 10; i++) {
+      this.rangeExtra.push(i);
+    }
+    this.domFlag = true;
+    this.showProfile = true;
+  }
+  addItemValidator() {
+    let position;
+    if (this.rowData.col_0 === 'SelectionAndDetails') {
+      position = 0;
+      this.colValidator.col_0_header = [''];
+    } else {
+      position = -1;
+    }
+    this.colValidator.other = this.formBuilder.array([this.addOtherSkillFormGroup(position)]);
+    this.questionForm = this.formBuilder.group(
+      this.colValidator
+    );
+    for (let i = 0; i <= position; i++) {
+      this.rangeMain.push(i);
+    }
+    for (let i = position + 1; i < 10; i++) {
+      this.rangeExtra.push(i);
+    }
+    this.addItemFlag  = true;
+    this.showProfile = true;
+  }
+  addOtherSkillFormGroup(position): FormGroup {
+    for (let i = position + 1; i < 10; i++) {
+      if (this.rowData['col_' + i + '_header']) {
+        this.colValidator['col_' + i + '_header'] = new FormControl('');
+      }
+    }
+    return this.formBuilder.group(this.colValidator);
+  }
+  showExtraDom(event) {
+    if (event.value === 'Yes') {
+      this.domPositionClick = true;
+    } else {
+      this.domPositionClick = false;
+      this.questionForm.controls.col_0_header.setValue('No');
+    }
+  }
+  domAddItemValidator() {
+    this.domPosition = parseInt(this.rowData.dom_position, 10);
+    this.domAddItemFlag = true;
+    this.domValidator();
+  }
+  initVar() {
+    this.domPositionClick = false;
+    this.domFlag = false;
+    this.domAddItemFlag = false;
+    this.rangeMain = [];
+    this.rangeExtra = [];
+    this.rangeExtraDomAddItem = [];
+    this.colValidator = {};
+    this.addItemFlag = false;
+    this.uploadIndex = [];
+    this.addItemRowsData = [];
+    this.addItemColData = [];
+  }
+  explain_content(i, index) {
+    this.explainIndex = i;
+    if (index) {
+      this.clickFlag = index;
+    } else {
+      if (index === '0') {
+        this.clickFlag = 0;
+      } else {
+        this.clickFlag = undefined;
+      }
+    }
+  }
+  changeStep() {
+    if (!this.questionForm.valid) {
+      for (const control in this.questionForm.controls) {
+        if (this.questionForm.controls.hasOwnProperty(control)) {
+          this.questionForm.controls[control].markAsTouched();
+        }
+      }
+      return false;
+    } else {
+      if (this.currentStep === 0) {
+        const businessName = this.questionForm.get('col_0_header').value;
+        const time = Date.now();
+        this.questionTypeID = businessName + time;
+      }
+      if (this.currentStep < this.questionData.length) {
+        this.currentStep++;
+      } else {
+        return;
+      }
+      this.progress = String(Math.round(this.currentStep * 100 / this.questionData.length));
+      if (this.addItemFlag || this.domAddItemFlag) {
+        for (const i of this.rangeExtra) {
+          if (this.questionForm.get('col_' + i + '_header')) {
+            if (!this.municipalityZero && this.rowData['col_' + i].includes('South Africa')) {
+              this.addItemColData['col_' + i + '_header'] = '';
+            } else {
+              this.addItemColData['col_' + i + '_header'] = this.questionForm.get('col_' + i + '_header').value;
+            }
+          } else {
+            this.addItemColData['col_' + i + '_header'] = '';
+          }
+        }
+        if (this.domAddItemFlag) {
+          this.addItemColData.col_0_header = 'Yes';
+        }
+        // tslint:disable-next-line:no-shadowed-variable
+        for (const {addItemRowData, index} of this.questionForm.get('other').value.map((addItemRowData, index) => ({
+          addItemRowData,
+          index
+        }))) {
+          if (index === 0) {
+            const target = {};
+            Object.assign(target, this.addItemColData);
+            this.addItemRowsData[0] = target;
+            if (this.domAddItemFlag) {
+              this.addItemRowsData[1] = addItemRowData;
+            }
+          } else {
+            if (this.domAddItemFlag) {
+              this.addItemRowsData[index + 1] = addItemRowData;
+            } else {
+              this.addItemRowsData[index] = addItemRowData;
+            }
+          }
+        }
+      }
+      this.putAnswerList();
+    }
+    this.questionStart(this.currentStep);
+  }
+  addTag(event: MatChipInputEvent, i): void {
+    const value = event.value;
+    if ((value || '').trim()) {
+      this.chipsTemp.push(value.trim());
+    }
+    this.questionForm.get('col_' + i + '_header').setValue(null);
+  }
+  removeTag(fruit: string): void {
+    const index = this.chipsTemp.indexOf(fruit);
+    if (index >= 0) {
+      this.chipsTemp.splice(index, 1);
+    }
+  }
+  getStakeholderRing(ring, i, index) {
+    this.rings[index] = ring;
+    this.questionForm.get('col_' + i + '_header').setValue(JSON.stringify(this.rings));
+  }
+  setOtherData(dataA, dataB, index, i) {
+    const data = dataA + '!!' + dataB;
+    this.muniTemp[index].push(data);
+    if (index === 0) {
+      this.municipalityZero = true;
+    } else {
+      (this.questionForm.controls.other as FormArray).
+        controls[index]['controls']['col_' + i + '_header'].setValue(this.muniTemp[index]);
+    }
+  }
+  putAnswerList() {
+    if (this.rowData.id === 2) {
+      this.formData.append('file', this.file[0]);
+      this.formData.append('file', this.file[1]);
+      this.formData.append('file', this.file[2]);
+    } else if (this.rowData.id === 50) {
+      this.formData.append('file', this.file[1]);
+    } else {
+      if (this.domAddItemFlag) {
+        this.formData.append('addItemRowsData', JSON.stringify(this.addItemRowsData));
+      } else {
+        for (let i = 0; i < 10; i++) {
+          if (this.questionForm.get('col_' + i + '_header')) {
+            if (this.uploadIndex[i] === i) {
+              this.formData.append('col_' + i + '_header', '');
+            } else {
+              if (this.rowData['col_' + i].toLowerCase().includes('phone')
+                && this.questionForm.get('col_' + i + '_header').value) {
+                this.formData.append('col_' + i + '_header', this.questionForm.get('col_' + i + '_header').value);
+              } else if (this.rowData['col_' + i].toLowerCase().includes('sector')) {
+                this.formData.append('col_' + i + '_header', this.sectorData);
+              } else if (this.rowData['col_' + i].toLowerCase().includes('tag')) {
+                this.formData.append('col_' + i + '_header', this.chips);
+              } else {
+                this.formData.append('col_' + i + '_header', this.questionForm.get('col_' + i + '_header').value);
+              }
+            }
+          }
+        }
+      }
+    }
+    this.formData.append('userid', this.userData.userId);
+    this.formData.append('profile', this.profile);
+    this.formData.append('id_business_quiz', this.rowData.id);
+    if (this.profile === 'business_profile') {
+      localStorage.setItem('business_profile', this.questionTypeID);
+    } else if (this.profile === 'scouter_profile') {
+      localStorage.setItem('scouter_profile', this.questionTypeID);
+    } else {
+      localStorage.setItem('employer_profile', this.questionTypeID);
+    }
+    this.formData.append('questionTypeID', this.questionTypeID);
+    this.formData.append('businessId', this.businessId);
+    this.formData.append('action', this.action);
+    this.colValidator = {};
+    return this.questionService.setAnswer(this.formData).subscribe(result => result);
+  }
+  getTreeStructure(sectors) {
+    const treeData = {};
+    for (const rowSector of sectors) {
+      const child = [];
+      for (let i = 0; i <= 4; i++ ) {
+        if (rowSector['sub_sector_' + i]) {
+          child.push(rowSector['sub_sector_' + i]);
+        }
+      }
+      if (child.length) {
+        treeData[rowSector.sector] = child;
+      } else {
+        treeData[rowSector.sector] = null;
+      }
+    }
+    return treeData;
+  }
+  goToStart() {
+    this.showProfile = false;
+    this.currentStep = 0;
+    this.progress = '0';
+    this.router.navigate(['/pages/listingABusinessComponent']);
+    this.action = 'restart';
+  }
+  onFileChange(event, i) {
+    this.uploadIndex[i] = i;
+    const mimeType = event.target.files[0].type;
+    if (mimeType.match(/image\/*/) == null) {
+      return;
+    }
+    const reader = new FileReader();
+    reader.readAsDataURL(event.target.files[0]);
+    reader.onload = () => {
+      this.imgURL[i] = reader.result;
+    };
+    this.file[i] = event.target.files.item(0);
+    this.showImage[i] = true;
+  }
+  domAddItem() {
+    const position = 0;
+    this.colValidator = {};
+    this.rangeExtraDomAddItem = [];
+    this.clickFlag = undefined;
+    (this.questionForm.get('other') as FormArray).push(this.addOtherSkillFormGroup(position));
+    for (let i = position + 1; i < 10; i++) {
+      this.rangeExtraDomAddItem.push(i);
+    }
+    this.domAddItemFlag = true;
+  }
+  handleAddressChange(address: any, i) {
+    this.address = address.formatted_address;
+    this.questionForm.controls['col_' + i + '_header'].setValue(this.address);
+  }
+  import(evt: any) {
+  }
+  getCountryProvince(selectedValue, index, j) {
+    const nextValue = this.rowData['col_' + 1 * ( j + 1 )];
+    if (nextValue) {
+      if (nextValue.toLowerCase().includes('province')) {
+        this.province[index] = [];
+        this.selectedCountry = selectedValue;
+        for (const province of this.provinces) {
+          if (province.country === selectedValue) {
+            this.province[index].push(province.names);
+          }
+        }
+      } else if (nextValue.toLowerCase().includes('south africa')) {
+        this.municipality[index] = [];
+        this.municipalityIndex[index] = true;
+        for (const municipal of this.municipalities) {
+          if (municipal.province === selectedValue) {
+            this.municipality[index].push(municipal);
+          }
+        }
+      }
+    }
+  }
+  addCurrencyAmount(event, i): void {
+    this.currencyAmount = event.target.value;
+  }
+  addCurrencySymbol(symbol, index, i): void {
+    this.currencySymbol = symbol;
+    this.questionForm.controls['col_' + i + '_header'].setValue(this.currencyAmount + this.currencySymbol);
+  }
+  addItem(index: number) {
+    this.colValidator = {};
+    this.chipsRow = [[]];
+    // @ts-ignore
+    this.chipsTemp[parseInt(index + 1, 10)] = [];
+    this.municipality[parseInt(String(index + 1), 10)] = [];
+    this.muniTemp[parseInt(String(index + 1), 10)] = [];
+    this.province[parseInt(String(index + 1), 10)] = [];
+    this.clickFlag = undefined;
+    let position;
+    if (this.rowData.col_0 === 'SelectionAndDetails') {
+      position = 0;
+    } else {
+      position = -1;
+    }
+    (this.questionForm.get('other') as FormArray).push(this.addOtherSkillFormGroup(position));
+    const getAddBtn = document.getElementsByClassName('add-btn_1');
+    for (let i = 0; i < getAddBtn.length; i++) {
+      const btnDisplay = getAddBtn.item(i) as HTMLElement;
+      btnDisplay.style.display = 'none';
+    }
+  }
+  setCurrency(index: number, i) {
+    if (this.currency[index]) {
+      this.currency[index] = !this.currency[index];
+    } else {
+      this.currency[index] = true;
+    }
+    this.questionForm.controls['col_' + i + '_header'].setValue(JSON.stringify(this.currency));
+  }
+  setValue(x, i) {
+    this.questionForm.controls['col_' + i + '_header'].setValue(x);
   }
 
+  getLevel = (node: TodoItemFlatNode) => node.level;
+
+  isExpandable = (node: TodoItemFlatNode) => node.expandable;
+
+  getChildren = (node: TodoItemNode): TodoItemNode[] => node.children;
+
+  hasChild = (_: number, nodeData: TodoItemFlatNode) => nodeData.expandable;
+  /** Whether all the descendants of the node are selected. */
+  descendantsAllSelected(node: TodoItemFlatNode): boolean {
+    const descendants = this.treeControl.getDescendants(node);
+    return descendants.every(child =>
+      this.checklistSelection.isSelected(child)
+    );
+  }
+
+  /** Whether part of the descendants are selected */
+  descendantsPartiallySelected(node: TodoItemFlatNode): boolean {
+    const descendants = this.treeControl.getDescendants(node);
+    const result = descendants.some(child => this.checklistSelection.isSelected(child));
+    return result && !this.descendantsAllSelected(node);
+  }
+
+  /** Toggle the to-do item selection. Select/deselect all the descendants node */
+  todoItemSelectionToggle(node: TodoItemFlatNode): void {
+    this.checklistSelection.toggle(node);
+    const descendants = this.treeControl.getDescendants(node);
+    this.checklistSelection.isSelected(node)
+      ? this.checklistSelection.select(...descendants)
+      : this.checklistSelection.deselect(...descendants);
+
+    // Force update for the parent
+    descendants.every(child =>
+      this.checklistSelection.isSelected(child)
+    );
+    this.checkAllParentsSelection(node);
+  }
+
+  /** Toggle a leaf to-do item selection. Check all the parents to see if they changed */
+  todoLeafItemSelectionToggle(node: TodoItemFlatNode, i): void {
+    this.checklistSelection.toggle(node);
+    this.checkAllParentsSelection(node);
+    if (this.sectorData.includes(node.item)) {
+      this.sectorData = this.sectorData.replace(node.item + ',', '');
+    } else {
+      this.sectorData += node.item + ',';
+    }
+  }
+
+  /* Checks all the parents when a leaf node is selected/unselected */
+  checkAllParentsSelection(node: TodoItemFlatNode): void {
+    let parent: TodoItemFlatNode | null = this.getParentNode(node);
+    while (parent) {
+      this.checkRootNodeSelection(parent);
+      parent = this.getParentNode(parent);
+    }
+  }
+
+  /** Check root node checked state and change it accordingly */
+  checkRootNodeSelection(node: TodoItemFlatNode): void {
+    const nodeSelected = this.checklistSelection.isSelected(node);
+    const descendants = this.treeControl.getDescendants(node);
+    const descAllSelected = descendants.every(child =>
+      this.checklistSelection.isSelected(child)
+    );
+    if (nodeSelected && !descAllSelected) {
+      this.checklistSelection.deselect(node);
+    } else if (!nodeSelected && descAllSelected) {
+      this.checklistSelection.select(node);
+    }
+  }
+
+  /* Get the parent node of a node */
+  getParentNode(node: TodoItemFlatNode): TodoItemFlatNode | null {
+    const currentLevel = this.getLevel(node);
+
+    if (currentLevel < 1) {
+      return null;
+    }
+
+    const startIndex = this.treeControl.dataNodes.indexOf(node) - 1;
+
+    for (let i = startIndex; i >= 0; i--) {
+      const currentNode = this.treeControl.dataNodes[i];
+
+      if (this.getLevel(currentNode) < currentLevel) {
+        return currentNode;
+      }
+    }
+    return null;
+  }
+  buildFileTree(obj: {[key: string]: any}, level: number): TodoItemNode[] {
+    return Object.keys(obj).reduce<TodoItemNode[]>((accumulator, key) => {
+      const value = obj[key];
+      const node = new TodoItemNode();
+      node.item = key;
+
+      if (value != null) {
+        if (typeof value === 'object') {
+          node.children = this.buildFileTree(value, level + 1);
+        } else {
+          node.item = value;
+        }
+      }
+
+      return accumulator.concat(node);
+    }, []);
+  }
+  transformer = (node: TodoItemNode, level: number) => {
+    const existingNode = this.nestedNodeMap.get(node);
+    const flatNode = existingNode && existingNode.item === node.item
+      ? existingNode
+      : new TodoItemFlatNode();
+    flatNode.item = node.item;
+    flatNode.level = level;
+    flatNode.expandable = !!node.children;
+    this.flatNodeMap.set(flatNode, node);
+    this.nestedNodeMap.set(node, flatNode);
+    return flatNode;
+  }
 }

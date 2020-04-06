@@ -35,7 +35,7 @@
                   </tbody>
                 </table>
               </div>
-              <mat-slide-toggle color="primary" (click)="onChange()" checked *ngIf="onShow && !myData.provider">
+              <mat-slide-toggle color="warn" (click)="onChange()" checked *ngIf="onShow && !myData.provider">
                 <div class="m-0">Change Password</div>
               </mat-slide-toggle>
               <mat-slide-toggle color="primary" (click)="onChange()" *ngIf="!onShow && !myData.provider">
@@ -49,39 +49,33 @@
                   <mat-label>Old Password</mat-label>
                   <input matInput type="password" placeholder="Insert old password" formControlName="oldPassword">
                   <mat-hint>Please Insert your old password</mat-hint>
-                  <mat-error *ngIf="submitted && f.oldPassword.errors">
-                    <div *ngIf="f.oldPassword.errors.required">
-                      Password is required
-                    </div>
-                    <div *ngIf="f.oldPassword.errors.notMatch">
-                      Passwords doesn't match
-                    </div>
+                  <mat-error *ngIf="hasError('oldPassword', 'required')">
+                    Old password is <strong>required</strong>
+                  </mat-error>
+                  <mat-error *ngIf="!hasError('oldPassword', 'required') && hasError('oldPassword', 'notMatch')">
+                    Password <strong>doesn't match</strong>
                   </mat-error>
                 </mat-form-field>
                 <mat-form-field>
                   <mat-label>New Password</mat-label>
                   <input matInput type="password" placeholder="Insert new password" formControlName="newPassword">
                   <mat-hint>Password has to be more than 6 letters</mat-hint>
-                  <mat-error *ngIf="submitted && f.newPassword.errors">
-                    <div *ngIf="f.newPassword.errors.required">
-                      Old Password is required
-                    </div>
-                    <div *ngIf="f.newPassword.errors.minlength">
-                      New Password must be at least 6 characters
-                    </div>
+                  <mat-error *ngIf="hasError('newPassword', 'required')">
+                    New Password is <strong>required</strong>
+                  </mat-error>
+                  <mat-error *ngIf="!hasError('newPassword', 'required') && hasError('newPassword', 'minlength')">
+                    New Password must be <strong>at least 6 characters</strong>
                   </mat-error>
                 </mat-form-field>
                 <mat-form-field>
                   <mat-label>Confirm Password</mat-label>
                   <input matInput type="password" placeholder="Insert password again" formControlName="confirmPassword">
                   <mat-hint>Please type your password again!</mat-hint>
-                  <mat-error *ngIf="submitted && f.confirmPassword.errors">
-                    <div *ngIf="f.confirmPassword.errors.required">
-                      Confirm Password is required
-                    </div>
-                    <div *ngIf="f.confirmPassword.errors.mustMatch">
-                      Passwords must match
-                    </div>
+                  <mat-error *ngIf="hasError('confirmPassword', 'required')">
+                    Confirm <strong>required</strong>
+                  </mat-error>
+                  <mat-error *ngIf="!hasError('confirmPassword', 'required') && hasError('confirmPassword', 'mustMatch')">
+                    Password does <strong>not match</strong>
                   </mat-error>
                 </mat-form-field>
                 <mat-divider></mat-divider>
@@ -121,8 +115,8 @@
               <td>{{task['u_email']}}</td>
               <td>{{task['u_createddate']}}</td>
               <td>
-                <mat-slide-toggle color="primary" *ngIf="task.u_active == 'InActive'" (click)="freezeUser(task.u_id, 'active')">InActive</mat-slide-toggle>
-                <mat-slide-toggle color="primary" *ngIf="task.u_active == 'Active'" (click)="freezeUser(task.u_id, 'inactive')" checked>Activated</mat-slide-toggle>
+                <mat-slide-toggle color="secondary" *ngIf="task.u_active == 'InActive'" (click)="freezeUser(task.u_id, 'active')">InActive</mat-slide-toggle>
+                <mat-slide-toggle color="secondary" *ngIf="task.u_active == 'Active'" (click)="freezeUser(task.u_id, 'inactive')" checked>Activated</mat-slide-toggle>
               </td>
               <td>
                 <mat-form-field>

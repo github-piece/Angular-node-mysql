@@ -196,4 +196,7 @@ export class UserpageComponent implements OnInit {
       });
     });
   }
+  hasError = (controlName: string, errorName: string) => {
+    return this.registerForm.controls[controlName].hasError(errorName);
+  }
 }

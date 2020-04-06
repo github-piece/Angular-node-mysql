@@ -187,10 +187,10 @@ export class MaindashboardComponent implements OnInit, AfterViewInit {
       },
       length: 2
     });
+    this.spinner.hide();
   }
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
-    this.spinner.hide();
   }
 }
 

@@ -9,7 +9,7 @@ export class BusinessService {
 
   constructor(private http: HttpClient) { }
   getBusinessList(userId) {
-    return this.http.post<any>(`${Server}/business`, {userId});
+    return this.http.post<any>(`${Server}/getBusiness`, {userId});
   }
   getGeometry(address) {
     return this.http.post<any>(`${Server}/getGeometry`, {address});

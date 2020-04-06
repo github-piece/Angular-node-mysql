@@ -1,67 +1,69 @@
-<div class="p-header">NEWS FEED</div>
-<div class="p-title">Here's what your connections posted</div>
-<div class="news-header">There are total {{articles.length}} news feed stories</div>
-<div class="row">
-  <div class="col-lg-4">
-    <ul>
-      <li *ngFor="let task of articles | paginate: { itemsPerPage: 4, currentPage: p }; let index = index">
-        <mat-card class="feed">
-          <td style="width: 100px">
-            <img src="{{task.u_avatar}}" alt="userPhoto">
-          </td>
-          <td style="width: 40%">
-            {{task.headline}}<br/>
-            <span>by</span> {{task.u_name}}
-          </td>
-          <td style="width: 40%">
-            {{task.article_date}}<br/>
-            <span>News Feed Created</span>
-          </td>
-          <td>
-            <button mat-stroked-button (click)="viewArticle(index)">View</button>
-          </td>
-        </mat-card>
-      </li>
-    </ul>
-    <pagination-controls class="pagination" (pageChange)="p = $event"></pagination-controls>
-  </div>
-  <div class="col-lg-8">
-    <div class="row">
-      <div class="col-md-6">
-        <mat-card class="news-image">
-          <mat-card-header>First Image</mat-card-header>
-          <mat-divider></mat-divider>
-          <mat-card-content class="text-center d-block">
-            <img [src]="thisArticle['imgurl1']" alt="Newsfeed Image" style="padding-top: 16px;"/>
-          </mat-card-content>
-        </mat-card>
-        <mat-card>
-          <mat-card-header>Content</mat-card-header>
-          <mat-divider></mat-divider>
-          <mat-card-content>
-            <p class="mt-2">
-              {{thisArticle['section1']}}
-            </p>
-          </mat-card-content>
-        </mat-card>
-      </div>
-      <div class="col-md-6">
-        <mat-card class="news-image">
-          <mat-card-header>Second Image</mat-card-header>
-          <mat-divider></mat-divider>
-          <mat-card-content class="text-center d-block">
-            <img [src]="thisArticle['imgurl2']" alt="Newsfeed Image" style="padding-top: 16px;"/>
-          </mat-card-content>
-        </mat-card>
-        <mat-card>
-          <mat-card-header>Content</mat-card-header>
-          <mat-divider></mat-divider>
-          <mat-card-content>
-            <p class="mt-2">
-              {{thisArticle['section2']}}
-            </p>
-          </mat-card-content>
-        </mat-card>
+<div *ngIf="show">
+  <div class="p-header">NEWS FEED</div>
+  <div class="p-title">Here's what your connections posted</div>
+  <div class="news-header">There are total {{articles.length}} news feed stories</div>
+  <div class="row">
+    <div class="col-lg-4">
+      <ul>
+        <li *ngFor="let task of articles | paginate: { itemsPerPage: 4, currentPage: p }; let index = index">
+          <mat-card class="feed">
+            <td style="width: 100px">
+              <img src="{{task.u_avatar}}" alt="userPhoto">
+            </td>
+            <td style="width: 40%">
+              {{task.headline}}<br/>
+              <span>by</span> {{task.u_name}}
+            </td>
+            <td style="width: 40%">
+              {{task.article_date}}<br/>
+              <span>News Feed Created</span>
+            </td>
+            <td>
+              <button mat-stroked-button (click)="viewArticle(index)">View</button>
+            </td>
+          </mat-card>
+        </li>
+      </ul>
+      <pagination-controls class="pagination" (pageChange)="p = $event"></pagination-controls>
+    </div>
+    <div class="col-lg-8">
+      <div class="row">
+        <div class="col-md-6">
+          <mat-card class="news-image">
+            <mat-card-header>First Image</mat-card-header>
+            <mat-divider></mat-divider>
+            <mat-card-content class="text-center d-block">
+              <img [src]="thisArticle['imgurl1']" alt="Newsfeed Image" style="padding-top: 16px;"/>
+            </mat-card-content>
+          </mat-card>
+          <mat-card>
+            <mat-card-header>Content</mat-card-header>
+            <mat-divider></mat-divider>
+            <mat-card-content>
+              <p class="mt-2">
+                {{thisArticle['section1']}}
+              </p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div class="col-md-6">
+          <mat-card class="news-image">
+            <mat-card-header>Second Image</mat-card-header>
+            <mat-divider></mat-divider>
+            <mat-card-content class="text-center d-block">
+              <img [src]="thisArticle['imgurl2']" alt="Newsfeed Image" style="padding-top: 16px;"/>
+            </mat-card-content>
+          </mat-card>
+          <mat-card>
+            <mat-card-header>Content</mat-card-header>
+            <mat-divider></mat-divider>
+            <mat-card-content>
+              <p class="mt-2">
+                {{thisArticle['section2']}}
+              </p>
+            </mat-card-content>
+          </mat-card>
+        </div>
       </div>
     </div>
   </div>

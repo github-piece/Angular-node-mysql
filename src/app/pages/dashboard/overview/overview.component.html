@@ -77,7 +77,7 @@
           <div class="table-responsive">
             <table class="mat-table odd">
               <tr *ngFor="let notification of notifications">
-                <td><mat-icon>{{notification.icon}}</mat-icon></td>
+                <td><mat-icon [color]="notification.color">{{notification.icon}}</mat-icon></td>
                 <td>{{notification.title}}</td>
                 <td>{{notification.text}}</td>
                 <td>{{notification.time}}</td>
@@ -90,19 +90,19 @@
         <mat-card-header>ToDo List</mat-card-header>
         <mat-divider></mat-divider>
         <mat-card-content>
-          <mat-radio-button color="warn" checked class="mt-4">
+          <mat-radio-button color="accent" checked class="mt-4">
             Learn Angular 4.0
             <span class="ml-30">2:45 PM</span>
           </mat-radio-button>
         </mat-card-content>
         <mat-card-content>
-          <mat-radio-button color="warn">
+          <mat-radio-button color="accent">
             Learn Angular Material
             <span class="ml-30">3:20 PM</span>
           </mat-radio-button>
         </mat-card-content>
         <mat-card-content>
-          <mat-radio-button color="warn">
+          <mat-radio-button color="accent">
             Write documentation
             <span class="ml-30">6:00 PM</span>
           </mat-radio-button>
