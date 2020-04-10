@@ -1,11 +1,11 @@
-<div *ngIf="!showProfile">
+<div *ngIf="!showProfile && !chooseScout">
   <div class="p-header">Business Register</div>
   <div class="p-title">Please achieve your idea!</div>
   <div class="row">
     <div class="col-xl-3 col-lg-6">
       <mat-card>
         <mat-card-header>Register a business or Organization</mat-card-header>
-        <img src="assets/images/auth_logo.png" alt="MSE" class="quiz-logo">
+        <img src="assets/images/auth_logo.png" alt="MIE" class="quiz-logo">
         <img mat-card-image src="assets/cards/353x177_2.jpg" alt="user-pic">
         <mat-card-content class="text-right d-block">
           <button mat-raised-button color="primary" class="mr-2">Credits</button>
@@ -16,18 +16,18 @@
     <div class="col-xl-3 col-lg-6">
       <mat-card>
         <mat-card-header>Register a scout or Node</mat-card-header>
-        <img src="assets/images/auth_logo.png" alt="MSE" class="quiz-logo">
+        <img src="assets/images/auth_logo.png" alt="MIE" class="quiz-logo">
         <img mat-card-image src="assets/cards/353x177_2.jpg" alt="user-pic">
         <mat-card-content class="text-right d-block">
           <button mat-raised-button color="primary" class="mr-2">Credits</button>
-          <button mat-raised-button color="primary" (click)="getBusinessQuiz('scouter_profile')">Start</button>
+          <button mat-raised-button color="primary" (click)="getBusinessQuiz('scouter')">Start</button>
         </mat-card-content>
       </mat-card>
     </div>
     <div class="col-xl-3 col-lg-6">
       <mat-card>
         <mat-card-header>Bee question</mat-card-header>
-        <img src="assets/images/auth_logo.png" alt="MSE" class="quiz-logo">
+        <img src="assets/images/auth_logo.png" alt="MIE" class="quiz-logo">
         <img mat-card-image src="assets/cards/545x296_2.jpg" alt="user-pic">
         <mat-card-content class="text-right d-block">
           <button mat-raised-button color="primary" class="mr-2">Credits</button>
@@ -38,7 +38,7 @@
     <div class="col-xl-3 col-lg-6">
       <mat-card>
         <mat-card-header>Create model</mat-card-header>
-        <img src="assets/images/auth_logo.png" alt="MSE" class="quiz-logo">
+        <img src="assets/images/auth_logo.png" alt="MIE" class="quiz-logo">
         <img mat-card-image src="assets/cards/545x296_1.jpg" alt="user-pic">
         <mat-card-content class="text-right d-block">
           <button mat-raised-button color="primary" class="mr-2">Credits</button>
@@ -52,7 +52,7 @@
 <div *ngIf="showProfile">
   <div class="container">
     <div class="hidden-xs float-right">
-      <a mat-raised-button color="primary" class="text-white mr-2" href="./src/assets/Business.xlsx">
+      <a mat-raised-button class="text-white mr-2 upload-btn" href="assets/Business.xlsx">
         <mat-icon>get_app</mat-icon>
         <span>DOWNLOAD AS EXCEL</span>
       </a>
@@ -60,7 +60,7 @@
         <div class="file-upload-btn-excel-label">Upload</div>
       </label>
     </div>
-    <div class="p-header">Questions</div>
+    <div class="p-header">{{profileType}}</div>
     <div class="p-title">Please complete the following questionnaire</div>
     <mat-card>
       <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Toggle menu" class="more-btn">
@@ -68,13 +68,13 @@
       </button>
       <mat-menu #menu="matMenu" xPosition="before" class="menu">
         <button mat-menu-item>
-          <a href="./src/assets/Business.xlsx">Download as Excel</a>
+          <a href="assets/Business.xlsx">Download as Excel</a>
         </button>
         <button mat-menu-item>
           <label for="answer">Upload your answers</label>
         </button>
       </mat-menu>
-      <mat-card-header>Question {{rowData['id']}}</mat-card-header>
+      <mat-card-header>Question {{currentStep}}</mat-card-header>
       <mat-divider></mat-divider>
       <mat-card-content>
         <div class="detail mt-3">
@@ -1509,3 +1509,50 @@
     <input type="file" id="answer" class="file-upload-btn-excel" (change)="import($event)"/>
   </div>
 </div>
+
+<div *ngIf="chooseScout">
+  <div class="container">
+    <div class="p-header">Scout Profile</div>
+    <div class="p-title">My Scout Profile Page</div>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header style="font-weight: 500">
+        <mat-icon color="primary" class="mr-2" style="margin-top: -1px">art_track</mat-icon>Choose Profile
+      </mat-expansion-panel-header>
+      <div class="row">
+        <div class="col-md-3 col-sm-5">
+          <button mat-raised-button class="w-100 my-1 text-white hidden-sm" color="primary" *ngFor="let profile of scoutProfile; let index = index" (click)="profileContent(index)">{{profile.title}}</button>
+          <mat-form-field class="shown-sm">
+            <mat-label>Choose Profile</mat-label>
+            <mat-select>
+              <mat-option *ngFor="let profile of scoutProfile; let index = index" (click)="profileContent(index)">{{profile.title}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-md-9 col-sm-7">
+          <mat-card-header>{{chooseProfileContent.title}}</mat-card-header>
+          <mat-divider></mat-divider>
+          <mat-card-content class="mt-2 d-flex">
+            <img [src]="chooseProfileContent.img" style="width: 240px" class="mr-3 hidden-xs">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+          </mat-card-content>
+          <mat-divider></mat-divider>
+          <mat-card-footer class="text-right d-block m-2"><button mat-raised-button color="primary" (click)="chooseScoutProfile()">Confirm</button></mat-card-footer>
+        </div>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel expanded class="mt-2">
+      <mat-expansion-panel-header style="font-weight: 500">My Profile</mat-expansion-panel-header>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="profile-picture">
+            <img [src]="userData.useravatar" alt="photo">
+            <div class="profile-name">{{userData.username}}</div>
+            <div class="profile-detail">{{userData.useremail}}</div>
+          </div>
+        </div>
+        <div class="col-md-8"></div>
+      </div>
+    </mat-expansion-panel>
+  </div>
+</div>
+

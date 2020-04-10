@@ -8,6 +8,7 @@ import {SignupComponent} from './pages/auth/signup/signup.component';
 import {SuccessComponent} from './pages/payfast/success/success.component';
 import {CancelComponent} from './pages/payfast/cancel/cancel.component';
 import {NotificationComponent} from './pages/payfast/notification/notification.component';
+import {takeUntil} from 'rxjs/operators';
 
 
 const routes: Routes = [
@@ -26,7 +27,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {useHash: true})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

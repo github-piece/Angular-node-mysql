@@ -81,3 +81,7 @@ mat-form-field {
 .d-flex .p-title {
   color: #e91e63;
 }
+.upload-btn {
+  color: #FFFFFF;
+  background-color: #3f51b5;
+}

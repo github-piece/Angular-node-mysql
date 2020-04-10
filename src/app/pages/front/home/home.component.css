@@ -1,1 +1,8 @@
 .banner-slide{height: 900px;}
+.security {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+}

@@ -17,7 +17,8 @@ export class InvestComponent implements OnInit {
   }
   viewDetail(i) {
     this.matDialog.open(InvestDetailComponent, {
-      width: '50%',
+      width: '40%',
+      minWidth: '320px',
       data: {index: i}
     });
   }
@@ -38,7 +39,7 @@ export class InvestComponent implements OnInit {
 export class InvestDetailComponent implements OnInit {
   detailData: any;
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: DialogData
+    @Inject(MAT_DIALOG_DATA) public data: DialogData
   ) {}
   ngOnInit() {
     this.detailData = investList;
@@ -46,7 +47,7 @@ export class InvestDetailComponent implements OnInit {
 }
 export const investList = [
   {
-    image: 'assets/banners/banner-1.jpg',
+    image: 'assets/lists/list1.jpg',
     title: 'MAKE YOUR PRODUCTS SHINE!',
     text: 'As the temperature drops and the wind chill increases,' +
       ' limit the amount time you spend outdoors. If you must be out in the cold.',
@@ -54,7 +55,7 @@ export const investList = [
     product: 'black-mamba'
   },
   {
-    image: 'assets/banners/banner-2.jpg',
+    image: 'assets/lists/list2.jpeg',
     title: 'SELECT THE CORRECT SHOES',
     text: 'Lorem Ipsum is simply dummy text of the printing and typesetting' +
       ' industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
@@ -62,7 +63,7 @@ export const investList = [
     product: 'airperez'
   },
   {
-    image: 'assets/banners/banner-3.jpg',
+    image: 'assets/lists/list3.jpeg',
     title: 'AND ALWAYS REMEMBER TO HAVE FUN!',
     text: 'Contrary to popular belief, Lorem Ipsum is not simply random text.' +
       ' It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.',
@@ -70,7 +71,7 @@ export const investList = [
     product: 'spacex'
   },
   {
-    image: 'assets/banners/banner-4.jpg',
+    image: 'assets/lists/list4.jpeg',
     title: 'AND ALWAYS REMEMBER TO HAVE FUN!',
     text: 'Contrary to popular belief, Lorem Ipsum is not simply random text.' +
       ' It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.',

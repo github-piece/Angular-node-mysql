@@ -78,10 +78,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   color: #fff
 }
 
-.hidden-xs, .hidden-md {
+.hidden-xs, .hidden-md, .hidden-sm {
   display: initial!important;
 }
-.shown-xs, .shown-md {
+.shown-xs, .shown-md, .shown-sm {
   display: none!important;
 }
 
@@ -98,6 +98,14 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     display: none!important;
   }
   .shown-md {
+    display: initial!important;
+  }
+}
+@media (max-width: 600px) {
+  .hidden-sm {
+    display: none!important;
+  }
+  .shown-sm {
     display: initial!important;
   }
 }

@@ -11,7 +11,7 @@
         <mat-card class="description">
           <div class="header px-5 pb-2">
             <img src="assets/images/auth_logo.png" class="logo-title hidden-xs" alt="img"/>
-            <div>MSE</div>
+            <div>MIX</div>
           </div>
           <p class="pb-5 pt-2 px-sm-5 text-justify">
             &nbsp;Lorem Ipsum is simply dummy text of the printing and typesetting
@@ -121,16 +121,13 @@
                 </button>
               </div>
               <mat-form-field style="width: 100%">
-                <input matInput type="text" placeholder="Name" value={{rowselect_headline}}
-                       formControlName="headline" [ngClass]="{ 'is-invalid': submitted && f.headline.errors }">
+                <input matInput type="text" placeholder="Name" formControlName="headline" [ngClass]="{ 'is-invalid': submitted && f.headline.errors }">
               </mat-form-field>
               <mat-form-field style="width: 100%">
-                                    <textarea matInput placeholder="Sur Name" formControlName="section1" value={{rowselect_section1}}
-                                              [ngClass]="{ 'is-invalid': submitted && f.section1.errors }"></textarea>
+                <textarea matInput placeholder="Sur Name" formControlName="section1" [ngClass]="{ 'is-invalid': submitted && f.section1.errors }"></textarea>
               </mat-form-field>
               <mat-form-field style="width: 100%">
-                                    <textarea matInput placeholder="Short Details..." formControlName="section2" value={{rowselect_section2}}
-                                              [ngClass]="{ 'is-invalid': submitted && f.section2.errors }"></textarea>
+                <textarea matInput placeholder="Short Details..." formControlName="section2" [ngClass]="{ 'is-invalid': submitted && f.section2.errors }"></textarea>
               </mat-form-field>
               <div class="row" style="padding: 0 32px 0 32px;">
                 <button mat-raised-button color="primary" class="w-100"

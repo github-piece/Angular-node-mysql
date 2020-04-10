@@ -72,7 +72,7 @@
                         <tbody>
                         <tr><td>Business Name:</td><td>{{business['business name']}}</td></tr>
                         <tr><td>Listing Date:</td><td>{{business['date completed']}}</td></tr>
-                        <tr><td>ShortName:</td><td>{{business['short name']}}</td></tr>
+                        <tr><td>ShortName:</td><td>{{business.business_id}}</td></tr>
                         <tr><td>Sector:</td><td>{{business['sector']}}</td></tr>
                         <tr><td>Number of employees:</td><td>{{business['number of employees']}}</td></tr>
                         <tr><td>Is company registered?</td><td>{{business['registration status']}}</td></tr>
@@ -580,7 +580,7 @@
             <button mat-raised-button color="primary" class="mr-3" (click)="buy(business['u_id'], business)">
               FUND BUSINESS
             </button>
-            <button mat-raised-button color="primary"(click)="sell(businessUser.id)" *ngIf="businessInfo.sell_enabled">
+            <button mat-raised-button color="primary" (click)="sell(userData.id)" *ngIf="businessInfo.sell_enabled">
               SELL FINANCIAL INTEREST
             </button>
             <button mat-raised-button *ngIf="!businessInfo.sell_enabled">

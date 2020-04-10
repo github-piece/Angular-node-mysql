@@ -119,6 +119,7 @@ import {GooglePlaceModule} from 'ngx-google-places-autocomplete/ngx-google-place
         GooglePlaceModule,
         MatTreeModule,
     ],
+  providers: [],
   exports: [
     TopNavbarComponent
   ],

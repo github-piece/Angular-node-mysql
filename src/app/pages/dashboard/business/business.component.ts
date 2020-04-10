@@ -3,10 +3,13 @@ import {AuthenticationService} from '../../../_services/authentication/authentic
 import {QuestionService} from '../../../_services/question/question.service';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {MatChipInputEvent, MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material';
+import {MatChipInputEvent, MatSnackBar, MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material';
 import {Router} from '@angular/router';
 import {FlatTreeControl} from '@angular/cdk/tree';
 import {SelectionModel} from '@angular/cdk/collections';
+import * as XLSX from 'xlsx';
+import {CatalogueService} from '../../../_services/catalogue/catalogue.service';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 type AOA = any[][];
 export class TodoItemNode {
@@ -31,17 +34,13 @@ export class BusinessComponent implements OnInit {
   dataSource: MatTreeFlatDataSource<TodoItemNode, TodoItemFlatNode>;
   checklistSelection = new SelectionModel<TodoItemFlatNode>(true /* multiple */);
 
-  currentStep = 0;
+  currentStep = 1;
   businessAnswers: AOA;
   userData: any;
   showProfile = false;
-  showActions = false;
-  onFinish = true;
-  loading = false;
   address: string;
   action =  'insert';
   profile: string;
-  imagePath: any;
   imgURL = [];
   showImage = [];
 
@@ -96,9 +95,21 @@ export class BusinessComponent implements OnInit {
   clickFlag: number;
   businessId = '';
   currency = {};
-  excelAnswers = [];
   chipsRow = [];
-  sectorCount = 0;
+  chooseScout = false;
+  profileType = 'Scout Profile';
+  chooseProfileContent: any;
+  scoutProfile = [
+    {title: 'All', value: 'scouter_profile', img: 'assets/lists/list1.jpg'},
+    {title: 'Community Profile', value: 'community_profile', img: 'assets/lists/list2.jpeg'},
+    {title: 'Maritime Profile', value: 'maritime_expert', img: 'assets/lists/list3.jpeg'},
+    {title: 'Nature Profile', value: 'nature_expert_profile', img: 'assets/lists/list4.jpeg'},
+    {title: 'Security Profile', value: 'security_profile', img: 'assets/lists/list1.jpg'},
+    {title: 'Healthcare Profile', value: 'healthcare centre', img: 'assets/lists/list2.jpeg'},
+    {title: 'Economic Profile', value: 'economic_profile', img: 'assets/lists/list3.jpeg'},
+    {title: 'Educational Profile', value: 'educational centre', img: 'assets/lists/list4.jpeg'},
+    {title: 'SupraNational Profile', value: 'supraNational_profile', img: 'assets/lists/list1.jpg'}
+  ];
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   chipsTemp: string[] = [];
   @ViewChild('tagInput', {static: false}) tagInput: ElementRef<HTMLInputElement>;
@@ -106,7 +117,10 @@ export class BusinessComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private questionService: QuestionService,
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    private catalogueService: CatalogueService,
+    private spinner: NgxSpinnerService,
+    private snackBar: MatSnackBar
   ) {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
     this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
@@ -114,17 +128,25 @@ export class BusinessComponent implements OnInit {
   }
   ngOnInit() {
     this.userData = this.authenticationService.currentUserSubject.value;
+    this.chooseProfileContent = this.scoutProfile[0];
   }
   getBusinessQuiz(profile) {
+    this.spinner.show();
     this.profile = profile;
+    if (profile === 'business_profile') {
+      this.profileType = 'Business Profile';
+    } else {
+      this.profileType = 'Scouter Profile';
+    }
     this.questionService.getBusinessQuiz(this.userData.userId, profile).subscribe(result => {
+      this.spinner.hide();
       if (this.action === 'restart') {
-        this.currentStep = 0;
+        this.currentStep = 1;
         this.action = 'insert';
       } else {
-        if (result.rememberValue[0] !== undefined && result.rememberValue[0].id_business_quiz !== 134)  {
-          this.currentStep = result.rememberValue[0].id_business_quiz;
-          this.businessId = result.rememberValue[0].business_id;
+        if (result.rememberValue !== undefined && result.rememberValue.id_business_quiz !== 134)  {
+          this.currentStep = result.rememberValue.id_business_quiz;
+          this.businessId = result.rememberValue.business_id;
           this.questionTypeID = this.businessId;
           this.action = 'update';
         }
@@ -144,31 +166,38 @@ export class BusinessComponent implements OnInit {
       this.dataSource.data = this.sectors;
       this.provinces = result.provinceList;
       this.municipalities = result.Municipalities;
-      this.questionStart(this.currentStep);
+      this.questionStart(this.currentStep, this.profile);
     });
   }
-  questionStart(step) {
-    this.formData = new FormData();
-    let required;
-    this.initVar();
-    this.rowData = this.questionData[step];
-    if (this.rowData.notes === 'Dom manipulation required') {
-      this.domPosition = parseInt(this.rowData.dom_position, 10);
-      this.domValidator();
-    } else if (this.rowData.notes === 'Add Item Option') {
-      this.addItemValidator();
-    } else if (this.rowData.notes.includes('Dom manipulation required') && this.rowData.notes.includes('Add Item Option')) {
-      this.domAddItemValidator();
-    } else {
-      for (let m = 0; m < 10; m++) {
-        this.rangeMain.push(m);
-      }
-      if (this.rowData.required) {
-        required = 1;
+  questionStart(step, profile) {
+    if (profile !== 'scouter') {
+      this.formData = new FormData();
+      let required;
+      this.initVar();
+      this.rowData = this.questionData[step];
+      if (this.rowData.notes === 'Dom manipulation required') {
+        this.domPosition = parseInt(this.rowData.dom_position, 10);
+        this.domValidator();
+      } else if (this.rowData.notes === 'Add Item Option') {
+        this.addItemValidator();
+      } else if (this.rowData.notes.includes('Dom manipulation required') && this.rowData.notes.includes('Add Item Option')) {
+        this.domAddItemValidator();
       } else {
-        required = 0;
+        for (let m = 0; m < 10; m++) {
+          this.rangeMain.push(m);
+        }
+        if (this.rowData.required) {
+          required = 1;
+        } else {
+          required = 0;
+        }
+        this.formValidator(required);
       }
-      this.formValidator(required);
+      this.showProfile = true;
+      this.chooseScout = false;
+    } else {
+      this.chooseScout = true;
+      this.showProfile = false;
     }
   }
   formValidator(required) {
@@ -215,7 +244,6 @@ export class BusinessComponent implements OnInit {
       this.rangeExtra.push(i);
     }
     this.domFlag = true;
-    this.showProfile = true;
   }
   addItemValidator() {
     let position;
@@ -236,7 +264,6 @@ export class BusinessComponent implements OnInit {
       this.rangeExtra.push(i);
     }
     this.addItemFlag  = true;
-    this.showProfile = true;
   }
   addOtherSkillFormGroup(position): FormGroup {
     for (let i = position + 1; i < 10; i++) {
@@ -293,7 +320,7 @@ export class BusinessComponent implements OnInit {
       }
       return false;
     } else {
-      if (this.currentStep === 0) {
+      if (this.currentStep === 1) {
         const businessName = this.questionForm.get('col_0_header').value;
         const time = Date.now();
         this.questionTypeID = businessName + time;
@@ -342,7 +369,7 @@ export class BusinessComponent implements OnInit {
       }
       this.putAnswerList();
     }
-    this.questionStart(this.currentStep);
+    this.questionStart(this.currentStep, this.profile);
   }
   addTag(event: MatChipInputEvent, i): void {
     const value = event.value;
@@ -366,17 +393,18 @@ export class BusinessComponent implements OnInit {
     this.muniTemp[index].push(data);
     if (index === 0) {
       this.municipalityZero = true;
-    } else {
-      (this.questionForm.controls.other as FormArray).
-        controls[index]['controls']['col_' + i + '_header'].setValue(this.muniTemp[index]);
     }
+    // else {
+    //   (this.questionForm.controls.other as FormArray).
+    //     controls[index].controls['col_' + i + '_header'].setValue(this.muniTemp[index]);
+    // }
   }
   putAnswerList() {
-    if (this.rowData.id === 2) {
+    if (this.rowData.id === 2 && this.profile === 'business_profile') {
       this.formData.append('file', this.file[0]);
       this.formData.append('file', this.file[1]);
       this.formData.append('file', this.file[2]);
-    } else if (this.rowData.id === 50) {
+    } else if (this.rowData.id === 50 && this.profile === 'business_profile') {
       this.formData.append('file', this.file[1]);
     } else {
       if (this.domAddItemFlag) {
@@ -437,9 +465,9 @@ export class BusinessComponent implements OnInit {
   }
   goToStart() {
     this.showProfile = false;
-    this.currentStep = 0;
+    this.currentStep = 1;
     this.progress = '0';
-    this.router.navigate(['/pages/listingABusinessComponent']);
+    this.router.navigate(['/dashboard/business']);
     this.action = 'restart';
   }
   onFileChange(event, i) {
@@ -472,6 +500,90 @@ export class BusinessComponent implements OnInit {
     this.questionForm.controls['col_' + i + '_header'].setValue(this.address);
   }
   import(evt: any) {
+    const excelAnswers = []; let j = 0;
+    const target: DataTransfer = (evt.target) as DataTransfer;
+    if (target.files.length !== 1) { throw new Error('Cannot use multiple files'); }
+    const reader: FileReader = new FileReader();
+    reader.onload = (e: any) => {
+      const bstr: string = e.target.result;
+      const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
+      const wsname: string = wb.SheetNames[0];
+      const ws: XLSX.WorkSheet = wb.Sheets[wsname];
+      this.businessAnswers = (XLSX.utils.sheet_to_json(ws, { header: 1 })) as AOA;
+      for (let i = 2; i < this.businessAnswers.length; i++) {
+        if (this.businessAnswers[i][2] !== undefined) {
+          let value = '';
+          for (let n = 3; n < this.businessAnswers[i].length; n += 3) {
+            if (this.businessAnswers[i][n] !== undefined) {
+              if (this.businessAnswers[i][n - 2] === 'Currency') {
+                this.businessAnswers[i][n - 3] += this.businessAnswers[i][n];
+                const answer = []; let kk = 0;
+                for ( let k = 0; k < this.businessAnswers[i].length; k++ ) {
+                  if (k !== n - 1 && k !== n - 2 && k !== n) {
+                    answer[kk] = this.businessAnswers[i][k];
+                    kk++;
+                  }
+                }
+                this.businessAnswers[i] = answer;
+                n = n - 3;
+              }
+              for (let m = 0; m < this.businessAnswers[i][n].length; m++) {
+                if (this.businessAnswers[i][n][m] === '\'') {
+                  let character = '\'';
+                  for (let k = m; k < this.businessAnswers[i][n].length; k++) {
+                    character += this.businessAnswers[i][n][k];
+                  }
+                  for (let ii = 0; ii < m; ii++) {
+                    value += this.businessAnswers[i][n][ii];
+                  }
+                  value += character;
+                  this.businessAnswers[i][n] = value;
+                  m = this.businessAnswers[i][n].length;
+                }
+              }
+            }
+          }
+          excelAnswers[j] = {
+            no: j + 1,
+            type: this.businessAnswers[i][2],
+            answer0: this.businessAnswers[i][3],
+            answer1: this.businessAnswers[i][6],
+            answer2: this.businessAnswers[i][9],
+            answer3: this.businessAnswers[i][12],
+            answer4: this.businessAnswers[i][15],
+            answer5: this.businessAnswers[i][18],
+            answer6: this.businessAnswers[i][21],
+            answer7: this.businessAnswers[i][24],
+            answer8: this.businessAnswers[i][27]
+          };
+          j++;
+        }
+      }
+      for (let i = 0; i < excelAnswers.length; i++) {
+        if (excelAnswers[i].type === undefined && excelAnswers[i + 1].type !== undefined) {
+          excelAnswers[i + 1] = {
+            no: i + 1,
+            answer0: 'Yes',
+            answer1: this.businessAnswers[i + 1][3],
+            answer2: this.businessAnswers[i + 1][6],
+            answer3: this.businessAnswers[i + 1][9],
+            answer4: this.businessAnswers[i + 1][12],
+            answer5: this.businessAnswers[i + 1][15],
+            answer6: this.businessAnswers[i + 1][18],
+            answer7: this.businessAnswers[i + 1][21],
+            answer8: this.businessAnswers[i + 1][24],
+            answer9: this.businessAnswers[i + 1][27]
+          };
+        }
+      }
+      this.questionService.setExcelAnswer(excelAnswers, this.userData.userId).subscribe(() => {
+        this.snackBar.open('Successfully Created!', '', {duration: 2000});
+        this.router.navigate(['/dashboard/catalogue']);
+      }, () => {
+        this.snackBar.open('Data Incorrect!', '', {duration: 2000});
+      });
+    };
+    reader.readAsBinaryString(target.files[0]);
   }
   getCountryProvince(selectedValue, index, j) {
     const nextValue = this.rowData['col_' + 1 * ( j + 1 )];
@@ -535,7 +647,23 @@ export class BusinessComponent implements OnInit {
   setValue(x, i) {
     this.questionForm.controls['col_' + i + '_header'].setValue(x);
   }
-
+  chooseScoutProfile() {
+    this.profile = this.chooseProfileContent.value;
+    if (this.chooseProfileContent.title !== 'All') { this.profileType = this.chooseProfileContent.title; }
+    this.questionService.getScoutQuiz(this.userData.userId, this.profile).subscribe(result => {
+      if (result.rememberValue !== undefined && result.rememberValue.id_business_quiz !== 274 && this.profile === 'scouter_profile')  {
+        this.currentStep = result.rememberValue.id_business_quiz;
+        this.businessId = result.rememberValue.business_id;
+        this.questionTypeID = this.businessId;
+        this.action = 'update';
+      }
+      this.questionData = result.data;
+      this.questionStart(this.currentStep, this.profile);
+    });
+  }
+  profileContent(index: number) {
+    this.chooseProfileContent = this.scoutProfile[index];
+  }
   getLevel = (node: TodoItemFlatNode) => node.level;
 
   isExpandable = (node: TodoItemFlatNode) => node.expandable;
@@ -655,4 +783,5 @@ export class BusinessComponent implements OnInit {
     this.nestedNodeMap.set(node, flatNode);
     return flatNode;
   }
+
 }

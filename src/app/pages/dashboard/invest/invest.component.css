@@ -1,6 +1,4 @@
-.matHeight {
-  height: 450px;
-}
+
 @media(max-width: 767px) {
   .matHeight {
     height: auto;

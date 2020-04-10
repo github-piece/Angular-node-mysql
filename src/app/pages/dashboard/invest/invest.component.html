@@ -1,13 +1,15 @@
-<div class="p-header">How To Invest</div>
-<div class="p-title">You can see Invest examples, here</div>
-<div class="row">
-  <div class="col-xl-3 col-lg-4 col-md-6" *ngFor="let card of investList; let index = index">
-    <mat-card class="matHeight">
-      <img mat-card-image [src]="card.image" (click)="viewDetail(index)" alt="Invest Image"/>
-      <div class="mat-card-header">{{card.title}}</div>
-      <mat-card-content>
-        <p>{{card.text | slice:0:200}}</p>
-      </mat-card-content>
-    </mat-card>
+<div class="container">
+  <div class="p-header">How To Invest</div>
+  <div class="p-title">You can see Invest examples, here</div>
+  <div class="row">
+    <div class="col-md-6" *ngFor="let card of investList; let index = index">
+      <mat-card class="matHeight">
+        <img mat-card-image [src]="card.image" (click)="viewDetail(index)" alt="Invest Image"/>
+        <div class="mat-card-header">{{card.title}}</div>
+        <mat-card-content>
+          <p>{{card.text | slice:0:200}}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
   </div>
 </div>

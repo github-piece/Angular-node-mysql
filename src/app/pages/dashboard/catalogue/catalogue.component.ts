@@ -57,7 +57,7 @@ export class CatalogueComponent implements OnInit {
   radarChartType: ChartType = 'radar';
   constructor(
     private authenticationService: AuthenticationService,
-    private catalogueService: CatalogueService,
+    public catalogueService: CatalogueService,
     private buysellService: BuysellService,
     private dialog: MatDialog,
     private spinner: NgxSpinnerService
@@ -229,6 +229,9 @@ export class CatalogueComponent implements OnInit {
     dialogRef.afterClosed().subscribe(() => {
       this.getBusinessList();
     });
+  }
+  sell(id: any) {
+
   }
 }
 @Component({

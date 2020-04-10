@@ -148,8 +148,7 @@ mat-sidenav:not(.mat-drawer-opened) .menu-item-title {
 mat-card-actions {
   margin-top: 8px
 }
-.search-btn mat-icon {
-  vertical-align: initial!important;
+.top-search-btn {
 }
 @media (max-width: 600px) {
   mat-sidenav-container {
