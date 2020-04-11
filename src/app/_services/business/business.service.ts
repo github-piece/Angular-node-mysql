@@ -11,7 +11,4 @@ export class BusinessService {
   getBusinessList(userId) {
     return this.http.post<any>(`${Server}/getBusiness`, {userId});
   }
-  getGeometry(address) {
-    return this.http.post<any>(`${Server}/getGeometry`, {address});
-  }
 }

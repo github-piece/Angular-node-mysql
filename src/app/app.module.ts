@@ -29,6 +29,7 @@ import {NgxSpinnerModule} from 'ngx-spinner';
 import { SuccessComponent } from './pages/payfast/success/success.component';
 import { CancelComponent } from './pages/payfast/cancel/cancel.component';
 import { NotificationComponent } from './pages/payfast/notification/notification.component';
+import {LocationStrategy, PathLocationStrategy} from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -68,6 +69,9 @@ import { NotificationComponent } from './pages/payfast/notification/notification
         MatFormFieldModule,
         MatInputModule
     ],
+  providers: [
+    {provide: LocationStrategy, useClass: PathLocationStrategy}
+  ],
   exports: [
   ],
   bootstrap: [AppComponent]

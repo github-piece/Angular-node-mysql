@@ -14,12 +14,12 @@ export class QuestionService {
   }
   setAnswer(formData) {
     // return this.http.post<any>(`${Server}/setBusinessAnswer`, formData);
-    return this.http.post<any>(`${LocalServer}/setBusinessAnswer`, formData);
+    return this.http.post<any>(`${Server}/setBusinessAnswer`, formData);
   }
   setExcelAnswer(excelAnswers, userId) {
-    return this.http.post<any>(`${LocalServer}/setExcelAnswer`, {excelAnswers, userId});
+    return this.http.post<any>(`${Server}/setExcelAnswer`, {excelAnswers, userId});
   }
   getScoutQuiz(userId, profile) {
-    return this.http.post<any>(`${LocalServer}/getScoutQuiz`, {userId, profile});
+    return this.http.post<any>(`${Server}/getScoutQuiz`, {userId, profile});
   }
 }

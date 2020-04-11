@@ -139,6 +139,7 @@ export class BusinessComponent implements OnInit {
       this.profileType = 'Scouter Profile';
     }
     this.questionService.getBusinessQuiz(this.userData.userId, profile).subscribe(result => {
+      console.log(result);
       this.spinner.hide();
       if (this.action === 'restart') {
         this.currentStep = 1;
@@ -444,7 +445,11 @@ export class BusinessComponent implements OnInit {
     this.formData.append('businessId', this.businessId);
     this.formData.append('action', this.action);
     this.colValidator = {};
-    return this.questionService.setAnswer(this.formData).subscribe(result => result);
+    return this.questionService.setAnswer(this.formData).subscribe(() => {
+      if (this.profile === 'business_profile' && this.rowData.id === 134) {
+        this.router.navigate(['/dashboard/catalogue']);
+      }
+    });
   }
   getTreeStructure(sectors) {
     const treeData = {};
@@ -576,7 +581,9 @@ export class BusinessComponent implements OnInit {
           };
         }
       }
+      this.spinner.show();
       this.questionService.setExcelAnswer(excelAnswers, this.userData.userId).subscribe(() => {
+        this.spinner.hide();
         this.snackBar.open('Successfully Created!', '', {duration: 2000});
         this.router.navigate(['/dashboard/catalogue']);
       }, () => {
