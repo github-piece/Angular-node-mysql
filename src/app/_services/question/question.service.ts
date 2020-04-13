@@ -14,7 +14,7 @@ export class QuestionService {
   }
   setAnswer(formData) {
     // return this.http.post<any>(`${Server}/setBusinessAnswer`, formData);
-    return this.http.post<any>(`${Server}/setBusinessAnswer`, formData);
+    return this.http.post<any>(`${LocalServer}/setBusinessAnswer`, formData);
   }
   setExcelAnswer(excelAnswers, userId) {
     return this.http.post<any>(`${Server}/setExcelAnswer`, {excelAnswers, userId});

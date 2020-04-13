@@ -10,6 +10,7 @@ import {SelectionModel} from '@angular/cdk/collections';
 import * as XLSX from 'xlsx';
 import {CatalogueService} from '../../../_services/catalogue/catalogue.service';
 import {NgxSpinnerService} from 'ngx-spinner';
+import {THIS_EXPR} from '@angular/compiler/src/output/output_ast';
 
 type AOA = any[][];
 export class TodoItemNode {
@@ -34,7 +35,7 @@ export class BusinessComponent implements OnInit {
   dataSource: MatTreeFlatDataSource<TodoItemNode, TodoItemFlatNode>;
   checklistSelection = new SelectionModel<TodoItemFlatNode>(true /* multiple */);
 
-  currentStep = 1;
+  currentStep = 0;
   businessAnswers: AOA;
   userData: any;
   showProfile = false;
@@ -44,9 +45,10 @@ export class BusinessComponent implements OnInit {
   imgURL = [];
   showImage = [];
 
-  progress = '1';
+  progress = '0';
   questionForm: FormGroup;
   questionData = [];
+  profileData = [];
   rowData: any = [];
   colValidator: any = {};
   uploadIndex = [];
@@ -99,17 +101,20 @@ export class BusinessComponent implements OnInit {
   chooseScout = false;
   profileType = 'Scout Profile';
   chooseProfileContent: any;
+  profileQuiz = '';
+  onExpand = false;
   scoutProfile = [
-    {title: 'All', value: 'scouter_profile', img: 'assets/lists/list1.jpg'},
-    {title: 'Community Profile', value: 'community_profile', img: 'assets/lists/list2.jpeg'},
-    {title: 'Maritime Profile', value: 'maritime_expert', img: 'assets/lists/list3.jpeg'},
-    {title: 'Nature Profile', value: 'nature_expert_profile', img: 'assets/lists/list4.jpeg'},
-    {title: 'Security Profile', value: 'security_profile', img: 'assets/lists/list1.jpg'},
-    {title: 'Healthcare Profile', value: 'healthcare centre', img: 'assets/lists/list2.jpeg'},
-    {title: 'Economic Profile', value: 'economic_profile', img: 'assets/lists/list3.jpeg'},
-    {title: 'Educational Profile', value: 'educational centre', img: 'assets/lists/list4.jpeg'},
-    {title: 'SupraNational Profile', value: 'supraNational_profile', img: 'assets/lists/list1.jpg'}
+    {title: 'All', value: 'Scouter_Profile', img: 'assets/lists/list1.jpg'},
+    {title: 'Community Profile', value: 'Community_Profile', img: 'assets/lists/list2.jpeg'},
+    {title: 'Maritime Profile', value: 'Maritime_Expert', img: 'assets/lists/list3.jpeg'},
+    {title: 'Nature Profile', value: 'Nature_Expert_Profile', img: 'assets/lists/list4.jpeg'},
+    {title: 'Security Profile', value: 'Security_Profile', img: 'assets/lists/list1.jpg'},
+    {title: 'Healthcare Profile', value: 'Healthcare Centre', img: 'assets/lists/list2.jpeg'},
+    {title: 'Economic Profile', value: 'Economic_Profile', img: 'assets/lists/list3.jpeg'},
+    {title: 'Educational Profile', value: 'Educational Centre', img: 'assets/lists/list4.jpeg'},
+    {title: 'SupraNational Profile', value: 'SupraNational_Profile', img: 'assets/lists/list1.jpg'}
   ];
+  onScoutProfile = [];
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   chipsTemp: string[] = [];
   @ViewChild('tagInput', {static: false}) tagInput: ElementRef<HTMLInputElement>;
@@ -139,10 +144,9 @@ export class BusinessComponent implements OnInit {
       this.profileType = 'Scouter Profile';
     }
     this.questionService.getBusinessQuiz(this.userData.userId, profile).subscribe(result => {
-      console.log(result);
       this.spinner.hide();
       if (this.action === 'restart') {
-        this.currentStep = 1;
+        this.currentStep = 0;
         this.action = 'insert';
       } else {
         if (result.rememberValue !== undefined && result.rememberValue.id_business_quiz !== 134)  {
@@ -152,7 +156,40 @@ export class BusinessComponent implements OnInit {
           this.action = 'update';
         }
       }
-      this.questionData = result.data;
+      if (this.profileType === 'Business Profile') {
+        this.onExpand = true;
+        this.questionData = result.data;
+      } else {
+        this.profileData = result.data;
+        const indexes = [];
+        for (const quizData of this.profileData) {
+          if (quizData.type === 'scouter_profile') {
+            this.onScoutProfile = [];
+            this.profileQuiz = 'All';
+            break;
+          } else {
+            for (let i = 0; i < this.scoutProfile.length; i++) {
+              if (this.scoutProfile[i].value === quizData.type) {
+                this.profileQuiz += this.scoutProfile[i].title + ', ';
+                indexes.push(i);
+                break;
+              }
+            }
+          }
+        }
+        for (let i = 0; i < this.scoutProfile.length; i++) {
+          let onExist = true;
+          for (const index of indexes) {
+            if (i === index) {
+              onExist = false;
+            }
+          }
+          if (onExist === true) {
+            this.onScoutProfile.push(this.scoutProfile[i]);
+          }
+        }
+        this.profileQuiz = this.profileQuiz.substr(0, this.profileQuiz.length - 2);
+      }
       this.country = result.country;
       this.instruments = result.instruments;
       this.currencyCode = result.currency_code;
@@ -176,6 +213,7 @@ export class BusinessComponent implements OnInit {
       let required;
       this.initVar();
       this.rowData = this.questionData[step];
+      this.calProgress();
       if (this.rowData.notes === 'Dom manipulation required') {
         this.domPosition = parseInt(this.rowData.dom_position, 10);
         this.domValidator();
@@ -219,14 +257,14 @@ export class BusinessComponent implements OnInit {
     } else {
       for (let i = 0; i < 10; i++) {
         if (this.rowData['col_' + i + '_header']) {
-          this.colValidator['col_' + i + '_header'] = new FormControl('');
+          this.colValidator['col_' + i + '_header'] = new FormControl({value: ''});
         }
       }
     }
     this.questionForm = this.formBuilder.group(
       this.colValidator
     );
-    this.showProfile = true;
+    this.questionForm.reset();
   }
   domValidator() {
     for (let i = 0; i <= 10; i++) {
@@ -319,58 +357,59 @@ export class BusinessComponent implements OnInit {
           this.questionForm.controls[control].markAsTouched();
         }
       }
-      return false;
+      return;
     } else {
-      if (this.currentStep === 1) {
+      if (this.currentStep === 0) {
         const businessName = this.questionForm.get('col_0_header').value;
         const time = Date.now();
         this.questionTypeID = businessName + time;
       }
-      if (this.currentStep < this.questionData.length) {
+      if (this.currentStep < this.questionData.length - 1) {
         this.currentStep++;
-      } else {
-        return;
-      }
-      this.progress = String(Math.round(this.currentStep * 100 / this.questionData.length));
-      if (this.addItemFlag || this.domAddItemFlag) {
-        for (const i of this.rangeExtra) {
-          if (this.questionForm.get('col_' + i + '_header')) {
-            if (!this.municipalityZero && this.rowData['col_' + i].includes('South Africa')) {
+        this.calProgress();
+        if (this.addItemFlag || this.domAddItemFlag) {
+          for (const i of this.rangeExtra) {
+            if (this.questionForm.get('col_' + i + '_header')) {
+              if (!this.municipalityZero && this.rowData['col_' + i].includes('South Africa')) {
+                this.addItemColData['col_' + i + '_header'] = '';
+              } else {
+                this.addItemColData['col_' + i + '_header'] = this.questionForm.get('col_' + i + '_header').value;
+              }
+            } else {
               this.addItemColData['col_' + i + '_header'] = '';
-            } else {
-              this.addItemColData['col_' + i + '_header'] = this.questionForm.get('col_' + i + '_header').value;
             }
-          } else {
-            this.addItemColData['col_' + i + '_header'] = '';
           }
-        }
-        if (this.domAddItemFlag) {
-          this.addItemColData.col_0_header = 'Yes';
-        }
-        // tslint:disable-next-line:no-shadowed-variable
-        for (const {addItemRowData, index} of this.questionForm.get('other').value.map((addItemRowData, index) => ({
-          addItemRowData,
-          index
-        }))) {
-          if (index === 0) {
-            const target = {};
-            Object.assign(target, this.addItemColData);
-            this.addItemRowsData[0] = target;
-            if (this.domAddItemFlag) {
-              this.addItemRowsData[1] = addItemRowData;
-            }
-          } else {
-            if (this.domAddItemFlag) {
-              this.addItemRowsData[index + 1] = addItemRowData;
+          if (this.domAddItemFlag) {
+            this.addItemColData.col_0_header = 'Yes';
+          }
+          // tslint:disable-next-line:no-shadowed-variable
+          for (const {addItemRowData, index} of this.questionForm.get('other').value.map((addItemRowData, index) => ({
+            addItemRowData,
+            index
+          }))) {
+            if (index === 0) {
+              const target = {};
+              Object.assign(target, this.addItemColData);
+              this.addItemRowsData[0] = target;
+              if (this.domAddItemFlag) {
+                this.addItemRowsData[1] = addItemRowData;
+              }
             } else {
-              this.addItemRowsData[index] = addItemRowData;
+              if (this.domAddItemFlag) {
+                this.addItemRowsData[index + 1] = addItemRowData;
+              } else {
+                this.addItemRowsData[index] = addItemRowData;
+              }
             }
           }
         }
+        this.putAnswerList();
+        this.questionStart(this.currentStep, this.profile);
+      } else {
+        this.spinner.show();
+        this.putAnswerList();
       }
-      this.putAnswerList();
     }
-    this.questionStart(this.currentStep, this.profile);
   }
   addTag(event: MatChipInputEvent, i): void {
     const value = event.value;
@@ -434,20 +473,30 @@ export class BusinessComponent implements OnInit {
     this.formData.append('userid', this.userData.userId);
     this.formData.append('profile', this.profile);
     this.formData.append('id_business_quiz', this.rowData.id);
-    if (this.profile === 'business_profile') {
-      localStorage.setItem('business_profile', this.questionTypeID);
-    } else if (this.profile === 'scouter_profile') {
-      localStorage.setItem('scouter_profile', this.questionTypeID);
-    } else {
-      localStorage.setItem('employer_profile', this.questionTypeID);
-    }
     this.formData.append('questionTypeID', this.questionTypeID);
     this.formData.append('businessId', this.businessId);
     this.formData.append('action', this.action);
     this.colValidator = {};
-    return this.questionService.setAnswer(this.formData).subscribe(() => {
-      if (this.profile === 'business_profile' && this.rowData.id === 134) {
-        this.router.navigate(['/dashboard/catalogue']);
+    return this.questionService.setAnswer(this.formData).subscribe(result => {
+      this.spinner.hide();
+      if (result !== null) {
+        if (result !== 1) {
+          this.chooseScout = true;
+          this.showProfile = false;
+          this.profileData = result;
+          this.profileQuiz = '';
+          for (const quizData of this.profileData) {
+            for (const scoutType of this.scoutProfile) {
+              if (scoutType.value === quizData.type) {
+                this.profileQuiz += scoutType.title + ', ';
+                break;
+              }
+            }
+          }
+          this.profileQuiz = this.profileQuiz.substr(0, this.profileQuiz.length - 2);
+        } else {
+          this.router.navigate(['/dashboard/catalogue']);
+        }
       }
     });
   }
@@ -470,7 +519,7 @@ export class BusinessComponent implements OnInit {
   }
   goToStart() {
     this.showProfile = false;
-    this.currentStep = 1;
+    this.currentStep = 0;
     this.progress = '0';
     this.router.navigate(['/dashboard/business']);
     this.action = 'restart';
@@ -658,18 +707,27 @@ export class BusinessComponent implements OnInit {
     this.profile = this.chooseProfileContent.value;
     if (this.chooseProfileContent.title !== 'All') { this.profileType = this.chooseProfileContent.title; }
     this.questionService.getScoutQuiz(this.userData.userId, this.profile).subscribe(result => {
-      if (result.rememberValue !== undefined && result.rememberValue.id_business_quiz !== 274 && this.profile === 'scouter_profile')  {
-        this.currentStep = result.rememberValue.id_business_quiz;
+      this.questionData = result.data;
+      // tslint:disable-next-line:max-line-length
+      if (result.rememberValue !== undefined && result.rememberValue.id_business_quiz !== this.questionData[this.questionData.length - 1].id) {
+        for (let i = 0; i < this.questionData.length; i++) {
+          if (result.rememberValue.id_business_quiz === this.questionData[i].id) {
+            this.currentStep = i + 1;
+            break;
+          }
+        }
         this.businessId = result.rememberValue.business_id;
         this.questionTypeID = this.businessId;
         this.action = 'update';
       }
-      this.questionData = result.data;
       this.questionStart(this.currentStep, this.profile);
     });
   }
   profileContent(index: number) {
     this.chooseProfileContent = this.scoutProfile[index];
+  }
+  calProgress() {
+    this.progress = String(Math.round(this.currentStep * 100 / (this.questionData.length - 1)));
   }
   getLevel = (node: TodoItemFlatNode) => node.level;
 

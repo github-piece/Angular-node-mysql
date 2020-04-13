@@ -49,10 +49,10 @@
   </div>
 </div>
 
-<div *ngIf="showProfile">
+<div *ngIf="showProfile == true">
   <div class="container">
     <div class="hidden-xs float-right">
-      <a mat-raised-button class="text-white mr-2 upload-btn" href="assets/Business.xlsx">
+      <a mat-raised-button class="mr-2" color="primary" href="assets/Business.xlsx">
         <mat-icon>get_app</mat-icon>
         <span>DOWNLOAD AS EXCEL</span>
       </a>
@@ -1510,21 +1510,21 @@
   </div>
 </div>
 
-<div *ngIf="chooseScout">
+<div *ngIf="chooseScout == true">
   <div class="container">
     <div class="p-header">Scout Profile</div>
     <div class="p-title">My Scout Profile Page</div>
-    <mat-expansion-panel>
+    <mat-expansion-panel [expanded]="onExpand" *ngIf="onScoutProfile.length">
       <mat-expansion-panel-header style="font-weight: 500">
         <mat-icon color="primary" class="mr-2" style="margin-top: -1px">art_track</mat-icon>Choose Profile
       </mat-expansion-panel-header>
       <div class="row">
         <div class="col-md-3 col-sm-5">
-          <button mat-raised-button class="w-100 my-1 text-white hidden-sm" color="primary" *ngFor="let profile of scoutProfile; let index = index" (click)="profileContent(index)">{{profile.title}}</button>
+          <button mat-raised-button class="w-100 my-1 text-white hidden-sm" color="primary" *ngFor="let profile of onScoutProfile; let index = index" (click)="profileContent(index)">{{profile.title}}</button>
           <mat-form-field class="shown-sm">
             <mat-label>Choose Profile</mat-label>
             <mat-select>
-              <mat-option *ngFor="let profile of scoutProfile; let index = index" (click)="profileContent(index)">{{profile.title}}</mat-option>
+              <mat-option *ngFor="let profile of onScoutProfile; let index = index" (click)="profileContent(index)">{{profile.title}}</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
@@ -1540,7 +1540,7 @@
         </div>
       </div>
     </mat-expansion-panel>
-    <mat-expansion-panel expanded class="mt-2">
+    <mat-expansion-panel [expanded]="!onExpand" class="mt-2" *ngIf="profileData.length">
       <mat-expansion-panel-header style="font-weight: 500">My Profile</mat-expansion-panel-header>
       <div class="row">
         <div class="col-md-4">
@@ -1550,7 +1550,17 @@
             <div class="profile-detail">{{userData.useremail}}</div>
           </div>
         </div>
-        <div class="col-md-8"></div>
+        <div class="col-md-8">
+          <div class="table-responsive">
+            <table class="mat-table odd">
+              <tr><th>Country of Residence : </th><td>{{profileData[0].country}}</td></tr>
+              <tr><th>All Quizs Answered : </th><td>{{profileQuiz}}</td></tr>
+              <tr><th>Organisation Name : </th><td>{{profileData[0].organisation}}</td></tr>
+              <tr><th>Province Area : </th><td>{{profileData[0].province}}</td></tr>
+              <tr><th>Created Date :</th><td>{{profileData[0].created_at | date: 'EEEE'}}, {{profileData[0].created_at | date: 'dd'}} of {{profileData[0].created_at | date: 'MMMM'}}</td></tr>
+            </table>
+          </div>
+        </div>
       </div>
     </mat-expansion-panel>
   </div>

@@ -231,7 +231,6 @@ export class CatalogueComponent implements OnInit {
     });
   }
   sell(id: any) {
-
   }
 }
 @Component({
@@ -307,7 +306,7 @@ export class BuymodalComponent implements OnInit {
     this.commission = this.buysellService.commission;
     this.commission.url_return = AppUrl + '/success';
     this.commission.url_cancel = AppUrl + '/cancel';
-    this.commission.url_notify = '';
+    this.commission.url_notify = Server + '/payData';
   }
   getSignature() {
     if (this.payFastForm.invalid) {
