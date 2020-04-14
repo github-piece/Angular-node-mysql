@@ -8,7 +8,6 @@ import {Label} from 'ng2-charts';
 import {MatDialog, MatDialogRef} from '@angular/material';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {PayFast} from '../../../../config/url.service';
-import {AppUrl} from '../../../../config/url.service';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {PayfastService} from '../../../_services/payfast/payfast.service';
 
@@ -27,7 +26,6 @@ export class CatalogueComponent implements OnInit {
   radarChartData: any = [{
     data: []
   }];
-
   unSdg = [];
   interactions = [];
   stakeholders: any = [];
@@ -223,11 +221,8 @@ export class CatalogueComponent implements OnInit {
   onDelete() {
   }
   openDialog() {
-    const dialogRef = this.dialog.open(BuymodalComponent, {
+    this.dialog.open(BuymodalComponent, {
       width: '600px'
-    });
-    dialogRef.afterClosed().subscribe(() => {
-      this.getBusinessList();
     });
   }
   sell(id: any) {
@@ -258,9 +253,8 @@ export class BuymodalComponent implements OnInit {
   maxAmount: number;
   fundTypes = [];
   onShow = true;
-  fund: any;
-  rate: any;
-  frequency: any;
+  rates = ['0%~2%', '2%~5%', '5%~10%', '10%~15%', '15%~20%', '20%~30%', '0%~2%'];
+  frequencies = ['Weekly', 'Bi-Weekly', 'Monthly', 'Quarterly', 'Bi-Annually'];
   constructor(
     private dialogRef: MatDialogRef<BuymodalComponent>,
     private authenticationService: AuthenticationService,
@@ -304,9 +298,6 @@ export class BuymodalComponent implements OnInit {
   }
   getCommission() {
     this.commission = this.buysellService.commission;
-    this.commission.url_return = AppUrl + '/success';
-    this.commission.url_cancel = AppUrl + '/cancel';
-    this.commission.url_notify = Server + '/payData';
   }
   getSignature() {
     if (this.payFastForm.invalid) {
@@ -319,19 +310,15 @@ export class BuymodalComponent implements OnInit {
     this.formData.append('cancel_url', this.commission.url_cancel);
     this.formData.append('notify_url', this.commission.url_notify);
     this.platformFee =  this.commission.mse_fee * this.payFastForm.get('amount').value;
-    this.fund = this.payFastForm.get('fundType').value;
-    this.rate = this.payFastForm.get('rate').value;
-    this.frequency = this.payFastForm.get('frequency').value;
     this.balanceValue = parseFloat((parseFloat(this.businessRemain) - parseFloat(this.amountBuy)).toPrecision(3));
     this.formData.append('amount', this.amountBuy);
     this.formData.append('item_name', this.itemName);
-    this.formData.append('fund', this.fund);
-    this.formData.append('rate', this.rate);
-    this.formData.append('frequency', this.frequency);
+    this.formData.append('custom_str1', this.payFastForm.get('fundType').value);
+    this.formData.append('custom_str2', this.payFastForm.get('rate').value);
+    this.formData.append('custom_str3', this.payFastForm.get('frequency').value);
+    this.formData.append('custom_str4', this.businessId);
+    this.formData.append('custom_str5', this.userData.userId);
     this.formData.append('payment_method', this.commission.payment_method);
-    this.formData.append('businessId', this.businessId);
-    this.formData.append('balance', this.businessRemain);
-    this.formData.append('userId', this.userData.userId);
     this.generateSignature(this.formData);
   }
   generateSignature(formData) {
@@ -341,7 +328,7 @@ export class BuymodalComponent implements OnInit {
     });
   }
   onNoClick() {
-    this.dialogRef.close(this.payFastForm.controls);
+    this.dialogRef.close();
   }
   showPart() {
     this.onShow = !this.onShow;

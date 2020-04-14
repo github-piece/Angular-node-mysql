@@ -91,6 +91,10 @@
         <mat-icon>shopping_cart</mat-icon>
         <span class="menu-item-title">New Business</span>
       </a>
+      <a class="simple-menu-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/dashboard/scout']">
+        <mat-icon>assignment_ind</mat-icon>
+        <span class="menu-item-title">Scout Profile</span>
+      </a>
     </mat-nav-list>
   </mat-sidenav>
 

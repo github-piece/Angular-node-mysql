@@ -14,6 +14,7 @@ import {ContactusComponent} from './contactus/contactus.component';
 import {OverviewComponent} from './overview/overview.component';
 import {ArticleComponent} from './article/article.component';
 import {BusinessComponent} from './business/business.component';
+import {ScoutComponent} from './scout/scout.component';
 
 
 const routes: Routes = [
@@ -34,7 +35,8 @@ const routes: Routes = [
       {path: 'terms', component: TermPolicyComponent},
       {path: 'contact', component: ContactusComponent},
       {path: 'article', component: ArticleComponent},
-      {path: 'business', component: BusinessComponent}
+      {path: 'business', component: BusinessComponent},
+      {path: 'scout', component: ScoutComponent}
     ]
   }
 ];

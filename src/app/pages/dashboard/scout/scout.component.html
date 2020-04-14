@@ -1,0 +1,51 @@
+<div class="container" *ngIf="onShow">
+  <div class="p-header">Scout Profile</div>
+  <div class="p-title">Check Business</div>
+  <mat-expansion-panel expanded="true">
+    <mat-expansion-panel-header>My Profile</mat-expansion-panel-header>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="profile-picture">
+          <img [src]="userData.useravatar" alt="photo">
+          <div class="profile-name">{{userData.username}}</div>
+          <div class="profile-detail">{{userData.useremail}}</div>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="table-responsive">
+          <table class="mat-table odd">
+            <tr><th>Country of Residence : </th><td>{{profileData[0].country}}</td></tr>
+            <tr><th>All Quizs Answered : </th><td>{{profileQuiz}}</td></tr>
+            <tr><th>Organisation Name : </th><td>{{profileData[0].organisation}}</td></tr>
+            <tr><th>Province Area : </th><td>{{profileData[0].province}}</td></tr>
+            <tr><th>Created Date :</th><td>{{profileData[0].created_at | date: 'EEEE'}}, {{profileData[0].created_at | date: 'dd'}} of {{profileData[0].created_at | date: 'MMMM'}}</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </mat-expansion-panel>
+  <mat-expansion-panel class="mt-3">
+    <mat-expansion-panel-header>Business Data</mat-expansion-panel-header>
+    <div class="table-responsive">
+      <table class="mat-table">
+        <thead><tr>
+          <td>No.</td>
+          <td>Business Name</td>
+          <td>Country</td>
+          <td>Address</td>
+          <td>Date</td>
+        </tr></thead>
+        <tbody><tr *ngFor="let business of dataSource; let index = index" (click)="getBusiness(index)">
+          <td>{{index + 1}}</td>
+          <td>{{business['business name']}}</td>
+          <td>{{business.country}}</td>
+          <td>{{business.address}}</td>
+          <td>{{business['date completed'] | date: 'EEEE'}}, {{business['date completed'] | date: 'dd'}} of {{business['date completed'] | date: 'MMMM'}}</td>
+        </tr></tbody>
+      </table>
+    </div>
+    <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true" [length]="totalSize"
+                   [pageIndex]="currentPage" (page)="handlePage($event)">
+    </mat-paginator>
+  </mat-expansion-panel>
+</div>

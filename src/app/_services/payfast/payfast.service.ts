@@ -9,6 +9,6 @@ export class PayfastService {
 
   constructor(private http: HttpClient) { }
   generateSignature(formData) {
-    return this.http.post<any>(`${LocalServer}/generateSignature`, formData);
+    return this.http.post<any>(`${Server}/generateSignature`, formData);
   }
 }

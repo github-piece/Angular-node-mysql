@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {User} from '../../_model/user';
-import {Server} from '../../../config/url.service';
+import {LocalServer, Server} from '../../../config/url.service';
 
 @Injectable({
   providedIn: 'root'
@@ -32,5 +32,8 @@ export class UserService {
   }
   updateUser(accountType, selectedId, radioAccountType) {
     return this.http.post<any>(`${Server}/updateUser`, {accountType, selectedId, radioAccountType});
+  }
+  getScoutProfile(userId) {
+    return this.http.post<any>(`${LocalServer}/getScoutProfile`, {userId});
   }
 }

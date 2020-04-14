@@ -56,6 +56,7 @@ import {BusinessComponent} from './business/business.component';
 import {AlertArticleComponent, EditArticleComponent} from './aboutus/editarticle.component';
 import {NgxMatIntlTelInputModule} from 'ngx-mat-intl-tel-input';
 import {GooglePlaceModule} from 'ngx-google-places-autocomplete/ngx-google-places-autocomplete.module';
+import { ScoutComponent } from './scout/scout.component';
 
 @NgModule({
   declarations: [
@@ -79,6 +80,7 @@ import {GooglePlaceModule} from 'ngx-google-places-autocomplete/ngx-google-place
     BusinessComponent,
     EditArticleComponent,
     AlertArticleComponent,
+    ScoutComponent,
   ],
   imports: [
       CommonModule,

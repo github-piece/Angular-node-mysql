@@ -37,6 +37,7 @@ export class MaindashboardComponent implements OnInit, AfterViewInit {
   tenureList = [];
   goalList = [];
   tableData: PeriodicElement[] = [];
+  onShow = false;
   dataSource = new MatTableDataSource<PeriodicElement>(this.tableData);
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   constructor(
@@ -60,7 +61,7 @@ export class MaindashboardComponent implements OnInit, AfterViewInit {
     this.onAddressAll();
     this.setBusinessList();
     this.chartSet();
-    console.clear();
+    this.onShow = true;
   }
   getRandomColor() {
     const letters = '0123456789ABCDEF';

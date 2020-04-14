@@ -10,7 +10,6 @@ import {SelectionModel} from '@angular/cdk/collections';
 import * as XLSX from 'xlsx';
 import {CatalogueService} from '../../../_services/catalogue/catalogue.service';
 import {NgxSpinnerService} from 'ngx-spinner';
-import {THIS_EXPR} from '@angular/compiler/src/output/output_ast';
 
 type AOA = any[][];
 export class TodoItemNode {
