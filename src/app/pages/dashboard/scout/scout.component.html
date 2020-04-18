@@ -1,4 +1,4 @@
-<div class="container" *ngIf="onShow">
+<div class="container" *ngIf="onShow&&onPageShow">
   <div *ngIf="!onQuiz">
     <div class="p-header">Scout Profile</div>
     <div class="p-title">Check Business</div>
@@ -1492,4 +1492,7 @@
       </mat-card-content>
     </mat-card>
   </div>
+</div>
+<div *ngIf="!onPageShow" class="position-center">
+  <div class="p-title">There is no data!</div>
 </div>

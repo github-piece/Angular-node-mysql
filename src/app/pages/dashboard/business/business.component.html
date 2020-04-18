@@ -51,7 +51,7 @@
 
 <div *ngIf="showProfile == true">
   <div class="container">
-    <div class="hidden-xs float-right">
+    <div class="hidden-xs float-right" *ngIf="profile === 'business_profile'">
       <a mat-raised-button class="mr-2" color="primary" href="assets/Business.xlsx">
         <mat-icon>get_app</mat-icon>
         <span>DOWNLOAD AS EXCEL</span>
@@ -63,7 +63,7 @@
     <div class="p-header">{{profileType}}</div>
     <div class="p-title">Please complete the following questionnaire</div>
     <mat-card>
-      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Toggle menu" class="more-btn">
+      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Toggle menu" class="more-btn" *ngIf="profile === 'business_profile'">
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #menu="matMenu" xPosition="before" class="menu">

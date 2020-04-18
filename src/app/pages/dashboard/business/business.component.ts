@@ -160,6 +160,7 @@ export class BusinessComponent implements OnInit {
         this.questionData = result.data;
       } else {
         this.profileData = result.data;
+        if (this.profileData) { this.onExpand = true; }
         const indexes = [];
         for (const quizData of this.profileData) {
           if (quizData.type === 'scouter_profile') {
@@ -513,6 +514,7 @@ export class BusinessComponent implements OnInit {
   }
   goToStart() {
     this.showProfile = false;
+    this.onScoutProfile = [];
     this.currentStep = 0;
     this.progress = '0';
     this.router.navigate(['/dashboard/business']);

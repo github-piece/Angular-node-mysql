@@ -25,6 +25,7 @@ export class ScoutComponent implements OnInit {
   checklistSelection = new SelectionModel<TodoItemFlatNode>(true /* multiple */);
   userData;
   profileData: any = [];
+  onPageShow = false;
   profileQuiz = '';
   onShow = false;
   businessData: any;
@@ -129,9 +130,12 @@ export class ScoutComponent implements OnInit {
     this.userService.getScoutProfile(this.userData.userId).subscribe(result => {
       this.spinner.hide();
       this.profileData = result.scoutData;
-      this.businessData = result.businessData;
-      this.getTasks();
-      this.getProfile();
+      if (this.profileData.length) {
+        this.onPageShow = true;
+        this.businessData = result.businessData;
+        this.getTasks();
+        this.getProfile();
+      }
     });
   }
   getProfile() {
