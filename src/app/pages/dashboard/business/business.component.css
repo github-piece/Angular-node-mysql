@@ -54,24 +54,7 @@
   top: 5px;
   right: 10px;
 }
-.detail {
-  color: #FFFFFF;
-  background-color: #3f51b5;
-  display: flex;
-  padding: 6px 16px;
-  align-items: center;
-  border-radius: 4px;
-  font-size: 14px;
-  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-  font-weight: 500;
-  line-height: 20px;
-  letter-spacing: -0.05px;
-  margin-bottom: 16px;
-}
-.detail .mat-icon {
-  color: white;
-  margin-right: 12px;
-}
+
 mat-form-field {
   width: 100%;
 }

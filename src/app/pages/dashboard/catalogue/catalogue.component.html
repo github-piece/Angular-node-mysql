@@ -38,16 +38,16 @@
             <div class="mat-card-header d-block">Total {{amount[index]}} : {{business["how much they're raising"]}} remaining...</div>
           </div>
           <div class="mb-4">
-            <button mat-raised-button class="float-left" [matMenuTriggerFor]="submenu" style="font-size: 18px">
+            <button mat-raised-button class="float-left" [matMenuTriggerFor]="submenu" style="font-size: 18px" (click)="getCompareData(business.business_id, index)">
               <mat-icon>menu</mat-icon>
             </button>
             <mat-menu #submenu="matMenu">
-              <button mat-menu-item (click)="groupShow(0)">Business Summary</button>
-              <button mat-menu-item (click)="groupShow(1)">Financial Summary</button>
-              <button mat-menu-item (click)="groupShow(2)">Sustainability Measures</button>
-              <button mat-menu-item (click)="groupShow(3)">Scoring Summary</button>
-              <button mat-menu-item (click)="groupShow(4)">Funding Channels</button>
-              <button mat-menu-item (click)="groupShow(5)">Badges</button>
+              <button mat-menu-item (click)="groupShow(0, index)">Business Summary</button>
+              <button mat-menu-item (click)="groupShow(1, index)">Financial Summary</button>
+              <button mat-menu-item (click)="groupShow(2, index)">Sustainability Measures</button>
+              <button mat-menu-item (click)="groupShow(3, index)">Scoring Summary</button>
+              <button mat-menu-item (click)="groupShow(4, index)">Funding Channels</button>
+              <button mat-menu-item (click)="groupShow(5, index)">Badges</button>
             </mat-menu>
             <div class="mat-card-header pb-0 text-right d-block">
               <button mat-raised-button color="primary" (click)="catalogueService.populateForm()">
@@ -58,7 +58,7 @@
               </button>
             </div>
           </div>
-          <mat-tab-group *ngIf="tabNum == 0">
+          <mat-tab-group *ngIf="tabNum[index] === 0">
             <mat-tab label="Business Information">
               <div style="overflow: hidden">
                 <div class="row mt-2" >
@@ -87,7 +87,7 @@
               </div>
             </mat-tab>
           </mat-tab-group>
-          <mat-tab-group *ngIf="tabNum == 1">
+          <mat-tab-group *ngIf="tabNum[index] === 1">
             <mat-tab label="Financial Information">
               <div style="overflow: hidden">
                 <div class="table-responsive">
@@ -96,72 +96,105 @@
                     <tr>
                       <th>Metric</th>
                       <th>Value</th>
+                      <th>Comment</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr>
                       <td>Number of employees:</td>
                       <td>{{business['number of employees']}}</td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="onCompareData[index]">{{compareData[index]['number of employees']}}</td>
                     </tr>
                     <tr>
                       <td>Average Wages</td>
                       <td>{{round(business['average wages'])}}</td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="onCompareData[index]">{{round(compareData[index]['average wages'])}}</td>
                     </tr>
                     <tr>
                       <td>Annual Sales Forecast</td>
                       <td>{{round(business['annual sales forecast'])}}</td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="onCompareData[index]">{{round(compareData[index]['annual sales forecast'])}}</td>
                     </tr>
                     <tr>
                       <td>Total Asset Turnover</td>
                       <td>{{round(business['total asset turnover'])}}</td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="onCompareData[index]">{{round(compareData[index]['total asset turnover'])}}</td>
                     </tr>
                     <tr>
                       <td>Fixed Asset Turnover</td>
                       <td>{{round(business['fixed asset turnover'])}}</td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="onCompareData[index]">{{round(compareData[index]['fixed asset turnover'])}}</td>
                     </tr>
                     <tr>
                       <td>Inventory Turnover:I think wrong8</td>
                       <td>{{round(business['inventory turnover'])}}</td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="onCompareData[index]">{{round(compareData[index]['inventory turnover'])}}</td>
                     </tr>
                     <tr>
                       <td>Current Ratio</td>
                       <td>{{round(business['current ratio'])}}</td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="onCompareData[index]">{{round(compareData[index]['current ratio'])}}</td>
                     </tr>
                     <tr>
                       <td>Cash Ratio</td>
                       <td>{{round(business['cash ratio'])}}</td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="onCompareData[index]">{{round(compareData[index]['cash ratio'])}}</td>
                     </tr>
                     <tr>
                       <td>Defensive Interval</td>
                       <td>{{round(business['defensive interval'])}}</td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="onCompareData[index]">{{round(compareData[index]['defensive interval'])}}</td>
                     </tr>
                     <tr>
                       <td>Debt-to-Equity</td>
                       <td>{{round(business['debt-to-equity'])}}</td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="onCompareData[index]">{{round(compareData[index]['debt-to-equity'])}}</td>
                     </tr>
                     <tr>
                       <td>Debt-to-Asset</td>
                       <td>{{round(business['debt-to-asset'])}}</td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="onCompareData[index]">{{round(compareData[index]['debt-to-asset'])}}</td>
                     </tr>
                     <tr>
                       <td>Cash Conversion Cycle</td>
                       <td>{{round(business['cash conversion cycle'])}}</td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="onCompareData[index]">{{round(compareData[index]['cash conversion cycle'])}}</td>
                     </tr>
                     <tr>
                       <td>Net Profit Margin</td>
                       <td>{{round(business['net profit margin'])}}</td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="onCompareData[index]">{{round(compareData[index]['net profit margin'])}}</td>
                     </tr>
                     <tr>
                       <td>Gross Margin</td>
                       <td>{{round(business['gross margin'])}}</td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="onCompareData[index]">{{round(compareData[index]['gross margin'])}}</td>
                     </tr>
                     <tr>
                       <td>Annual Projected CoGS</td>
                       <td>{{round(business['annual projected cogs'])}}</td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="onCompareData[index]">{{round(compareData[index]['annual projected cogs'])}}</td>
                     </tr>
                     <tr>
                       <td>Return on Assets</td>
                       <td>{{round(business['return on assets'])}}</td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="onCompareData[index]">{{round(compareData[index]['return on assets'])}}</td>
                     </tr>
                     </tbody>
                   </table>
@@ -178,44 +211,69 @@
                       <th>Amount</th>
                       <th>Date Submitted</th>
                       <th>Comments</th>
+                      <th>Comments Submitted</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr>
                       <td>Current Asset</td>
                       <td>{{round(business['current assets'])}}</td>
-                      <td>{{business['date completed']}}</td>
-                      <td><button mat-raised-button color="primary">Button 1</button></td>
+                      <td>{{business['date completed'] | date: 'EEEE'}}, {{business['date completed'] | date: 'dd'}} of {{business['date completed'] | date: 'MMMM'}}</td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="onCompareData[index]">{{round(compareData[index]['current assets'])}}</td>
+                      <td *ngIf="onCompareData[index]">
+                        {{compareData[index]['created_at'] | date: 'EEEE'}}, {{compareData[index]['created_at'] | date: 'dd'}} of {{compareData[index]['created_at'] | date: 'MMMM'}}
+                      </td>
                     </tr>
                     <tr>
                       <td>Non - Current Asset</td>
                       <td>{{round(business['non-current assets'])}}</td>
-                      <td>{{business['date completed']}}</td>
-                      <td><button mat-raised-button color="primary">Button 2</button></td>
+                      <td>{{business['date completed'] | date: 'EEEE'}}, {{business['date completed'] | date: 'dd'}} of {{business['date completed'] | date: 'MMMM'}}</td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="onCompareData[index]">{{round(compareData[index]['non-current assets'])}}</td>
+                      <td *ngIf="onCompareData[index]">
+                        {{compareData[index]['created_at'] | date: 'EEEE'}}, {{compareData[index]['created_at'] | date: 'dd'}} of {{compareData[index]['created_at'] | date: 'MMMM'}}
+                      </td>
                     </tr>
                     <tr>
                       <td>Total Asset</td>
                       <td>{{round(business['total assets'])}}</td>
-                      <td>{{business['date completed']}}</td>
-                      <td><button mat-raised-button color="primary">Button 2</button></td>
+                      <td>{{business['date completed'] | date: 'EEEE'}}, {{business['date completed'] | date: 'dd'}} of {{business['date completed'] | date: 'MMMM'}}</td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="onCompareData[index]">{{round(compareData[index]['total assets'])}}</td>
+                      <td *ngIf="onCompareData[index]">
+                        {{compareData[index]['created_at'] | date: 'EEEE'}}, {{compareData[index]['created_at'] | date: 'dd'}} of {{compareData[index]['created_at'] | date: 'MMMM'}}
+                      </td>
                     </tr>
                     <tr>
                       <td>Current Liability</td>
                       <td>{{round(business['current liabilities'])}}</td>
-                      <td>{{business['date completed']}}</td>
-                      <td><button mat-raised-button color="primary">Button 2</button></td>
+                      <td>{{business['date completed'] | date: 'EEEE'}}, {{business['date completed'] | date: 'dd'}} of {{business['date completed'] | date: 'MMMM'}}</td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="onCompareData[index]">{{round(compareData[index]['current liabilities'])}}</td>
+                      <td *ngIf="onCompareData[index]">
+                        {{compareData[index]['created_at'] | date: 'EEEE'}}, {{compareData[index]['created_at'] | date: 'dd'}} of {{compareData[index]['created_at'] | date: 'MMMM'}}
+                      </td>
                     </tr>
                     <tr>
                       <td>Non - Current Liability</td>
                       <td>{{round(business['non-current liabilities'])}}</td>
-                      <td>{{business['date completed']}}</td>
-                      <td><button mat-raised-button color="primary">Button 2</button></td>
+                      <td>{{business['date completed'] | date: 'EEEE'}}, {{business['date completed'] | date: 'dd'}} of {{business['date completed'] | date: 'MMMM'}}</td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="onCompareData[index]">{{round(compareData[index]['non-current liabilities'])}}</td>
+                      <td *ngIf="onCompareData[index]">
+                        {{compareData[index]['created_at'] | date: 'EEEE'}}, {{compareData[index]['created_at'] | date: 'dd'}} of {{compareData[index]['created_at'] | date: 'MMMM'}}
+                      </td>
                     </tr>
                     <tr>
                       <td>Total Liability</td>
                       <td>{{round(business['total liabilites'])}}</td>
-                      <td>{{business['date completed']}}</td>
-                      <td><button mat-raised-button color="primary">Button 2</button></td>
+                      <td>{{business['date completed'] | date: 'EEEE'}}, {{business['date completed'] | date: 'dd'}} of {{business['date completed'] | date: 'MMMM'}}</td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="onCompareData[index]">{{round(compareData[index]['total liabilites'])}}</td>
+                      <td *ngIf="onCompareData[index]">
+                        {{compareData[index]['created_at'] | date: 'EEEE'}}, {{compareData[index]['created_at'] | date: 'dd'}} of {{compareData[index]['created_at'] | date: 'MMMM'}}
+                      </td>
                     </tr>
                     </tbody>
                   </table>
@@ -237,7 +295,8 @@
                     <tr *ngFor="let item of mainBusiness[index]['income items'].split(','); let item_index = index;">
                       <td>{{item}}</td>
                       <td>{{round(mainBusiness[index]['income amounts'].split(',')[item_index])}}</td>
-                      <td><button mat-raised-button color="primary">Button 1</button></td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="onCompareData[index]">{{round(compareData[index]['income amounts'].split(',')[item_index])}}</td>
                     </tr>
                     </tbody>
                   </table>
@@ -259,32 +318,38 @@
                     <tr>
                       <td>Cash Paid for Operational Reasons</td>
                       <td>{{business['cash paid for operational reasons']}}</td>
-                      <td><button mat-raised-button color="primary">Button 1</button></td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="onCompareData[index]">{{compareData[index]['cash paid for operational reasons']}}</td>
                     </tr>
                     <tr>
                       <td>Cash Paid for Investing Activities</td>
                       <td>{{business['cash paid for investing activities']}}</td>
-                      <td><button mat-raised-button color="primary">Button 1</button></td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="onCompareData[index]">{{compareData[index]['cash paid for investing activities']}}</td>
                     </tr>
                     <tr>
                       <td>Cash Paid for Financing Activities</td>
                       <td>{{business['cash paid for financing activities']}}</td>
-                      <td><button mat-raised-button color="primary">Button 1</button></td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="onCompareData[index]">{{compareData[index]['cash paid for financing activities']}}</td>
                     </tr>
                     <tr>
                       <td>Cash Received from Operations</td>
                       <td>{{business['cash received from operations']}}</td>
-                      <td><button mat-raised-button color="primary">Button 1</button></td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="onCompareData[index]">{{compareData[index]['cash received from operations']}}</td>
                     </tr>
                     <tr>
                       <td>Cash Received from Investing Activities</td>
                       <td>{{business['cash received from investing activities']}}</td>
-                      <td><button mat-raised-button color="primary">Button 1</button></td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="onCompareData[index]">{{compareData[index]['cash received from investing activities']}}</td>
                     </tr>
                     <tr>
                       <td>Cash Received from Financing Activities</td>
                       <td>{{business['cash received from financing activities']}}</td>
-                      <td><button mat-raised-button color="primary">Button 1</button></td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="onCompareData[index]">{{compareData[index]['cash received from financing activities']}}</td>
                     </tr>
                     </tbody>
                   </table>
@@ -292,7 +357,7 @@
               </div>
             </mat-tab>
           </mat-tab-group>
-          <mat-tab-group *ngIf="tabNum == 2">
+          <mat-tab-group *ngIf="tabNum[index] === 2">
             <mat-tab label="UN SDG's">
               <div style="overflow: hidden"><div class="table-responsive">
                 <table class="mat-table">
@@ -311,8 +376,16 @@
                       <td><img [src]="'assets/catalogue/'+unSdg_path" alt="unSdg" style="width: 80px"></td>
                       <td>{{unSdg[index]['goal_number'][sdg_index]}}</td>
                       <td>{{unSdg[index]['goal_description'][sdg_index]}}</td>
-                      <td><button mat-raised-button color="primary">Button 1</button></td>
-                      <td><button mat-raised-button color="primary">Button 1</button></td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="!onCompareData[index]">Not compared</td>
+                      <td *ngIf="onCompareData[index]">
+                        <div *ngIf="scoutUnSdg[index][0]['goal_number'][sdg_index] === undefined">Not compared</div>
+                        <div *ngIf="scoutUnSdg[index][0]['goal_number'][sdg_index] !== undefined">{{scoutUnSdg[index][0]['goal_number'][sdg_index]}}</div>
+                      </td>
+                      <td *ngIf="onCompareData[index]">
+                        <div *ngIf="scoutUnSdg[index][0]['goal_description'][sdg_index] === undefined">Not compared</div>
+                        <div *ngIf="scoutUnSdg[index][0]['goal_description'][sdg_index] !== undefined">{{scoutUnSdg[index][0]['goal_description'][sdg_index]}}</div>
+                      </td>
                     </tr>
                   </ng-container>
                   </tbody>
@@ -482,7 +555,7 @@
               </div>
             </mat-tab>
           </mat-tab-group>
-          <mat-tab-group *ngIf="tabNum == 3">
+          <mat-tab-group *ngIf="tabNum[index] === 3">
             <mat-tab label="Scoring Summary">
               <div style="overflow: hidden">
                 <div class="row mt-2">
@@ -545,7 +618,7 @@
               </div>
             </mat-tab>
           </mat-tab-group>
-          <mat-tab-group *ngIf="tabNum == 4">
+          <mat-tab-group *ngIf="tabNum[index] === 4">
             <mat-tab label="Funding Chanel">
               <div style="overflow: hidden">
                 <div class="row">
@@ -565,7 +638,7 @@
               </div>
             </mat-tab>
           </mat-tab-group>
-          <mat-tab-group *ngIf="tabNum == 5">
+          <mat-tab-group *ngIf="tabNum[index] === 5">
             <mat-tab label="Badges">
               <div *ngIf="unSdg.length" style="overflow: hidden">
                 <div class="row">

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {PhpServer, Server} from '../../../config/url.service';
+import {Server} from '../../../config/url.service';
 import {HttpClient} from '@angular/common/http';
 
 @Injectable({
@@ -14,13 +14,8 @@ export class CatalogueService {
   getTabData(userId, business, tab) {
     return this.http.post<any>(`${Server}/getTabData`, {userId, business, tab});
   }
-  setBusinessByExcel(userId, questionTypeID) {
-    const action = 'createByExcel';
-    return this.http.post<any>(`${PhpServer}/catalogue.php`, {userId, questionTypeID, action});
-  }
-  setBusinessList(userId, questionTypeID) {
-    const action = 'create';
-    return this.http.post<any>(`${PhpServer}/catalogue.php`, {userId, questionTypeID, action});
+  getCompareData(businessId) {
+    return this.http.post<any>(`${Server}/getCompareData`, {businessId});
   }
   populateForm() {
   }

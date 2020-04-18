@@ -1,51 +1,1495 @@
 <div class="container" *ngIf="onShow">
-  <div class="p-header">Scout Profile</div>
-  <div class="p-title">Check Business</div>
-  <mat-expansion-panel expanded="true">
-    <mat-expansion-panel-header>My Profile</mat-expansion-panel-header>
-    <div class="row">
-      <div class="col-md-4">
-        <div class="profile-picture">
-          <img [src]="userData.useravatar" alt="photo">
-          <div class="profile-name">{{userData.username}}</div>
-          <div class="profile-detail">{{userData.useremail}}</div>
+  <div *ngIf="!onQuiz">
+    <div class="p-header">Scout Profile</div>
+    <div class="p-title">Check Business</div>
+    <mat-expansion-panel expanded="true">
+      <mat-expansion-panel-header>My Profile</mat-expansion-panel-header>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="profile-picture">
+            <img [src]="userData.useravatar" alt="photo">
+            <div class="profile-name">{{userData.username}}</div>
+            <div class="profile-detail">{{userData.useremail}}</div>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="table-responsive">
+            <table class="mat-table odd">
+              <tr><th>Country of Residence : </th><td>{{profileData[0].country}}</td></tr>
+              <tr><th>All Quizs Answered : </th><td>{{profileQuiz}}</td></tr>
+              <tr><th>Organisation Name : </th><td>{{profileData[0].organisation}}</td></tr>
+              <tr><th>Province Area : </th><td>{{profileData[0].province}}</td></tr>
+              <tr><th>Created Date :</th><td>{{profileData[0].created_at | date: 'EEEE'}}, {{profileData[0].created_at | date: 'dd'}} of {{profileData[0].created_at | date: 'MMMM'}}</td></tr>
+            </table>
+          </div>
         </div>
       </div>
-      <div class="col-md-8">
-        <div class="table-responsive">
-          <table class="mat-table odd">
-            <tr><th>Country of Residence : </th><td>{{profileData[0].country}}</td></tr>
-            <tr><th>All Quizs Answered : </th><td>{{profileQuiz}}</td></tr>
-            <tr><th>Organisation Name : </th><td>{{profileData[0].organisation}}</td></tr>
-            <tr><th>Province Area : </th><td>{{profileData[0].province}}</td></tr>
-            <tr><th>Created Date :</th><td>{{profileData[0].created_at | date: 'EEEE'}}, {{profileData[0].created_at | date: 'dd'}} of {{profileData[0].created_at | date: 'MMMM'}}</td></tr>
-          </table>
-        </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel class="mt-3">
+      <mat-expansion-panel-header>Business Data</mat-expansion-panel-header>
+      <div class="table-responsive">
+        <table class="mat-table">
+          <thead><tr>
+            <td>No.</td>
+            <td>Business Name</td>
+            <td>Country</td>
+            <td>Address</td>
+            <td>Date</td>
+          </tr></thead>
+          <tbody><tr *ngFor="let business of tableDataSource; let index = index" (click)="getBusiness(index)">
+            <td>{{index + 1}}</td>
+            <td>{{business['business name']}}</td>
+            <td>{{business.country}}</td>
+            <td>{{business.address}}</td>
+            <td>{{business['date completed'] | date: 'EEEE'}}, {{business['date completed'] | date: 'dd'}} of {{business['date completed'] | date: 'MMMM'}}</td>
+          </tr></tbody>
+        </table>
       </div>
-    </div>
-  </mat-expansion-panel>
-  <mat-expansion-panel class="mt-3">
-    <mat-expansion-panel-header>Business Data</mat-expansion-panel-header>
-    <div class="table-responsive">
-      <table class="mat-table">
-        <thead><tr>
-          <td>No.</td>
-          <td>Business Name</td>
-          <td>Country</td>
-          <td>Address</td>
-          <td>Date</td>
-        </tr></thead>
-        <tbody><tr *ngFor="let business of dataSource; let index = index" (click)="getBusiness(index)">
-          <td>{{index + 1}}</td>
-          <td>{{business['business name']}}</td>
-          <td>{{business.country}}</td>
-          <td>{{business.address}}</td>
-          <td>{{business['date completed'] | date: 'EEEE'}}, {{business['date completed'] | date: 'dd'}} of {{business['date completed'] | date: 'MMMM'}}</td>
-        </tr></tbody>
-      </table>
-    </div>
-    <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true" [length]="totalSize"
-                   [pageIndex]="currentPage" (page)="handlePage($event)">
-    </mat-paginator>
-  </mat-expansion-panel>
+      <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true" [length]="totalSize"
+                     [pageIndex]="currentPage" (page)="handlePage($event)">
+      </mat-paginator>
+    </mat-expansion-panel>
+  </div>
+  <div *ngIf="onQuiz" class="container">
+    <div class="p-header">Scout Questions</div>
+    <div class="p-title">Please complete the following questionnaire</div>
+    <mat-card>
+      <mat-card-header>Question {{ currentStep + 1 }}</mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <div class="detail mt-3">
+          <mat-icon>error_outline</mat-icon>
+          You can download all questions as excel and upload your answers!
+        </div>
+        <form [formGroup]="questionForm">
+          <div *ngFor="let i of rangeMain">
+            <div *ngIf="rowData['col_'+i+'_header']">
+              <ng-template [ngIf]="((rowData['col_'+i].toLowerCase().includes('smalltextbox'))||(rowData['col_'+i] =='null')||(rowData['col_'+i] =='')||(rowData['col_'+i] ==0))">
+                <mat-form-field>
+                  <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                  <input matInput type="text" formControlName="col_{{i}}_header" placeholder="Enter your answer">
+                </mat-form-field>
+              </ng-template>
+              <ng-template [ngIf]="(rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('selection'))&&(!rowData['col_0'].toLowerCase().includes('selectionanddetails')))">
+                <mat-form-field>
+                  <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                  <mat-select formControlName="col_{{i}}_header">
+                    <mat-option *ngFor="let x of (rowData['col_'+i].slice(10,rowData['col_'+i].length-1)).split(',');" value="{{x}}">
+                      {{x}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </ng-template>
+              <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('options')&&(!domFlag))">
+                <mat-form-field>
+                  <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                  <mat-select>
+                    <mat-option *ngFor="let x of (rowData['col_'+i].slice(8, rowData['col_'+i].length-1)).split(',');" value="{{x}}" (click)="setValue(x, i)">
+                      {{x}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </ng-template>
+              <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase()=='number')">
+                <mat-form-field>
+                  <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                  <input matInput type="number" formControlName="col_{{i}}_header">
+                </mat-form-field>
+              </ng-template>
+              <!--Current item is country, next item is province-->
+              <ng-template [ngIf]="rowData['col_'+i] && (rowData['col_'+i].includes(' country[Country]'))">
+                <mat-form-field>
+                  <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                  <mat-select formControlName="col_{{i}}_header" placeholder="Please select one of these items">
+                    <mat-option *ngFor="let x of country; " value="{{x.country}}" (click)="getCountryProvince(x.country, 0, i)">
+                      {{x.country}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </ng-template>
+              <!--Select province option based on selected country-->
+              <ng-template [ngIf]="rowData['col_'+i] && (rowData['col_'+i].toLowerCase().includes('province'))">
+                <mat-form-field>
+                  <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                  <mat-select formControlName="col_{{i}}_header" placeholder="Please select one of these items">
+                    <mat-option *ngFor="let selected_province of province[0]; " value="{{selected_province}}" (click)="getCountryProvince(selected_province, 0, i)">
+                      {{selected_province}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </ng-template>
+              <!--Select municipality if country is south africa-->
+              <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('south africa')">
+                <div class="mat-card-header" style="padding-bottom: 0; padding-top: 16px">{{rowData['col_'+i+'_header']}}</div>
+                <ng-container *ngIf="selectedCountry ==='South Africa'">
+                  <mat-selection-list [formControl]="questionForm.controls['col_'+i+'_header']">
+                    <div class="table-responsive">
+                      <table class="mat-table odd">
+                        <tbody>
+                        <tr *ngFor="let x of municipality[0]">
+                          <td style="padding: 0 16px">{{x.province}}</td>
+                          <td style="padding: 0 16px">{{x.district}}</td>
+                          <td style="padding: 0 16px">{{x.municipality}}</td>
+                          <td style="padding: 0 16px">
+                            <mat-list-option value="{{x.municipality}}"></mat-list-option>
+                          </td>
+                        </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </mat-selection-list>
+                </ng-container>
+              </ng-template>
+              <!--Select multiple option for sector.-->
+              <ng-template [ngIf]="(rowData['col_'+i].toLowerCase().includes('sector'))">
+                <mat-card-header>{{rowData['col_'+i+'_header']}}</mat-card-header>
+                <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+                  <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
+                    <button mat-icon-button disabled></button>
+                    <mat-checkbox
+                      [checked]="checklistSelection.isSelected(node)"
+                      (change)="todoLeafItemSelectionToggle(node, i)">{{node.item}}
+                    </mat-checkbox>
+                  </mat-tree-node>
+                  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+                    <button mat-icon-button matTreeNodeToggle
+                            [attr.aria-label]="'toggle ' + node.filename">
+                      <mat-icon>
+                        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                      </mat-icon>
+                    </button>
+                    <mat-checkbox [checked]="descendantsAllSelected(node)"
+                                  [indeterminate]="descendantsPartiallySelected(node)"
+                                  (change)="todoItemSelectionToggle(node)">{{node.item}}
+                    </mat-checkbox>
+                  </mat-tree-node>
+                </mat-tree>
+              </ng-template>
+              <!--Select multiple option for normal multiple-->
+              <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('selectmultiple'))&&(!(rowData['col_'+i].toLowerCase().includes('sector')))" >
+                <div class="mat-card-header pt-3">{{rowData['col_'+i+'_header']}}</div>
+                <div class="table-responsive mb-2">
+                  <table class="mat-table">
+                    <thead><tr><td>No.</td><td>Percent</td><td>Action</td></tr></thead>
+                    <tbody><tr *ngFor="let x of (rowData['col_'+i].slice(15,rowData['col_'+i].length-1)).split(',');let index= index">
+                      <td>{{index + 1}}</td><td>{{x}}</td><td><mat-radio-button (click)="setValue(x, i)"></mat-radio-button></td>
+                    </tr></tbody>
+                  </table>
+                </div>
+              </ng-template>
+              <!--Upload for image-->
+              <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('uploadimage')">
+                <mat-card style="height: 480px; margin-bottom: 16px;">
+                  <div class="mat-card-header" style="height: 50px">
+                    {{rowData['col_'+i+'_header']}}
+                  </div>
+                  <label for="{{'file0' + i}}" class="label-btn">Choose a file</label>
+                  <input id="{{'file0' + i}}" class="file-input-btn" name="file" accept='image/*' type="file" (change)="onFileChange($event, i)">
+                  <div *ngIf="showImage[i]" class="text-center">
+                    <img [src]="imgURL[i]" *ngIf="imgURL[i]" style="height: 300px; margin-bottom: 32px">
+                  </div>
+                </mat-card>
+              </ng-template>
+              <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('email')">
+                <mat-form-field>
+                  <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                  <input matInput type="email" formControlName="col_{{i}}_header">
+                </mat-form-field>
+              </ng-template>
+              <!--large text box option-->
+              <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('largetextbox')||rowData['col_'+i].toLowerCase().includes('item description'))" >
+                <mat-form-field>
+                  <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                  <textarea matInput formControlName="col_{{i}}_header"></textarea>
+                </mat-form-field>
+              </ng-template>
+              <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('phone')">
+                <mat-form-field>
+                  <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                  <ngx-mat-intl-tel-input
+                    [preferredCountries]="['us', 'gb']"
+                    [enablePlaceholder]="true"
+                    [enableSearch]="true"
+                    name="phone"
+                    [formControl]="questionForm.controls['col_' + i + '_header']"
+                  ></ngx-mat-intl-tel-input>
+                </mat-form-field>
+              </ng-template>
+              <!--select instrument type option-->
+              <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('selectinstrument')">
+                <mat-form-field>
+                  <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                  <mat-select formControlName="col_{{i}}_header" multiple style="min-width: 100%">
+                    <mat-option *ngFor="let x of instruments; let i = index; " value="{{x.instrument}}" (click)="explain_content(i,'')">
+                      {{x.instrument}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-list >
+                  <ng-container *ngFor="let x of instruments; let i = index;">
+                    <ng-container *ngIf="(explainIndex == i)&&(this.clickFlag == undefined)">
+                      - Description.
+                      <p>{{x.description}}</p>
+                      <hr>
+                      - Best suit for.
+                      <p>{{x.best_suit_for}}</p>
+                      <hr>
+                      - Agreement type.
+                      <p>{{x.agreement_type}}</p>
+                      <hr>
+                      - advantage.
+                      <p>{{x.advantage}}</p>
+                      <hr>
+                      - Disadvantage.
+                      <p>{{x.disadvantage}}</p>
+                    </ng-container>
+                  </ng-container>
+                </mat-list>
+              </ng-template>
+              <!--select date picker-->
+              <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('selectdate'))">
+                <mat-form-field style="width: 320px">
+                  <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                  <input matInput [matDatepicker]="picker" formControlName="col_{{i}}_header">
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+              </ng-template>
+              <!--select currency + amount option-->
+              <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('currency + amount'))" >
+                <mat-form-field style="width: 320px">
+                  <mat-label>Please type amount and currency symbol</mat-label>
+                  <input matInput type="number" placeholder="Please enter currency amount" (change)="addCurrencyAmount($event,i)">
+                </mat-form-field>
+                <mat-form-field style="width: 112px; margin-left: 8px">
+                  <mat-label>*Currency</mat-label>
+                  <mat-select>
+                    <mat-option *ngFor="let x of currencyCode" value="{{x.symbol}}" (onSelectionChange)="addCurrencySymbol(x.symbol, '', i)">
+                      {{x.symbol}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <input type="hidden" formControlName="col_{{i}}_header">
+              </ng-template>
+              <!--select currency symbol.-->
+              <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('selectcurrency')||rowData['col_'+i].toLowerCase().includes('selectcurrencies'))">
+                <mat-form-field>
+                  <mat-label>
+                    *Currency symbol
+                  </mat-label>
+                  <mat-select formControlName="col_{{i}}_header">
+                    <mat-option *ngFor="let x of currencyCode;" value="{{x.symbol}}">
+                      {{x.symbol}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </ng-template>
+              <!--select stake holder map option-->
+              <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('stakeholdermap')">
+                <div class="mat-card-header">{{rowData['col_'+i+'_header']}}</div>
+                <mat-divider></mat-divider>
+                <table class="mat-table">
+                  <tbody>
+                  <tr *ngFor="let x of stakeholder; let index = index">
+                    <td>{{index + 1}}</td>
+                    <td>{{x.stakeholder}}</td>
+                    <td>
+                      <mat-form-field>
+                        <mat-label>Choose Method</mat-label>
+                        <mat-select>
+                          <mat-option *ngFor="let ring of stakeholderRings"  (click)="getStakeholderRing(ring.ring, i, index)" value="{{ring.ring}}">
+                            {{ring.ring}}
+                          </mat-option>
+                          <mat-option>None</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </ng-template>
+              <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('stakeholderscoring_ring')">
+                <input type="hidden" formControlName="col_{{i}}_header">
+              </ng-template>
+              <!--select available currency  option-->
+              <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('availablecurrencies'))" >
+                <div class="mat-card-header">{{rowData['col_'+i+'_header']}}</div>
+                <div class="table-responsive">
+                  <table class="mat-table">
+                    <thead><tr><td>No.</td><td>Currency symbol</td><td>Currency</td><td>Currency Type</td><td>Action</td></tr></thead>
+                    <tbody>
+                    <tr *ngFor="let x of currencyCode; let index = index">
+                      <td>{{index + 1}}</td>
+                      <td>{{x.symbol}}</td>
+                      <td>{{x.currency}}</td>
+                      <td>{{x.currency_type}}</td>
+                      <td><mat-checkbox (click)="setCurrency(index, i)"></mat-checkbox></td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </ng-template>
+              <!--select goal from tbl_unsdg_database-->
+              <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('tbl_unsdg_database')">
+                <mat-selection-list [formControl]="questionForm.controls['col_'+i+'_header']">
+                  <div class="mat-title">{{rowData['col_'+i+'_header']}}</div>
+                  <mat-list-option *ngFor="let x of goals;"  value="{{x.goal_name}}">
+                    {{x.goal_name}}
+                  </mat-list-option>
+                </mat-selection-list>
+              </ng-template>
+              <!--select asset from tbl_balance_sheet.-->
+              <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('tbl_balance_sheet')">
+                <mat-form-field>
+                  <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                  <mat-select formControlName="col_{{i}}_header">
+                    <mat-option *ngFor="let x of balances; let i_balance = index; " value="{{x.balance_sheet_item}}" (click)="explain_content(i_balance,'')">
+                      {{x.balance_sheet_item}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-list >
+                  <ng-container *ngFor="let x of balances; let i = index;">
+                    <ng-container *ngIf="(explainIndex == i)&&(clickFlag == undefined)">
+                      <hr>
+                      - Balance Sheet Example.
+                      <p>{{x.balance_sheet_example}}</p>
+                      <hr>
+                      - Balance Type.
+                      <p>{{x.item_type}}</p>
+                    </ng-container>
+                  </ng-container>
+                </mat-list>
+              </ng-template>
+              <!--select income from tbl_income_statement_item.-->
+              <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].includes('tbl_income_statement_item')">
+                <mat-form-field>
+                  <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                  <mat-select formControlName="col_{{i}}_header">
+                    <mat-option *ngFor="let x of incomes; let i = index; " value="{{x.income_statement_item}}" (click)="explain_content(i,'')">
+                      {{x.income_statement_item}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-list>
+                  <ng-container *ngFor="let x of incomes; let i = index;">
+                    <ng-container *ngIf="(explainIndex == i)&&(this.clickFlag == undefined)">
+                      <hr>
+                      - Balance Sheet Example.
+                      <p>{{x.income_statement_item}}</p>
+                      <hr>
+                      - Balance Type.
+                      <p>{{x.income_statement_example}}</p>
+                    </ng-container>
+                  </ng-container>
+                </mat-list>
+              </ng-template>
+              <!--select cash flows from tbl_cash_flow_statement-->
+              <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('tbl_cash_flow')">
+                <mat-form-field>
+                  <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                  <mat-select formControlName="col_{{i}}_header">
+                    <mat-option *ngFor="let x of cashFlows; let i = index; " value="{{x.cash_flow_item}}" (click)="explain_content(i,'')">
+                      {{x.cash_flow_item}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-list >
+                  <ng-container  *ngFor="let x of cashFlows; let i = index;">
+                    <ng-container *ngIf="(explainIndex == i)&&(this.clickFlag == undefined)">
+                      <hr>
+                      - Cash Flow Item.
+                      <p>{{x.cash_flow_item}}</p>
+                      <hr>
+                      - Cash Flow Example.
+                      <p>{{x.cash_flow_example}}</p>
+                    </ng-container>
+                  </ng-container>
+                </mat-list>
+              </ng-template>
+              <!--when rowData['col_'+i] includes selectionanddetails, not display, but only hr tag-->
+              <ng-template [ngIf]="rowData['col_'+i].toLowerCase().includes('selectionanddetails')">
+                <mat-card-header>{{rowData['col_'+i+'_header']}}</mat-card-header>
+              </ng-template>
+              <!--dom options option-->
+              <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('options')&&domFlag)">
+                <mat-form-field>
+                  <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                  <mat-select *ngIf="(i==this.domPosition)" formControlName="col_{{i}}_header" (selectionChange)="showExtraDom($event)">
+                    <mat-option *ngFor="let x of (rowData['col_'+i].slice(8,rowData['col_'+i].length-1)).split(',');" value="{{x}}" >
+                      {{x}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-select *ngIf="!(i==this.domPosition)" formControlName="col_{{i}}_header">
+                    <mat-option *ngFor="let x of (rowData['col_'+i].slice(8,rowData['col_'+i].length-1)).split(',');" value="{{x}}" >
+                      {{x}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </ng-template>
+              <!--google auto complete option-->
+              <ng-template [ngIf]="rowData['col_'+i].toLowerCase().includes('google')">
+                <mat-form-field>
+                  <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                  <input matInput ngx-google-places-autocomplete  placeholder="Enter Address" formControlName="col_{{i}}_header" #placesRef="ngx-places" (onAddressChange)="handleAddressChange($event, i)"/>
+                </mat-form-field>
+              </ng-template>
+              <!--start from tbl_bee_quiz    -->
+              <!--my business option-->
+              <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('my business'))">
+                <mat-form-field>
+                  <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                  <mat-select formControlName="col_{{i}}_header">
+                    <mat-option *ngFor="let x of (rowData['col_'+i].slice(24,rowData['col_'+i].length-1)).split(',');" value="{{x}}">
+                      {{x}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </ng-template>
+              <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('tag')">
+                <mat-form-field>
+                  <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                  <mat-chip-list #chipList aria-label="Tag Selection">
+                    <mat-chip
+                      *ngFor="let chip of chipsTemp"
+                      selectable="true"
+                      removable="true"
+                      (removed)="removeTag(chip)"
+                    >
+                      {{chip}}
+                      <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <input
+                      placeholder="New Tag..."
+                      #tagInput
+                      formControlName="col_{{i}}_header"
+                      [matChipInputFor]="chipList"
+                      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                      matChipInputAddOnBlur="true"
+                      (matChipInputTokenEnd)="addTag($event, i)">
+                  </mat-chip-list>
+                </mat-form-field>
+              </ng-template>
+            </div>
+          </div>
+          <!--when dom manipulation, add extra items.-->
+          <div *ngIf="domPositionClick">
+            <div *ngFor="let i of rangeExtra">
+              <div *ngIf="rowData['col_'+i+'_header']">
+                <ng-template [ngIf]="(rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('selection'))&&(!rowData['col_0'].toLowerCase().includes('selectionanddetails')))" >
+                  <mat-form-field>
+                    <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                    <mat-select formControlName="col_{{i}}_header">
+                      <mat-option *ngFor="let x of (rowData['col_'+i].slice(10,rowData['col_'+i].length-1)).split(',');" value="{{x}}">
+                        {{x}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </ng-template>
+                <!--options option-->
+                <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('options'))">
+                  <mat-form-field>
+                    <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                    <mat-select formControlName="col_{{i}}_header">
+                      <mat-option *ngFor="let x of (rowData['col_'+i].slice(8,rowData['col_'+i].length-1)).split(',');" value="{{x}}">
+                        {{x}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </ng-template>
+                <!--number option-->
+                <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase()=='number')">
+                  <mat-form-field>
+                    <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                    <input matInput type="number" formControlName="col_{{i}}_header" placeholder="Enter your answer">
+                  </mat-form-field>
+                </ng-template>
+                <!--select multiple option-->
+                <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('selectmultiple'))&&(!(rowData['col_'+i].toLowerCase().includes('sector')))" >
+                  <mat-label>{{rowData['col_'+i+'_header']}}0000000000000000</mat-label>
+                  <mat-selection-list [formControl]="questionForm.controls['col_'+i+'_header']">
+                    <mat-list-option *ngFor="let x of (rowData['col_'+i].slice(15,rowData['col_'+i].length-1)).split(',');" [value]="x">
+                      {{x}}
+                    </mat-list-option>
+                  </mat-selection-list>
+                </ng-template>
+
+                <!--upload option-->
+                <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('uploadimage')" >
+                  <mat-card style="width: 480px" id="{{'thisfile' + i}}">
+                    <div class="mat-card-header" style="height: 50px">
+                      If you want to add your image, please click here
+                    </div>
+                    <label for="{{'file' + i}}" class="label-btn">Choose a file</label>
+                    <input id="{{'file' + i}}" class="file-input-btn" accept='image/*' type="file" name="file" (change)="onFileChange($event, i)">
+                    <div *ngIf="showImage[i]">
+                      <img [src]="imgURL[i]" *ngIf="imgURL[i]" style="height: 300px; margin-bottom: 32px; width: 100%">
+                    </div>
+                  </mat-card>
+                </ng-template>
+                <!--email option-->
+                <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('email')" >
+                  <mat-form-field>
+                    <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                    <input matInput type="email" formControlName="col_{{i}}_header">
+                  </mat-form-field>
+                </ng-template>
+                <!--large text box option-->
+                <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('largetextbox')||rowData['col_'+i].toLowerCase().includes('item description'))" >
+                  <mat-form-field>
+                    <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                    <textarea matInput formControlName="col_{{i}}_header"></textarea>
+                  </mat-form-field>
+                </ng-template>
+                <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('phone')">
+                  <mat-form-field>
+                    <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                    <ngx-mat-intl-tel-input
+                      [preferredCountries]="['us', 'gb']"
+                      [enablePlaceholder]="true"
+                      [enableSearch]="true"
+                      name="phone"
+                      [formControl]="questionForm.controls['col_' + i + '_header']"
+                    ></ngx-mat-intl-tel-input>
+                  </mat-form-field>
+                </ng-template>
+                <!--select instrument type option-->
+                <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('selectinstrument')">
+                  <mat-form-field>
+                    <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                    <mat-select formControlName="col_{{i}}_header">
+                      <mat-option *ngFor="let x of instruments; let i = index; " value="{{x.instrument}}" (click)="explain_content(i,'')">
+                        {{x.instrument}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-list >
+                    <ng-container *ngFor="let x of instruments; let i = index;">
+                      <ng-container *ngIf="(explainIndex == i)&&(this.clickFlag == undefined)">
+                        <hr>
+                        - Description.
+                        <p>{{x.description}}</p>
+                        <hr>
+                        - Best suit for.
+                        <p>{{x.best_suit_for}}</p>
+                        <hr>
+                        - Agreement type.
+                        <p>{{x.agreement_type}}</p>
+                        <hr>
+                        - advantage.
+                        <p>{{x.advantage}}</p>
+                        <hr>
+                        - Disadvantage.
+                        <p>{{x.disadvantage}}</p>
+                      </ng-container>
+                    </ng-container>
+                  </mat-list>
+                </ng-template>
+                <!--select date picker-->
+                <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('selectdate'))">
+                  <mat-form-field style="width: 360px">
+                    <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="col_{{i}}_header">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
+                </ng-template>
+                <!--select currency + amount option-->
+                <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('currency + amount'))" >
+                  <mat-form-field style="width: 320px">
+                    <mat-label>Please type amount and currency symbol</mat-label>
+                    <input matInput type="number" placeholder="Please enter currency amount" (change)="addCurrencyAmount($event,i)">
+                  </mat-form-field>
+                  <mat-form-field style="width: 112px; margin-left: 8px">
+                    <mat-label>*Currency</mat-label>
+                    <mat-select>
+                      <mat-option *ngFor="let x of currencyCode" value="{{x.symbol}}" (onSelectionChange)="addCurrencySymbol(x.symbol, '' ,i)">
+                        {{x.symbol}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <input type="hidden" formControlName="col_{{i}}_header">
+                </ng-template>
+                <!--select currency symbol.-->
+                <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('selectcurrency')||rowData['col_'+i].toLowerCase().includes('selectcurrencies'))">
+                  <mat-form-field>
+                    <mat-label>
+                      *Currency symbol
+                    </mat-label>
+                    <mat-select formControlName="col_{{i}}_header">
+                      <mat-option *ngFor="let x of currencyCode;" value="{{x.symbol}}">
+                        {{x.symbol}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </ng-template>
+                <!--select stakeholder map option-->
+                <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('stakeholdermap')">
+                  <mat-selection-list [formControl]="questionForm.controls['col_'+i+'_header']">
+                    <div class="mat-title">{{rowData['col_'+i+'_header']}}</div>
+                    <mat-list-option *ngFor="let x of stakeholder;"  value="{{x.stakeholder}}">
+                      {{x.stakeholder}}
+                    </mat-list-option>
+                  </mat-selection-list>
+                </ng-template>
+                <!--select available currency  option-->
+                <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('availablecurrencies'))" >
+                  <div class="mat-title">{{rowData['col_'+i+'_header']}}</div>
+                  <div class="table-responsive">
+                    <table class="mat-table">
+                      <thead><tr><td>No.</td><td>Currency symbol</td><td>Currency</td><td>Currency Type</td><td>Action</td></tr></thead>
+                      <tbody>
+                      <tr *ngFor="let x of currencyCode; let index = index">
+                        <td>{{index + 1}}</td>
+                        <td>{{x.symbol}}</td>
+                        <td>{{x.currency}}</td>
+                        <td>{{x.currency_type}}</td>
+                        <td><mat-checkbox (click)="setCurrency(index, i)"></mat-checkbox></td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </ng-template>
+                <!--select goal from tbl_unsdg_database-->
+                <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('tbl_unsdg_database')">
+                  <label class="form-label">Please select one of these items.
+                    <mat-selection-list [formControl]="questionForm.controls['col_'+i+'_header']">
+                      <div class="mat-title">{{rowData['col_'+i+'_header']}}</div>
+                      <mat-list-option *ngFor="let x of goals;"  value="{{x.goal_name}}">
+                        {{x.goal_name}}
+                      </mat-list-option>
+                    </mat-selection-list>
+                  </label>
+                </ng-template>
+                <!--select asset from tbl_balance_sheet.-->
+                <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('tbl_balance_sheet')">
+                  <mat-form-field>
+                    <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                    <mat-select formControlName="col_{{i}}_header">
+                      <mat-option *ngFor="let x of balances; let i_balance = index; " value="{{x.balance_sheet_item}}" (click)="explain_content(i_balance,'')">
+                        {{x.balance_sheet_item}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-list >
+                    <ng-container *ngFor="let x of balances; let i = index;">
+                      <ng-container *ngIf="(explainIndex == i)&&(clickFlag == undefined)">
+                        <hr>
+                        - Balance Sheet Example.
+                        <p>{{x.balance_sheet_example}}</p>
+                        <hr>
+                        - Balance Type.
+                        <p>{{x.item_type}}</p>
+                      </ng-container>
+                    </ng-container>
+                  </mat-list>
+                </ng-template>
+                <!--select income from tbl_income_statement_item.-->
+                <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].includes('tbl_income_statement_item')">
+                  <mat-form-field>
+                    <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                    <mat-select formControlName="col_{{i}}_header">
+                      <mat-option *ngFor="let x of incomes; let i = index; " value="{{x.income_statement_item}}" (click)="explain_content(i,'')">
+                        {{x.income_statement_item}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-list>
+                    <ng-container *ngFor="let x of incomes; let i = index;">
+                      <ng-container *ngIf="(explainIndex == i)&&(this.clickFlag == undefined)">
+                        <hr>
+                        - Balance Sheet Example.
+                        <p>{{x.income_statement_item}}</p>
+                        <hr>
+                        - Balance Type.
+                        <p>{{x.income_statement_example}}</p>
+                      </ng-container>
+                    </ng-container>
+                  </mat-list>
+                </ng-template>
+                <!--select cash flows from tbl_cash_flow_statement-->
+                <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('tbl_cash_flow')">
+                  <mat-form-field>
+                    <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                    <mat-select formControlName="col_{{i}}_header">
+                      <mat-option *ngFor="let x of cashFlows; let i = index; " value="{{x.cash_flow_item}}" (click)="explain_content(i,'')">
+                        {{x.cash_flow_item}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-list >
+                    <ng-container  *ngFor="let x of cashFlows; let i = index;">
+                      <ng-container *ngIf="(explainIndex == i)&&(this.clickFlag == undefined)">
+                        <hr>
+                        - Cash Flow Item.
+                        <p>{{x.cash_flow_item}}</p>
+                        <hr>
+                        - Cash Flow Example.
+                        <p>{{x.cash_flow_example}}</p>
+                      </ng-container>
+                    </ng-container>
+                  </mat-list>
+                </ng-template>
+                <!--select stakeholder scoring from tbl_stakeholder_scoring-->
+                <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('stakeholderscoring_ring')">
+                  <mat-form-field>
+                    <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                    <mat-select formControlName="col_{{i}}_header">
+                      <mat-option *ngFor="let x of stakeholderRings; let i = index; " value="{{x.ring}}" (click)="explain_content(i,'')">
+                        {{x.ring}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-list >
+                    <ng-container *ngFor="let x of stakeholderRings; let i = index;">
+                      <ng-container *ngIf="(explainIndex == i)&&(this.clickFlag == undefined)">
+                        <hr>
+                        - Ring Description.
+                        <p>{{x.ring_description}}</p>
+                      </ng-container>
+                    </ng-container>
+                  </mat-list>
+                </ng-template>
+                <!--sector multiple selection option-->
+                <ng-template [ngIf]="(rowData['col_'+i].toLowerCase().includes('sector'))">
+                  <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+                    <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
+                      <button mat-icon-button disabled></button>
+                      <mat-checkbox
+                        [checked]="checklistSelection.isSelected(node)"
+                        (change)="todoLeafItemSelectionToggle(node)">{{node.item}}</mat-checkbox>
+                    </mat-tree-node>
+
+                    <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+                      <button mat-icon-button matTreeNodeToggle
+                              [attr.aria-label]="'toggle ' + node.filename">
+                        <mat-icon>
+                          {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                        </mat-icon>
+                      </button>
+                      <mat-checkbox [checked]="descendantsAllSelected(node)"
+                                    [indeterminate]="descendantsPartiallySelected(node)"
+                                    (change)="todoItemSelectionToggle(node)">{{node.item}}</mat-checkbox>
+                    </mat-tree-node>
+                  </mat-tree>
+                  <!--                  <div id='treeparent'><ejs-treeview #treeview="" id='treeelement' [fields]='treeData' [showCheckBox]='showCheckBox' (nodeChecked)='nodeChecked($event)'></ejs-treeview></div>-->
+                </ng-template>
+                <!--input default option-->
+                <ng-template [ngIf]="((rowData['col_'+i].toLowerCase().includes('smalltextbox'))||(rowData['col_'+i] =='null')||(rowData['col_'+i] =='')||(rowData['col_'+i] ==0))">
+                  <mat-form-field>
+                    <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                    <input matInput type="text" formControlName="col_{{i}}_header" placeholder="Enter your answer">
+                  </mat-form-field>
+                </ng-template>
+              </div>
+            </div>
+            <label *ngIf="domAddItemFlag" class="w-100 mb-3" (click)="domAddItem();">
+              <span  class="fa fa-plus"></span>please click here to add more details.
+            </label>
+          </div>
+          <!--when add item, add items to show-->
+          <div *ngIf="addItemFlag">
+            <div formArrayName="other" *ngFor="let other of questionForm.get('other').controls; let index = index">
+              <div [formGroupName]="index">
+                <div *ngFor="let i of rangeExtra">
+                  <div *ngIf="rowData['col_'+i+'_header']">
+                    <div [ngClass]="{ 'has-error': ((questionForm.get('col_'+i+'_header').invalid) && (questionForm.get('col_'+i+'_header').touched)) }">
+                      <!--question part-->
+                      <!--answer input part-->
+                      <!--select option-->
+                      <ng-template [ngIf]="(rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('selection'))&&(!rowData['col_0'].toLowerCase().includes('selectionanddetails')))" >
+                        <mat-form-field>
+                          <mat-label>
+                            {{rowData['col_'+i+'_header']}}
+                          </mat-label>
+                          <mat-select formControlName="col_{{i}}_header">
+                            <mat-option *ngFor="let x of (rowData['col_'+i].slice(10,rowData['col_'+i].length-1)).split(',');" value="{{x}}">
+                              {{x}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </ng-template>
+                      <!--options option-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('options'))" >
+                        <mat-form-field>
+                          <mat-label>
+                            {{rowData['col_'+i+'_header']}}
+                          </mat-label>
+                          <mat-select formControlName="col_{{i}}_header">
+                            <mat-option *ngFor="let x of (rowData['col_'+i].slice(8,rowData['col_'+i].length-1)).split(',');" value="{{x}}">
+                              {{x}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </ng-template>
+                      <!--number option-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase()=='number')" >
+                        <mat-form-field>
+                          <mat-label>
+                            {{rowData['col_'+i+'_header']}}
+                          </mat-label>
+                          <input matInput type="number" formControlName="col_{{i}}_header" placeholder="Enter your answer">
+                        </mat-form-field>
+                      </ng-template>
+                      <!--Current item is country, next item is province-->
+                      <ng-template [ngIf]="rowData['col_'+i] && (rowData['col_'+i].includes(' country[Country]'))">
+                        <mat-form-field>
+                          <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                          <mat-select formControlName="col_{{i}}_header" placeholder="Please select one of these items">
+                            <mat-option *ngFor="let x of country; " value="{{x.country}}" (click)="getCountryProvince(x.country, index, i)">
+                              {{x.country}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </ng-template>
+                      <!--Select province option based on selected country-->
+                      <ng-template [ngIf]="rowData['col_'+i] && (rowData['col_'+i].toLowerCase().includes('province'))">
+                        <mat-form-field>
+                          <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                          <mat-select formControlName="col_{{i}}_header" placeholder="Please select one of these items">
+                            <mat-option *ngFor="let selected_province of province[index]; " value="{{selected_province}}" (click)="getCountryProvince(selected_province, index, i)">
+                              {{selected_province}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </ng-template>
+                      <!--Select municipality based on province if country is south africa-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].includes('South Africa')">
+                        <ng-container *ngIf="selectedCountry ==='South Africa' && municipalityIndex[index]">
+                          <div class="mat-card-header" style="padding-bottom: 0; padding-top: 16px">{{rowData['col_'+i+'_header']}}</div>
+                          <mat-selection-list [formControl]="questionForm.controls['col_'+i+'_header']">
+                            <table class="table-devias odd">
+                              <tbody>
+                              <tr *ngFor="let x of municipality[index]">
+                                <td style="padding: 0 16px">{{x.province}}</td>
+                                <td style="padding: 0 16px">{{x.district}}</td>
+                                <td style="padding: 0 16px">{{x.municipality}}</td>
+                                <td style="padding: 0 16px">
+                                  <mat-list-option value="{{x.district + '!!' + x.municipality}}" (click)="setOtherData(x.district , x.municipality, index, i)"></mat-list-option>
+                                </td>
+                              </tr>
+                              </tbody>
+                            </table>
+                          </mat-selection-list>
+                        </ng-container>
+                      </ng-template>
+                      <!--select multiple option-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('selectmultiple'))&&(!(rowData['col_'+i].toLowerCase().includes('sector')))" >
+                        <mat-label>{{rowData['col_'+i+'_header']}}0000000000000000</mat-label>
+                        <mat-selection-list [formControl]="questionForm.controls['col_'+i+'_header']">
+                          <mat-list-option *ngFor="let x of (rowData['col_'+i].slice(15,rowData['col_'+i].length-1)).split(',');" [value]="x">
+                            {{x}}
+                          </mat-list-option>
+                        </mat-selection-list>
+                      </ng-template>
+                      <!--upload option-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('upload')" >
+                        <div class="mat-title">
+                          {{rowData['col_'+i+'_header']}}
+                        </div>
+                        <label class="form-label">
+                          <input type="file" formControlName="col_{{i}}_header"  (change)="onFileChange($event,i)" >
+                        </label>
+                      </ng-template>
+                      <!--email option-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('email')" >
+                        <mat-form-field>
+                          <mat-label>
+                            {{rowData['col_'+i+'_header']}}
+                          </mat-label>
+                          <input matInput type="email" formControlName="col_{{i}}_header">
+                        </mat-form-field>
+                      </ng-template>
+                      <!--large text box option-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('largetextbox')||rowData['col_'+i].toLowerCase().includes('item description'))" >
+                        <mat-form-field>
+                          <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                          <textarea matInput formControlName="col_{{i}}_header"></textarea>
+                        </mat-form-field>
+                      </ng-template>
+                      <!--tag option-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('tag')">
+                        <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                        <mat-chip-list #chipList aria-label="Tag Selection">
+                          <mat-chip
+                            *ngFor="let chip of chipsTemp"
+                            selectable="true"
+                            removable="true"
+                            (removed)="removeTag(chip)"
+                          >
+                            {{chip}}
+                            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                          </mat-chip>
+                          <input
+                            placeholder="New Tag..."
+                            #tagInput
+                            formControlName="col_{{i}}_header"
+                            [matChipInputFor]="chipList"
+                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                            matChipInputAddOnBlur="true"
+                            (matChipInputTokenEnd)="addTag($event, i)">
+                        </mat-chip-list>
+                      </ng-template>
+                      <!--phone number option-->
+                      <ng-template>
+                        <mat-form-field>
+                          <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                          <ngx-mat-intl-tel-input
+                            [preferredCountries]="['us', 'gb']"
+                            [enablePlaceholder]="true"
+                            [enableSearch]="true"
+                            name="phone"
+                            [formControl]="questionForm.controls['col_' + i + '_header']"
+                          ></ngx-mat-intl-tel-input>
+                        </mat-form-field>
+                      </ng-template>
+                      <!--select instrument type option-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('selectinstrument')">
+                        <mat-form-field>
+                          <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                          <mat-select formControlName="col_{{i}}_header">
+                            <mat-option *ngFor="let x of instruments; let i = index; " value="{{x.instrument}}" (click)="explain_content(i,index)">
+                              {{x.instrument}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        <mat-list >
+                          <ng-container *ngFor="let x of instruments; let i = index;">
+                            <ng-container *ngIf="(explainIndex == i)&&(this.clickFlag == index)">
+                              <hr>
+                              - Description.
+                              <p>{{x.description}}</p>
+                              <hr>
+                              - Best suit for.
+                              <p>{{x.best_suit_for}}</p>
+                              <hr>
+                              - Agreement type.
+                              <p>{{x.agreement_type}}</p>
+                              <hr>
+                              - advantage.
+                              <p>{{x.advantage}}</p>
+                              <hr>
+                              - Disadvantage.
+                              <p>{{x.disadvantage}}</p>
+                            </ng-container>
+                          </ng-container>
+                        </mat-list>
+                      </ng-template>
+                      <!--select date picker-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('selectdate'))">
+                        <mat-form-field style="width: 360px">
+                          <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                          <input matInput [matDatepicker]="picker" formControlName="col_{{i}}_header">
+                          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                          <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                      </ng-template>
+                      <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('currency + amount'))" >
+                        <mat-form-field style="width: 320px">
+                          <mat-label>Please type amount and currency symbol</mat-label>
+                          <input matInput type="number" placeholder="Please enter currency amount" (change)="addCurrencyAmount($event,i)">
+                        </mat-form-field>
+                        <mat-form-field style="width: 112px; margin-left: 8px">
+                          <mat-label>*Currency</mat-label>
+                          <mat-select>
+                            <mat-option *ngFor="let x of currencyCode" value="{{x.symbol}}" (onSelectionChange)="addCurrencySymbol(x.symbol, index, i)">
+                              {{x.symbol}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        <input type="hidden" formControlName="col_{{i}}_header">
+                      </ng-template>
+                      <!--select currency symbol.-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('selectcurrency')||rowData['col_'+i].toLowerCase().includes('selectcurrencies'))">
+                        <mat-form-field>
+                          <mat-label>
+                            *Currency symbol
+                          </mat-label>
+                          <mat-select formControlName="col_{{i}}_header">
+                            <mat-option *ngFor="let x of currencyCode;" value="{{x.symbol}}">
+                              {{x.symbol}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </ng-template>
+                      <!--select stake holder map option-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('stakeholdermap')">
+                        <mat-selection-list [formControl]="questionForm.controls['col_'+i+'_header']">
+                          <div class="mat-title">{{rowData['col_'+i+'_header']}}</div>
+                          <mat-list-option *ngFor="let x of stakeholder;"  value="{{x.stakeholder}}">
+                            {{x.stakeholder}}
+                          </mat-list-option>
+                        </mat-selection-list>
+                      </ng-template>
+                      <!--select available currency  option-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('availablecurrencies'))" >
+                        <div class="mat-title">{{rowData['col_'+i+'_header']}}</div>
+                        <div class="table-responsive">
+                          <table class="mat-table">
+                            <thead><tr><td>No.</td><td>Currency symbol</td><td>Currency</td><td>Currency Type</td><td>Action</td></tr></thead>
+                            <tbody>
+                            <tr *ngFor="let x of currencyCode; let index = index">
+                              <td>{{index + 1}}</td>
+                              <td>{{x.symbol}}</td>
+                              <td>{{x.currency}}</td>
+                              <td>{{x.currency_type}}</td>
+                              <td><mat-checkbox (click)="setCurrency(index, i)"></mat-checkbox></td>
+                            </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </ng-template>
+                      <!--select goal from tbl_unsdg_database-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('tbl_unsdg_database')">
+                        <mat-form-field>
+                          <mat-label>Please select one of these items.</mat-label>
+                          <mat-selection-list [formControl]="questionForm.controls['col_'+i+'_header']">
+                            <div class="mat-title">{{rowData['col_'+i+'_header']}}</div>
+                            <mat-list-option *ngFor="let x of goals;"  value="{{x.goal_name}}">
+                              {{x.goal_name}}
+                            </mat-list-option>
+                          </mat-selection-list>
+                        </mat-form-field>
+                      </ng-template>
+                      <!--select asset from tbl_balance_sheet.-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('tbl_balance_sheet')">
+                        <mat-form-field>
+                          <mat-label>
+                            {{rowData['col_'+i+'_header']}}
+                          </mat-label>
+                          <mat-select formControlName="col_{{i}}_header">
+                            <mat-option *ngFor="let x of balances; let i_balance = index; " value="{{x.balance_sheet_item}}" (click)="explain_content(i_balance,index)">
+                              {{x.balance_sheet_item}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        <mat-list >
+                          <ng-container *ngFor="let x of balances; let i = index;">
+                            <ng-container *ngIf="(explainIndex == i)&&(clickFlag == index)">
+                              <hr>
+                              - Balance Sheet Example.
+                              <p>{{x.balance_sheet_example}}</p>
+                              <hr>
+                              - Balance Type.
+                              <p>{{x.item_type}}</p>
+                            </ng-container>
+                          </ng-container>
+                        </mat-list>
+                      </ng-template>
+                      <!--select income from tbl_income_statement_item.-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].includes('tbl_income_statement_item')">
+                        <mat-form-field>
+                          <mat-label>
+                            {{rowData['col_'+i+'_header']}}
+                          </mat-label>
+                          <mat-select formControlName="col_{{i}}_header">
+                            <mat-option *ngFor="let x of incomes; let i = index; " value="{{x.income_statement_item}}" (click)="explain_content(i,index)">
+                              {{x.income_statement_item}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        <mat-list>
+                          <ng-container *ngFor="let x of incomes; let i = index;">
+                            <ng-container *ngIf="(explainIndex == i)&&(this.clickFlag == index)">
+                              <hr>
+                              - Balance Sheet Example.
+                              <p>{{x.income_statement_item}}</p>
+                              <hr>
+                              - Balance Type.
+                              <p>{{x.income_statement_example}}</p>
+                            </ng-container>
+                          </ng-container>
+                        </mat-list>
+                      </ng-template>
+                      <!--select cash flows from tbl_cash_flow_statement-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('tbl_cash_flow')">
+                        <mat-form-field>
+                          <mat-label>
+                            {{rowData['col_'+i+'_header']}}
+                          </mat-label>
+                          <mat-select formControlName="col_{{i}}_header">
+                            <mat-option *ngFor="let x of cashFlows; let i = index; " value="{{x.cash_flow_item}}" (click)="explain_content(i,index)">
+                              {{x.cash_flow_item}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        <mat-list >
+                          <ng-container  *ngFor="let x of cashFlows; let i = index;">
+                            <ng-container *ngIf="(explainIndex == i)&&(this.clickFlag == index)">
+                              <hr>
+                              - Cash Flow Item.
+                              <p>{{x.cash_flow_item}}</p>
+                              <hr>
+                              - Cash Flow Example.
+                              <p>{{x.cash_flow_example}}</p>
+                            </ng-container>
+                          </ng-container>
+                        </mat-list>
+                      </ng-template>
+                      <!--select stakeholder scoring from tbl_stakeholder_scoring-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('stakeholderscoring_ring')">
+                        <mat-form-field>
+                          <mat-label>
+                            {{rowData['col_'+i+'_header']}}
+                          </mat-label>
+                          <mat-select formControlName="col_{{i}}_header">
+                            <mat-option *ngFor="let x of stakeholderRings; let i = index; " value="{{x.ring}}" (click)="explain_content(i,index)">
+                              {{x.ring}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        <mat-list >
+                          <ng-container *ngFor="let x of stakeholderRings; let i = index;">
+                            <ng-container *ngIf="(explainIndex == i)&&(this.clickFlag == index)">
+                              <hr>
+                              - Ring Description.
+                              <p>{{x.ring_description}}</p>
+                            </ng-container>
+                          </ng-container>
+                        </mat-list>
+                      </ng-template>
+                      <!--input default option-->
+                      <ng-template [ngIf]="((rowData['col_'+i].toLowerCase().includes('smalltextbox'))||(rowData['col_'+i] =='null')||(rowData['col_'+i] =='')||(rowData['col_'+i] ==0))">
+                        <mat-form-field>
+                          <mat-label>
+                            {{rowData['col_'+i+'_header']}}
+                          </mat-label>
+                          <input matInput type="text" formControlName="col_{{i}}_header" placeholder="Enter your answer">
+                        </mat-form-field>
+                      </ng-template>
+                      <!--validation message-->
+                      <ng-container *ngFor="let validation of validatorMessage['col_'+i+'_header']">
+                          <span class="help-block" *ngIf=" questionForm.get('col_'+i+'_header').hasError(validation.type)&&(questionForm.get('col_'+i+'_header').touched||questionForm.get('col_'+i+'_header').dirty)">
+                              {{validation.errorMessage}}
+                          </span>
+                      </ng-container>
+                    </div>
+                  </div>
+                  <!--add item event trigger option-->
+                  <button mat-raised-button type="button" class="w-100 mb-3" *ngIf="i==9" (click)="addItem(index);" style="background: #607d8b; color: white">
+                    <mat-icon>add</mat-icon>
+                    Please click here to add more details.
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--when dom-add item, dom-addItem to show-->
+          <div class="form-group" *ngIf="domAddItemFlag">
+            <div  formArrayName="other" *ngFor="let other of questionForm.get('other').controls; let index = index" class="form-group">
+              <div [formGroupName]="index">
+                <div *ngFor="let i of rangeExtraDomAddItem">
+                  <div *ngIf="rowData['col_'+i+'_header']">
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-offset-1 col-sm-10 " [ngClass]="{ 'has-error': ((questionForm.get('col_'+i+'_header').invalid) && (questionForm.get('col_'+i+'_header').touched)) }">
+                      <ng-template [ngIf]="(rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('selection'))&&(!rowData['col_0'].toLowerCase().includes('selectionanddetails')))" >
+                        <mat-form-field>
+                          <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                          <mat-select formControlName="col_{{i}}_header">
+                            <mat-option *ngFor="let x of (rowData['col_'+i].slice(10,rowData['col_'+i].length-1)).split(',');" value="{{x}}">
+                              {{x}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </ng-template>
+                      <!--options option-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('options'))" >
+                        <mat-form-field>
+                          <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                          <mat-select formControlName="col_{{i}}_header">
+                            <mat-option *ngFor="let x of (rowData['col_'+i].slice(8,rowData['col_'+i].length-1)).split(',');" value="{{x}}">
+                              {{x}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </ng-template>
+                      <!--number option-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase()=='number')" >
+                        <mat-form-field>
+                          <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                          <input matInput type="number" formControlName="col_{{i}}_header" placeholder="Enter your answer">
+                        </mat-form-field>
+                      </ng-template>
+                      <!--country option-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('country'))" >
+                        <mat-form-field>
+                          <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                          <mat-select formControlName="col_{{i}}_header">
+                            <mat-option *ngFor="let x of country; " value="{{x.country}}">
+                              {{x.country}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </ng-template>
+                      <!--select multiple option-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('selectmultiple'))&&(!(rowData['col_'+i].toLowerCase().includes('sector')))" >
+                        <mat-label>{{rowData['col_'+i+'_header']}}0000000000000000</mat-label>
+                        <mat-selection-list [formControl]="questionForm.controls['col_'+i+'_header']">
+                          <mat-list-option *ngFor="let x of (rowData['col_'+i].slice(15,rowData['col_'+i].length-1)).split(',');" [value]="x">
+                            {{x}}
+                          </mat-list-option>
+                        </mat-selection-list>
+                      </ng-template>
+                      <!--upload option-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('upload')" >
+                        <label class="form-label">
+                          <input type="file" formControlName="col_{{i}}_header"  (change)="onFileChange($event,i)" >
+                        </label>
+                      </ng-template>
+                      <!--email option-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('email')" >
+                        <mat-form-field>
+                          <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                          <input matInput type="email" formControlName="col_{{i}}_header">
+                        </mat-form-field>
+                      </ng-template>
+                      <!--large text box option-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('largetextbox')||rowData['col_'+i].toLowerCase().includes('item description'))" >
+                        <mat-form-field>
+                          <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                          <textarea matInput formControlName="col_{{i}}_header"></textarea>
+                        </mat-form-field>
+                      </ng-template>
+                      <ng-template>
+                        <mat-form-field>
+                          <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                          <ngx-mat-intl-tel-input
+                            [preferredCountries]="['us', 'gb']"
+                            [enablePlaceholder]="true"
+                            [enableSearch]="true"
+                            name="phone"
+                            [formControl]="questionForm.controls['col_' + i + '_header']"
+                          ></ngx-mat-intl-tel-input>
+                        </mat-form-field>
+                      </ng-template>
+                      <!--select instrument type option-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('selectinstrument')">
+                        <mat-form-field>
+                          <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                          <mat-select formControlName="col_{{i}}_header">
+                            <mat-option *ngFor="let x of instruments; let i = index; " value="{{x.instrument}}" (click)="explain_content(i,index)">
+                              {{x.instrument}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        <mat-list>
+                          <ng-container *ngFor="let x of instruments; let i = index;">
+                            <ng-container *ngIf="(explainIndex == i)&&(this.clickFlag == index)">
+                              <hr>
+                              - Description.
+                              <p>{{x.description}}</p>
+                              <hr>
+                              - Best suit for.
+                              <p>{{x.best_suit_for}}</p>
+                              <hr>
+                              - Agreement type.
+                              <p>{{x.agreement_type}}</p>
+                              <hr>
+                              - advantage.
+                              <p>{{x.advantage}}</p>
+                              <hr>
+                              - Disadvantage.
+                              <p>{{x.disadvantage}}</p>
+                            </ng-container>
+                          </ng-container>
+                        </mat-list>
+                      </ng-template>
+                      <!--select date picker-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('selectdate'))">
+                        <mat-form-field style="width: 360px">
+                          <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                          <input matInput [matDatepicker]="picker" formControlName="col_{{i}}_header">
+                          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                          <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                      </ng-template>
+                      <!--select currency + amount option-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('currency + amount'))" >
+                        <mat-form-field style="width: 320px">
+                          <mat-label>Please type amount and currency symbol</mat-label>
+                          <input matInput type="number" placeholder="Please enter currency amount" (change)="addCurrencyAmount($event,i)">
+                        </mat-form-field>
+                        <mat-form-field style="width: 112px; margin-left: 8px">
+                          <mat-label>*Currency</mat-label>
+                          <mat-select formControlName="col_{{i}}_header">
+                            <mat-option *ngFor="let x of currencyCode" value="{{x.symbol}}">
+                              {{x.symbol}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        <input type="hidden" formControlName="col_{{i}}_header">
+                      </ng-template>
+                      <!--select currency symbol.-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('selectcurrency')||rowData['col_'+i].toLowerCase().includes('selectcurrencies'))">
+                        <mat-form-field>
+                          <mat-label>
+                            *Currency symbol
+                          </mat-label>
+                          <mat-select formControlName="col_{{i}}_header">
+                            <mat-option *ngFor="let x of currencyCode;" value="{{x.symbol}}">
+                              {{x.symbol}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </ng-template>
+                      <!--select stake holder map option-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('stakeholdermap')">
+                        <mat-selection-list [formControl]="questionForm.controls['col_'+i+'_header']">
+                          <div class="mat-title">{{rowData['col_'+i+'_header']}}</div>
+                          <mat-list-option *ngFor="let x of stakeholder;"  value="{{x.stakeholder}}">
+                            {{x.stakeholder}}
+                          </mat-list-option>
+                        </mat-selection-list>
+                      </ng-template>
+                      <!--select available currency  option-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('availablecurrencies'))" >
+                        <div class="mat-title">{{rowData['col_'+i+'_header']}}</div>
+                        <div class="table-responsive">
+                          <table class="mat-table">
+                            <thead><tr><td>No.</td><td>Currency symbol</td><td>Currency</td><td>Currency Type</td><td>Action</td></tr></thead>
+                            <tbody>
+                            <tr *ngFor="let x of currencyCode; let index = index">
+                              <td>{{index + 1}}</td>
+                              <td>{{x.symbol}}</td>
+                              <td>{{x.currency}}</td>
+                              <td>{{x.currency_type}}</td>
+                              <td><mat-checkbox (click)="setCurrency(index, i)"></mat-checkbox></td>
+                            </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </ng-template>
+                      <!--select goal from tbl_unsdg_database-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('tbl_unsdg_database')">
+                        <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                        <label class="form-label">Please select one of these items.
+                          <mat-selection-list [formControl]="questionForm.controls['col_'+i+'_header']">
+                            <div class="mat-title">{{rowData['col_'+i+'_header']}}</div>
+                            <mat-list-option *ngFor="let x of goals;"  value="{{x.goal_name}}">
+                              {{x.goal_name}}
+                            </mat-list-option>
+                          </mat-selection-list>
+                        </label>
+                      </ng-template>
+                      <!--select asset from tbl_balance_sheet.-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('tbl_balance_sheet')">
+                        <mat-form-field>
+                          <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                          <mat-select formControlName="col_{{i}}_header">
+                            <mat-option *ngFor="let x of balances; let i_balance = index; " value="{{x.balance_sheet_item}}" (click)="explain_content(i_balance,index)">
+                              {{x.balance_sheet_item}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        <mat-list >
+                          <ng-container *ngFor="let x of balances; let i = index;">
+                            <ng-container *ngIf="(explainIndex == i)&&(clickFlag == index)">
+                              <hr>
+                              - Balance Sheet Example.
+                              <p>{{x.balance_sheet_example}}</p>
+                              <hr>
+                              - Balance Type.
+                              <p>{{x.item_type}}</p>
+                            </ng-container>
+                          </ng-container>
+                        </mat-list>
+                      </ng-template>
+                      <!--select income from tbl_income_statement_item.-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].includes('tbl_income_statement_item')">
+                        <mat-form-field>
+                          <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                          <mat-select formControlName="col_{{i}}_header">
+                            <mat-option *ngFor="let x of incomes; let i = index; " value="{{x.income_statement_item}}" (click)="explain_content(i,index)">
+                              {{x.income_statement_item}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        <mat-list>
+                          <ng-container *ngFor="let x of incomes; let i = index;">
+                            <ng-container *ngIf="(explainIndex == i)&&(this.clickFlag == index)">
+                              <hr>
+                              - Balance Sheet Example.
+                              <p>{{x.income_statement_item}}</p>
+                              <hr>
+                              - Balance Type.
+                              <p>{{x.income_statement_example}}</p>
+                            </ng-container>
+                          </ng-container>
+                        </mat-list>
+                      </ng-template>
+                      <!--select cash flows from tbl_cash_flow_statement-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('tbl_cash_flow')">
+                        <mat-form-field>
+                          <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                          <mat-select formControlName="col_{{i}}_header">
+                            <mat-option *ngFor="let x of cashFlows; let i = index; " value="{{x.cash_flow_item}}" (click)="explain_content(i,index)">
+                              {{x.cash_flow_item}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        <mat-list >
+                          <ng-container  *ngFor="let x of cashFlows; let i = index;">
+                            <ng-container *ngIf="(explainIndex == i)&&(this.clickFlag == index)">
+                              <hr>
+                              - Cash Flow Item.
+                              <p>{{x.cash_flow_item}}</p>
+                              <hr>
+                              - Cash Flow Example.
+                              <p>{{x.cash_flow_example}}</p>
+                            </ng-container>
+                          </ng-container>
+                        </mat-list>
+                      </ng-template>
+                      <!--select stakeholder scoring from tbl_stakeholder_scoring-->
+                      <ng-template [ngIf]="rowData['col_'+i]&&rowData['col_'+i].toLowerCase().includes('stakeholderscoring_ring')">
+                        <mat-form-field>
+                          <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                          <mat-select formControlName="col_{{i}}_header">
+                            <mat-option *ngFor="let x of stakeholderRings; let i = index; " value="{{x.ring}}" (click)="explain_content(i,index)">
+                              {{x.ring}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        <mat-list >
+                          <ng-container *ngFor="let x of stakeholderRings; let i = index;">
+                            <ng-container *ngIf="(explainIndex == i)&&(this.clickFlag == index)">
+                              <hr>
+                              - Ring Description.
+                              <p>{{x.ring_description}}</p>
+                            </ng-container>
+                          </ng-container>
+                        </mat-list>
+                      </ng-template>
+                      <!--input default option-->
+                      <ng-template [ngIf]="((rowData['col_'+i].toLowerCase().includes('smalltextbox'))||(rowData['col_'+i] =='null')||(rowData['col_'+i] =='')||(rowData['col_'+i] ==0))">
+                        <mat-form-field>
+                          <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
+                          <input matInput type="text" formControlName="col_{{i}}_header" placeholder="Enter your answer">
+                        </mat-form-field>
+                      </ng-template>
+                      <!--validation message-->
+                      <ng-container *ngFor="let validation of validatorMessage['col_'+i+'_header']">
+                        <span class="help-block" *ngIf=" questionForm.get('col_'+i+'_header').hasError(validation.type)&&(questionForm.get('col_'+i+'_header').touched||questionForm.get('col_'+i+'_header').dirty)">
+                            {{validation.errorMessage}}
+                        </span>
+                      </ng-container>
+                    </div>
+                  </div>
+                  <!--add item event trigger option-->
+                  <label *ngIf="i==9" class="w-100 mb-3" (click)="domAddItem();">
+                    <span  class="fa fa-plus" ></span>please click here to add more details.
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex">
+            <div class="p-title">{{progress}}%</div>
+            <mat-progress-bar color="accent" value="{{progress}}" class="ml-3"></mat-progress-bar>
+          </div>
+          <button mat-raised-button type="button" (click)="goToStart()">Restart</button>
+          <button mat-raised-button type="button" color="primary" class="float-right" (click)="changeStep()">Next</button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
 </div>

@@ -4,3 +4,12 @@ mat-expansion-panel-header {
 tr {
   cursor: pointer;
 }
+mat-form-field {
+  width: 100%;
+}
+.d-flex mat-progress-bar {
+  margin-top: 10px
+}
+.d-flex .p-title {
+  color: #e91e63;
+}

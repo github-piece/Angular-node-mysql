@@ -228,7 +228,7 @@
                     [enablePlaceholder]="true"
                     [enableSearch]="true"
                     name="phone"
-                    formControlName="col_{{i}}_header"
+                    [formControl]="questionForm.controls['col_' + i + '_header']"
                   ></ngx-mat-intl-tel-input>
                 </mat-form-field>
               </ng-template>
@@ -479,7 +479,7 @@
                     <input
                       placeholder="New Tag..."
                       #tagInput
-                      formControlName="col_{{i}}_header"
+  [formControl]="questionForm.controls['col_' + i + '_header']"
                       [matChipInputFor]="chipList"
                       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                       matChipInputAddOnBlur="true"
@@ -493,7 +493,6 @@
           <div *ngIf="domPositionClick">
             <div *ngFor="let i of rangeExtra">
               <div *ngIf="rowData['col_'+i+'_header']">
-                2
                 <ng-template [ngIf]="(rowData['col_'+i]&&(rowData['col_'+i].toLowerCase().includes('selection'))&&(!rowData['col_0'].toLowerCase().includes('selectionanddetails')))" >
                   <mat-form-field>
                     <mat-label>{{rowData['col_'+i+'_header']}}</mat-label>
@@ -567,7 +566,7 @@
                       [enablePlaceholder]="true"
                       [enableSearch]="true"
                       name="phone"
-                      formControlName="col_{{i}}_header"
+                      [formControl]="questionForm.controls['col_' + i + '_header']"
                     ></ngx-mat-intl-tel-input>
                   </mat-form-field>
                 </ng-template>
@@ -770,7 +769,6 @@
                 </ng-template>
                 <!--sector multiple selection option-->
                 <ng-template [ngIf]="(rowData['col_'+i].toLowerCase().includes('sector'))">
-                  here
                   <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
                     <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
                       <button mat-icon-button disabled></button>
@@ -782,7 +780,7 @@
                     <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
                       <button mat-icon-button matTreeNodeToggle
                               [attr.aria-label]="'toggle ' + node.filename">
-                        <mat-icon class="mat-icon-rtl-mirror">
+                        <mat-icon>
                           {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
                         </mat-icon>
                       </button>
@@ -802,7 +800,9 @@
                 </ng-template>
               </div>
             </div>
-            <label *ngIf="domAddItemFlag" class="add-item" (click)="domAddItem();"><span  class="fa fa-plus" ></span>please click here to add more details.</label>
+            <label *ngIf="domAddItemFlag" class="w-100 mb-3" (click)="domAddItem();">
+              <span  class="fa fa-plus"></span>please click here to add more details.
+            </label>
           </div>
           <!--when add item, add items to show-->
           <div *ngIf="addItemFlag">
@@ -940,7 +940,7 @@
                           <input
                             placeholder="New Tag..."
                             #tagInput
-                            formControlName="col_{{i}}_header"
+                           [formControl]="questionForm.controls['col_' + i + '_header']"
                             [matChipInputFor]="chipList"
                             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                             matChipInputAddOnBlur="true"
@@ -956,7 +956,7 @@
                             [enablePlaceholder]="true"
                             [enableSearch]="true"
                             name="phone"
-                            formControlName="col_{{i}}_header"
+                            [formControl]="questionForm.controls['col_' + i + '_header']"
                           ></ngx-mat-intl-tel-input>
                         </mat-form-field>
                       </ng-template>
@@ -1183,7 +1183,7 @@
                     </div>
                   </div>
                   <!--add item event trigger option-->
-                  <button mat-raised-button type="button" class="add-btn_1" *ngIf="i==9" (click)="addItem(index);" style="background: #607d8b; color: white">
+                  <button mat-raised-button type="button" class="w-100 mb-3" *ngIf="i==9" (click)="addItem(index);" style="background: #607d8b; color: white">
                     <mat-icon>add</mat-icon>
                     Please click here to add more details.
                   </button>
@@ -1274,7 +1274,7 @@
                             [enablePlaceholder]="true"
                             [enableSearch]="true"
                             name="phone"
-                            formControlName="col_{{i}}_header"
+                            [formControl]="questionForm.controls['col_' + i + '_header']"
                           ></ngx-mat-intl-tel-input>
                         </mat-form-field>
                       </ng-template>
@@ -1492,7 +1492,9 @@
                     </div>
                   </div>
                   <!--add item event trigger option-->
-                  <label *ngIf="i==9" class="add-item" (click)="domAddItem();"><span  class="fa fa-plus" ></span>please click here to add more details.</label>
+                  <label *ngIf="i==9" class="w-100 mb-3" (click)="domAddItem();">
+                    <span  class="fa fa-plus" ></span>please click here to add more details.
+                  </label>
                 </div>
               </div>
             </div>

@@ -1,22 +1,16 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {AuthenticationService} from '../../../_services/authentication/authentication.service';
 import {BusinessService} from '../../../_services/business/business.service';
 import {Server} from '../../../../config/url.service';
-import {MatTableDataSource} from '@angular/material';
 import {MatPaginator} from '@angular/material/paginator';
 import {NgxSpinnerService} from 'ngx-spinner';
-export interface PeriodicElement {
-  name: string;
-  no: number;
-  location: string;
-  address: string;
-}
+import {MatTab, MatTableDataSource, PageEvent} from '@angular/material';
 @Component({
   selector: 'app-maindashboard',
   templateUrl: './maindashboard.component.html',
   styleUrls: ['./maindashboard.component.css']
 })
-export class MaindashboardComponent implements OnInit, AfterViewInit {
+export class MaindashboardComponent implements OnInit {
   displayedColumns: string[] = ['no', 'name', 'location', 'address'];
   public charts: Array<{
     title: string;
@@ -36,9 +30,13 @@ export class MaindashboardComponent implements OnInit, AfterViewInit {
   businessList = [['treeMap', null, 0, 0]];
   tenureList = [];
   goalList = [];
-  tableData: PeriodicElement[] = [];
+  tableData = [];
   onShow = false;
-  dataSource = new MatTableDataSource<PeriodicElement>(this.tableData);
+  dataSource: any;
+  elements: any[];
+  pageSize = 5;
+  currentPage = 0;
+  totalSize = 0;
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   constructor(
     private authenticationService: AuthenticationService,
@@ -189,9 +187,26 @@ export class MaindashboardComponent implements OnInit, AfterViewInit {
       length: 2
     });
     this.spinner.hide();
+    this.getTask();
   }
-  ngAfterViewInit(): void {
+  getTask() {
+    const data  = this.tableData;
+    this.dataSource = new MatTableDataSource<any>(data);
     this.dataSource.paginator = this.paginator;
+    this.elements = data;
+    this.totalSize = this.elements.length;
+    this.iterator();
+  }
+  iterator() {
+    const end = (this.currentPage + 1) * this.pageSize;
+    const start = this.currentPage * this.pageSize;
+    const part = this.elements.slice(start, end);
+    this.dataSource = part;
+  }
+  handlePage(event?: PageEvent) {
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.iterator();
   }
 }
 

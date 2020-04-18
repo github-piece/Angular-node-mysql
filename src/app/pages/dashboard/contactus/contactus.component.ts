@@ -45,7 +45,6 @@ export class ContactusComponent implements OnInit {
     if (this.contactForm.invalid) {
       return;
     }
-    console.log(this.contactForm.value);
   }
   hasError = (controlName: string, errorName: string) => {
     return this.contactForm.controls[controlName].hasError(errorName);

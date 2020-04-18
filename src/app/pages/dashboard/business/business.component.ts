@@ -433,10 +433,6 @@ export class BusinessComponent implements OnInit {
     if (index === 0) {
       this.municipalityZero = true;
     }
-    // else {
-    //   (this.questionForm.controls.other as FormArray).
-    //     controls[index].controls['col_' + i + '_header'].setValue(this.muniTemp[index]);
-    // }
   }
   putAnswerList() {
     if (this.rowData.id === 2 && this.profile === 'business_profile') {
@@ -448,22 +444,21 @@ export class BusinessComponent implements OnInit {
     } else {
       if (this.domAddItemFlag) {
         this.formData.append('addItemRowsData', JSON.stringify(this.addItemRowsData));
-      } else {
-        for (let i = 0; i < 10; i++) {
-          if (this.questionForm.get('col_' + i + '_header')) {
-            if (this.uploadIndex[i] === i) {
-              this.formData.append('col_' + i + '_header', '');
+      }
+      for (let i = 0; i < 10; i++) {
+        if (this.questionForm.get('col_' + i + '_header')) {
+          if (this.uploadIndex[i] === i) {
+            this.formData.append('col_' + i + '_header', '');
+          } else {
+            if (this.rowData['col_' + i].toLowerCase().includes('phone')
+              && this.questionForm.get('col_' + i + '_header').value) {
+              this.formData.append('col_' + i + '_header', this.questionForm.get('col_' + i + '_header').value);
+            } else if (this.rowData['col_' + i].toLowerCase().includes('sector')) {
+              this.formData.append('col_' + i + '_header', this.sectorData);
+            } else if (this.rowData['col_' + i].toLowerCase().includes('tag')) {
+              this.formData.append('col_' + i + '_header', this.chips);
             } else {
-              if (this.rowData['col_' + i].toLowerCase().includes('phone')
-                && this.questionForm.get('col_' + i + '_header').value) {
-                this.formData.append('col_' + i + '_header', this.questionForm.get('col_' + i + '_header').value);
-              } else if (this.rowData['col_' + i].toLowerCase().includes('sector')) {
-                this.formData.append('col_' + i + '_header', this.sectorData);
-              } else if (this.rowData['col_' + i].toLowerCase().includes('tag')) {
-                this.formData.append('col_' + i + '_header', this.chips);
-              } else {
-                this.formData.append('col_' + i + '_header', this.questionForm.get('col_' + i + '_header').value);
-              }
+              this.formData.append('col_' + i + '_header', this.questionForm.get('col_' + i + '_header').value);
             }
           }
         }
