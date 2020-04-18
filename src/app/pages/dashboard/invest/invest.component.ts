@@ -25,8 +25,8 @@ export class InvestComponent implements OnInit {
 }
 @Component({
   selector: 'app-invest-detail',
-  template: '<div class="detail">' +
-  '<img [src]="detailData[data.index].image" alt="Invest Image">' +
+  template: '<div>' +
+  '<img [src]="detailData[data.index].image" alt="Invest Image" class="w-100">' +
   '<div class="mat-card-header mt-2">{{detailData[data.index].title}}</div>' +
   '<mat-card-content>' +
     '<p>{{detailData[data.index].text}}</p>' +

@@ -474,7 +474,7 @@ export class BusinessComponent implements OnInit {
     return this.questionService.setAnswer(this.formData).subscribe(result => {
       this.spinner.hide();
       if (result !== null) {
-        if (result !== 1) {
+        if (result !== true) {
           this.chooseScout = true;
           this.showProfile = false;
           this.profileData = result;
