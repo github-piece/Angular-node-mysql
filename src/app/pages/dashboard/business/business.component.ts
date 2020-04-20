@@ -79,7 +79,8 @@ export class BusinessComponent implements OnInit {
   domPosition: number;
   cashFlows = [];
   stakeholderRings = [];
-  rings: any = {};
+  rings: any = [];
+  stakeholders: any = [];
   explainIndex: any;
   addItemFlag = false;
   rangeMain = [];
@@ -424,9 +425,20 @@ export class BusinessComponent implements OnInit {
       this.chipsTemp.splice(index, 1);
     }
   }
-  getStakeholderRing(ring, i, index) {
+  getStakeholderRing(stakeholder, ring, index) {
     this.rings[index] = ring;
-    this.questionForm.get('col_' + i + '_header').setValue(JSON.stringify(this.rings));
+    this.stakeholders[index] = stakeholder;
+    let stakeData = ''; let ringData = '';
+    for (let i = 0; i < this.rings.length; i++) {
+      if (this.rings[i] !== undefined) {
+        stakeData += this.stakeholders[i] + ',';
+        ringData += this.rings[i] + ',';
+      }
+    }
+    stakeData = stakeData.substr(0, stakeData.length - 1);
+    ringData = ringData.substr(0, ringData.length - 1);
+    this.questionForm.get('col_0_header').setValue(stakeData);
+    this.questionForm.get('col_1_header').setValue(ringData);
   }
   setOtherData(dataA, dataB, index, i) {
     const data = dataA + '!!' + dataB;

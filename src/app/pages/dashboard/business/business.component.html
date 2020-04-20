@@ -314,7 +314,7 @@
                       <mat-form-field>
                         <mat-label>Choose Method</mat-label>
                         <mat-select>
-                          <mat-option *ngFor="let ring of stakeholderRings"  (click)="getStakeholderRing(ring.ring, i, index)" value="{{ring.ring}}">
+                          <mat-option *ngFor="let ring of stakeholderRings"  (click)="getStakeholderRing(x.stakeholder, ring.ring, index)" value="{{ring.ring}}">
                             {{ring.ring}}
                           </mat-option>
                           <mat-option>None</mat-option>

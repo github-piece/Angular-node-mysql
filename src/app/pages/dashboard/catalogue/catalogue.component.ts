@@ -29,25 +29,7 @@ export class CatalogueComponent implements OnInit {
   unSdg = [];
   interactions = [];
   stakeholders: any = [];
-  stakeholdersCountry = [];
-  stakeholdersButton3 = [];
-  stakeholdersButton4 = [];
-  stakeholdersConsideration = [];
-  stakeholdersMap = [];
-  stakeholdersProvince = [];
-  stakeholdersDistrict = [];
-  stakeholdersMunicipality = [];
   scoutUnSdg = {};
-  scoutInteractions = {};
-  scoutStakeholders: any = {};
-  scoutStakeholdersCountry = {};
-  scoutStakeholdersButton3 = {};
-  scoutStakeholdersButton4 = {};
-  scoutStakeholdersConsideration = {};
-  scoutStakeholdersMap = {};
-  scoutStakeholdersProvince = {};
-  scoutStakeholdersDistrict = {};
-  scoutStakeholdersMunicipality = {};
   nameSearch = '';
   countrySearch = '';
   goalSearch = '';
@@ -58,7 +40,7 @@ export class CatalogueComponent implements OnInit {
   amount = [];
   tabNum = [];
   explainIndex: any = 0;
-  explainNumber: any = 0;
+  explainNumber: any = 'SDG 1';
   getCompare = [];
   compareData = {};
   onCompareData = [];
@@ -133,45 +115,15 @@ export class CatalogueComponent implements OnInit {
         }
       }
     }
-    this.catalogueService.getTabData(this.userData.userId, JSON.stringify(this.mainBusiness), 'Sustainability')
-      .subscribe(data => {this.setTabData(2, data); });
-    this.catalogueService.getTabData(this.userData.userId, JSON.stringify(this.mainBusiness), 'Badges')
-      .subscribe(data => {this.setTabData(5, data); });
   }
-  setTabData(index, data) {
-    if (index === 2) {
-      this.unSdg = data.unSdg;
-      this.interactions = data.interactions;
-      this.stakeholders = data.stakeholders;
-      this.stakeholdersCountry = this.stakeholders.country;
-      this.stakeholdersButton3 = this.stakeholders.button3;
-      this.stakeholdersButton4 = this.stakeholders.button4;
-      this.stakeholdersConsideration = this.stakeholders.consideration;
-      this.stakeholdersMap = this.stakeholders.maps;
-      this.stakeholdersProvince = this.stakeholders.province;
-      this.stakeholdersDistrict = this.stakeholders.district;
-      this.stakeholdersMunicipality = this.stakeholders.municipality;
-    } else {
-      this.unSdg = data.unSdg;
-    }
+  setTabData(data) {
+    this.interactions = data.interactions;
+    this.stakeholders = data.stakeholders;
+    this.unSdg = data.unSdg;
   }
-  setScoutTabData(index, data, i) {
-    if (index === 2) {
-      this.scoutUnSdg[i] = data.unSdg;
-      this.scoutInteractions[i] = data.interactions;
-      this.scoutStakeholders[i] = data.stakeholders;
-      this.scoutStakeholdersCountry[i] = this.scoutStakeholders.country;
-      this.scoutStakeholdersButton3[i] = this.scoutStakeholders.button3;
-      this.scoutStakeholdersButton4[i] = this.scoutStakeholders.button4;
-      this.scoutStakeholdersConsideration[i] = this.scoutStakeholders.consideration;
-      this.scoutStakeholdersMap[i] = this.scoutStakeholders.maps;
-      this.scoutStakeholdersProvince[i] = this.scoutStakeholders.province;
-      this.scoutStakeholdersDistrict[i] = this.scoutStakeholders.district;
-      this.scoutStakeholdersMunicipality[i] = this.scoutStakeholders.municipality;
+  setScoutTabData(data, i) {
       this.spinner.hide();
-    } else {
       this.scoutUnSdg[i] = data.unSdg;
-    }
   }
   businessSearch(businessName, countryName, goalName) {
     this.nameSearch = businessName;
@@ -194,12 +146,19 @@ export class CatalogueComponent implements OnInit {
     }
     this.showBusiness = searchBusiness;
     this.setFlag(this.showBusiness.length);
+    this.getStake(this.showBusiness);
+
+  }
+  getStake(business) {
+    this.catalogueService.getTabData(this.userData.userId, JSON.stringify(business), 'Sustainability')
+      .subscribe(data => {this.setTabData(data); });
   }
   showAllBusiness() {
     this.nameSearch = '';
     this.countrySearch = '';
     this.goalSearch = '';
     this.showBusiness = this.mainBusiness;
+    this.getStake(this.showBusiness);
     this.setFlag(this.showBusiness.length);
     this.businessMatch = true;
   }
@@ -226,6 +185,7 @@ export class CatalogueComponent implements OnInit {
             k++;
           }
         }
+        this.getStake(this.showBusiness);
         this.setFlag(this.showBusiness.length);
         this.mainBusiness = [];
         this.mainBusiness = this.showBusiness;
@@ -267,28 +227,17 @@ export class CatalogueComponent implements OnInit {
       this.onCompareData[index] = false;
       this.compareData[index] = {};
       this.scoutUnSdg[index] = [];
-      this.scoutInteractions[index] = [];
-      this.scoutStakeholders[index] = [];
-      this.scoutStakeholdersCountry[index] = [];
-      this.scoutStakeholdersButton3[index] = [];
-      this.scoutStakeholdersButton4[index] = [];
-      this.scoutStakeholdersConsideration[index] = [];
-      this.scoutStakeholdersMap[index] = [];
-      this.scoutStakeholdersProvince[index] = [];
-      this.scoutStakeholdersDistrict[index] = [];
-      this.scoutStakeholdersMunicipality[index] = [];
+      this.spinner.show();
       this.catalogueService.getCompareData(businessId).subscribe(result => {
         if (result !== null) {
           this.onCompareData[index] = true;
           this.compareData[index] = result;
           const compareDataList = [this.compareData[index]];
-          this.spinner.show();
           this.catalogueService.getTabData(this.userData.userId, JSON.stringify(compareDataList), 'Sustainability').subscribe(data => {
-              this.setScoutTabData(2, data, index);
+              this.setScoutTabData(data, index);
           });
-          this.catalogueService.getTabData(this.userData.userId, JSON.stringify(compareDataList), 'Badges').subscribe(data => {
-            this.setScoutTabData(5, data, index);
-          });
+        } else {
+          this.spinner.hide();
         }
       });
     }

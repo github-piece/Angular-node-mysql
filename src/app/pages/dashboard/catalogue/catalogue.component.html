@@ -427,110 +427,23 @@
               <div *ngIf="stakeholders" style="overflow: hidden">
                 <div class="row">
                   <div class="my-2 col-lg-2 btn_stake_group">
-                    <button mat-raised-button color="primary" class="w-100" (click)="explain_content('stake_country',index)">Country</button>
-                    <button mat-raised-button color="primary" class="w-100" (click)="explain_content('stake_button_3', index)">Button 3</button>
-                    <button mat-raised-button color="primary" class="w-100" (click)="explain_content('stake_button_4', index)">Button 4</button>
-                    <button mat-raised-button color="primary" class="w-100" (click)="explain_content('stake_consideration', index)">Considerations</button>
-                    <button mat-raised-button color="primary" class="w-100" (click)="explain_content('Province', index)">Province</button>
-                    <button mat-raised-button color="primary" class="w-100" (click)="explain_content('District', index)">District</button>
-                    <button mat-raised-button color="primary" class="w-100" (click)="explain_content('Municipality', index)">Municipality</button>
+                    <button mat-raised-button color="primary" class="w-100" (click)="explain_content(0, index)">Country</button>
+                    <button mat-raised-button color="primary" class="w-100" (click)="explain_content(1, index)">Button 3</button>
+                    <button mat-raised-button color="primary" class="w-100" (click)="explain_content(2, index)">Button 4</button>
+                    <button mat-raised-button color="primary" class="w-100" (click)="explain_content(3, index)">Considerations</button>
+                    <button mat-raised-button color="primary" class="w-100" (click)="explain_content(4, index)">Province</button>
+                    <button mat-raised-button color="primary" class="w-100" (click)="explain_content(5, index)">District</button>
+                    <button mat-raised-button color="primary" class="w-100" (click)="explain_content(6, index)">Municipality</button>
                   </div>
                   <div class="my-2 col-lg-6">
-                    <ng-container *ngIf="(explainIndex=='stake_country')&&(explainNumber==index)&&stakeholdersCountry">
-                      <ng-container *ngFor="let stakeholder_country_item of stakeholdersCountry[index]">
-                        <ng-container *ngIf="stakeholder_country_item">
-                          <ng-container *ngFor="let item of stakeholder_country_item|keyvalue">
-                            <h5>- {{item.key}}.</h5>
-                            <p>{{item.value}}</p>
-                          </ng-container>
-                        </ng-container>
-                      </ng-container>
-                    </ng-container>
-                    <ng-container *ngIf="(explainIndex=='stake_button_3')&&(explainNumber==index)&&stakeholdersButton3">
-                      <ng-container *ngFor="let stakeholder_button3_item of stakeholdersButton3[index]">
-                        <ng-container *ngIf="stakeholder_button3_item">
-                          <ng-container *ngFor="let item of stakeholder_button3_item | keyvalue">
-                            <h5>- {{item.key}}.</h5>
-                            <p>{{item.value}}</p>
-                          </ng-container>
-                        </ng-container>
-                      </ng-container>
-                    </ng-container>
-                    <ng-container *ngIf="(explainIndex=='stake_button_4')&&(explainNumber==index)&&stakeholdersButton4">
-                      <ng-container *ngFor="let stakeholder_button4_item of stakeholdersButton4[index]">
-                        <ng-container *ngIf="stakeholder_button4_item">
-                          <ng-container *ngFor="let item of stakeholder_button4_item|keyvalue">
-                            <h5>- {{item.key}}.</h5>
-                            <p>{{item.value}}</p>
-                          </ng-container>
-                        </ng-container>
-                      </ng-container>
-                    </ng-container>
-                    <ng-container  *ngIf="(explainIndex=='stake_consideration')&&(explainNumber==index)&&stakeholdersConsideration">
-                      <ng-container *ngFor="let stakeholder_consideration_item of stakeholdersConsideration[index]">
-                        <ng-container *ngIf="stakeholder_consideration_item">
-                          <ng-container *ngFor="let item of stakeholder_consideration_item|keyvalue">
-                            <h5>- {{item.key}}.</h5>
-                            <p>{{item.value}}</p>
-                          </ng-container>
-                        </ng-container>
-                      </ng-container>
-                    </ng-container>
-                    <ng-container  *ngIf="(explainIndex=='Province')&&(explainNumber==index)&&stakeholdersProvince">
-                      <ng-container *ngFor="let stakeholder_province_item of stakeholdersProvince[index]">
-                        <ng-container *ngFor="let stakeholder_province of stakeholder_province_item">
-                          <ng-container *ngIf="stakeholder_province">
-                            <h5>- {{stakeholder_province.question1}}.</h5>
-                            <p>{{stakeholder_province.result}}</p>
-                            <h5>- {{stakeholder_province.question2}}.</h5>
-                            <p>{{stakeholder_province.result}}</p>
-                            <h5>- {{stakeholder_province.question3}}.</h5>
-                            <p>{{stakeholder_province.result}}</p>
-                            <h5>- {{stakeholder_province.question4}}.</h5>
-                            <p>{{stakeholder_province.result}}</p>
-                            <mat-divider></mat-divider>
-                          </ng-container>
-                        </ng-container>
-                      </ng-container>
-                    </ng-container>
-                    <ng-container  *ngIf="(explainIndex=='District')&&(explainNumber==index)&&stakeholdersDistrict">
-                      <ng-container *ngFor="let stakeholder_district_item of stakeholdersDistrict[index]">
-                        <ng-container *ngFor="let stakeholder_district of stakeholder_district_item">
-                          <ng-container *ngIf="stakeholder_district">
-                            <h5>- {{stakeholder_district.question1}}.</h5>
-                            <p>{{stakeholder_district.result}}</p>
-                            <h5>- {{stakeholder_district.question2}}.</h5>
-                            <p>{{stakeholder_district.result}}</p>
-                            <h5>- {{stakeholder_district.question3}}.</h5>
-                            <p>{{stakeholder_district.result}}</p>
-                            <h5>- {{stakeholder_district.question4}}.</h5>
-                            <p>{{stakeholder_district.result}}</p>
-                            <mat-divider></mat-divider>
-                          </ng-container>
-                        </ng-container>
-                      </ng-container>
-                    </ng-container>
-                    <ng-container *ngIf="(explainIndex=='Municipality')&&(explainNumber==index)&&stakeholdersMunicipality">
-                      <ng-container *ngFor="let stakeholder_municipality_item of stakeholdersMunicipality[index]">
-                        <ng-container *ngFor="let stakeholder_municipality of stakeholder_municipality_item">
-                          <ng-container *ngIf="stakeholder_municipality">
-                            <h5>- {{stakeholder_municipality.question1}}.</h5>
-                            <p>{{stakeholder_municipality.result}}</p>
-                            <h5>- {{stakeholder_municipality.question2}}.</h5>
-                            <p>{{stakeholder_municipality.result}}</p>
-                            <h5>- {{stakeholder_municipality.question3}}.</h5>
-                            <p>{{stakeholder_municipality.result}}</p>
-                            <h5>- {{stakeholder_municipality.question4}}.</h5>
-                            <p>{{stakeholder_municipality.result}}</p>
-                            <mat-divider></mat-divider>
-                          </ng-container>
-                        </ng-container>
-                      </ng-container>
-                    </ng-container>
+                    <div *ngFor="let item of stakeholders[explainIndex][index] | keyvalue">
+                      <h5>{{item.key}}</h5>
+                      <p>{{item.value}}</p>
+                    </div>
                   </div>
-                  <div class="my-2 col-lg-4">
+                  <div class="my-2 col-lg-4" *ngIf="(stakeholders[7][index] | json) != ({} | json)">
                     <div class="p-title">Stakeholder Map</div>
-                    <table class="mat-table" *ngIf="stakeholdersMap">
+                    <table class="mat-table">
                       <thead>
                       <tr>
                         <th>Categorization</th>
@@ -538,13 +451,11 @@
                       </tr>
                       </thead>
                       <tbody>
-                      <tr *ngFor="let stakeholder of stakeholdersMap[index] | keyvalue">
+                      <tr *ngFor="let stakeholder of stakeholders[7][index] | keyvalue">
                         <td>{{stakeholder.key}}</td>
                         <td>
-                          <ng-container *ngIf="stakeholder.value">
-                            <ng-container *ngFor="let stakeholder_item of stakeholder.value">
-                              <span>{{stakeholder_item}}</span>
-                            </ng-container>
+                          <ng-container *ngFor="let stakeholder_item of stakeholder.value; let i = index">
+                            <span>{{stakeholder_item}}<span *ngIf="i != stakeholder.value.length - 1">,</span>&nbsp;&nbsp;</span>
                           </ng-container>
                         </td>
                       </tr>
