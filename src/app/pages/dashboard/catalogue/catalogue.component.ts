@@ -333,7 +333,7 @@ export class BuymodalComponent implements OnInit {
     this.formData.append('return_url', this.commission.url_return);
     this.formData.append('cancel_url', this.commission.url_cancel);
     this.formData.append('notify_url', this.commission.url_notify);
-    this.platformFee =  this.commission.mse_fee * this.payFastForm.get('amount').value;
+    this.platformFee = this.commission.mse_fee * this.payFastForm.get('amount').value;
     this.balanceValue = parseFloat((parseFloat(this.businessRemain) - parseFloat(this.amountBuy)).toPrecision(3));
     this.formData.append('amount', this.amountBuy);
     this.formData.append('item_name', this.itemName);

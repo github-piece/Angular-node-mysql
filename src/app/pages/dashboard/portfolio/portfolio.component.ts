@@ -1,10 +1,10 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {AuthenticationService} from '../../../_services/authentication/authentication.service';
-import {BusinessService} from '../../../_services/business/business.service';
 import {BuysellService} from '../../../_services/buysell/buysell.service';
 import {MatTableDataSource, PageEvent} from '@angular/material';
 import {MatPaginator} from '@angular/material/paginator';
 import {NgxSpinnerService} from 'ngx-spinner';
+
 @Component({
   selector: 'app-portfolio',
   templateUrl: './portfolio.component.html',
@@ -21,7 +21,7 @@ export class PortfolioComponent implements OnInit {
     length: number;
   }> = [];
   userData: any = [];
-  businessData = [];
+  businessData: any = [];
   historySellList: any = [];
   historyBuyList: any = [];
   historyList: any = [];
@@ -43,10 +43,10 @@ export class PortfolioComponent implements OnInit {
   detailsSize = 0;
   sellSize = 0;
   onShow = false;
+  receiveData: any;
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   constructor(
     private authenticationService: AuthenticationService,
-    private businessService: BusinessService,
     private buysellService: BuysellService,
     private spinner: NgxSpinnerService
   ) { }
@@ -54,24 +54,17 @@ export class PortfolioComponent implements OnInit {
     this.spinner.show();
     this.userData = this.authenticationService.currentUserSubject.value;
     this.getBusinessList(this.userData.userId);
-    this.getSellHistory();
-    this.getBuyHistory();
   }
   getBusinessList(userId) {
-    this.businessService.getBusinessList(userId).subscribe(data => this.businessData = data );
-  }
-  getSellHistory() {
-    this.buysellService.getSellHistory(this.userData.userId).subscribe(data => {
-      this.historySellList = data;
+    this.buysellService.getBusinessList(userId).subscribe(result => {
+      this.receiveData = result;
+      this.businessData = this.receiveData.businessData;
+      this.historySellList = this.receiveData.historySellList;
+      this.historyBuyList = this.receiveData.historyBuyList;
       for (const history of this.historySellList) {
         const date = new Date(history.date_created);
         history.nextDate = new Date(date.setFullYear(date.getFullYear() + 1)).toString();
       }
-    });
-  }
-  getBuyHistory() {
-    this.buysellService.getBuyHistory(this.userData.userId).subscribe(data => {
-      this.historyBuyList = data;
       this.process();
     });
   }
@@ -196,9 +189,7 @@ export class PortfolioComponent implements OnInit {
       length: 2
     });
     this.spinner.hide();
-    setTimeout (() => {
-      this.onShow = true;
-    }, 1000);
+    this.onShow = true;
   }
   getTasks() {
     this.dataSource = new MatTableDataSource<any>(this.tableData);

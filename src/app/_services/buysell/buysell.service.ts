@@ -6,7 +6,6 @@ import {Server} from '../../../config/url.service';
   providedIn: 'root'
 })
 export class BuysellService {
-  public rowData: any = [];
   public businessId: any;
   public businessRemain: any;
   public businessName: any;
@@ -18,7 +17,7 @@ export class BuysellService {
   getBuyHistory(userId) {
     return this.http.post(`${Server}/getBuyHistory`, {userId});
   }
-  getSellHistory(userId) {
-    return this.http.post(`${Server}/getSellHistory`, {userId});
+  getBusinessList(userId) {
+    return this.http.post(`${Server}/getBusinessList`, {userId});
   }
 }

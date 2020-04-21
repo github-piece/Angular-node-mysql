@@ -61,8 +61,8 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let task of dataSource">
-                  <td>{{task.no}}</td>
+                <tr *ngFor="let task of dataSource; let index = index">
+                  <td>{{index + 1}}</td>
                   <td>{{task.name}}</td>
                   <td>{{task.location}}</td>
                   <td>{{task.address}}</td>
